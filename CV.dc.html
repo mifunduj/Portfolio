@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style id="__om-edit-overrides"></style>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: #0c0f12; font-family: 'IBM Plex Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #7fd6d0; text-decoration: none; }
+    a:hover { color: #a9e8e3; text-decoration: underline; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    button { font: inherit; cursor: pointer; }
+    ::selection { background: #7fd6d0; color: #0c0f12; }
+  </style>
+</helmet>
+
+<!-- CV.dc.html — profil, expertise (par profil), parcours, formation, publications, contact.
+     Les études de cas projet vivent dans des fichiers séparés : "Projet Hexacoptere.dc.html"
+     et "Projet Acoustique.dc.html". Ce fichier ne contient QUE le contenu type CV. -->
+<div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
+
+  <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
+    <div style="max-width:1160px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; gap:26px;">
+      <a href="./CV.dc.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Ph.D. — CV</span>
+      <span style="flex:1;"></span>
+      <a href="./Projet Hexacoptere.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Hexacoptère</a>
+      <a href="./Projet Acoustique.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Acoustique</a>
+      <a href="#expertise" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Expertise</a>
+      <a href="#parcours" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Parcours</a>
+      <a href="mailto:mifunduj@gmail.com" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#0c0f12; background:#7fd6d0; padding:7px 14px; border-radius:2px;">Me joindre</a>
+    </div>
+  </nav>
+
+  <!-- Hero + sélecteur de profil : change accroche, résumé, pastilles et expertise ci-dessous -->
+  <header style="max-width:1160px; margin:0 auto; padding:80px 40px 68px;">
+    <div style="display:grid; grid-template-columns:1fr 320px; gap:64px; align-items:start;">
+      <div>
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:26px;">
+          <span style="width:7px; height:7px; background:#7fd6d0; border-radius:50%;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Disponible — R&amp;D, recherche, enseignement</span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px;">
+          <sc-for list="{{ profileTabs }}" as="p" hint-placeholder-count="4">
+            <button type="button" onClick="{{ p.select }}" style="{{ p.style }}">{{ p.label }}</button>
+          </sc-for>
+        </div>
+        <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:60px; line-height:1.03; letter-spacing:-0.025em; margin:0 0 26px; max-width:840px;">{{ profile.headline }}</h1>
+        <p style="font-size:17.5px; line-height:1.65; color:#a5aeb5; max-width:620px; margin:0 0 32px;">{{ profile.summary }}</p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <sc-for list="{{ profile.tags }}" as="t" hint-placeholder-count="6">
+            <span style="display:inline-block; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:12px; color:#c3cad0; border:1px solid #262d33; background:#12171b; padding:7px 12px; border-radius:2px;">{{ t }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <div style="height:420px; display:flex; align-items:flex-start; justify-content:center; background:radial-gradient(ellipse at 50% 85%, #171d23 0%, rgba(12,15,18,0) 70%);">
+          <img src="./uploads/Photo_Jonathan_Mifundu_Nzengi_sans_fond.png" alt="Jonathan Mifundu Nzengi" style="max-width:100%; max-height:100%; object-fit:contain; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#6d767d; margin-top:12px; text-align:center;">Jonathan Mifundu Nzengi, Ph.D.</div>
+      </div>
+    </div>
+  </header>
+
+  <div style="border-top:1px solid #1e2429; border-bottom:1px solid #1e2429;">
+    <div style="max-width:1160px; margin:0 auto; padding:0 40px; display:grid; grid-template-columns:repeat(4,1fr);">
+      <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+        <div style="padding:30px 28px 30px 0; border-right:1px solid #1e2429;">
+          <div style="font-family:'Archivo',sans-serif; font-size:30px; font-weight:600; letter-spacing:-0.01em;">{{ s.value }}</div>
+          <div style="font-size:13px; color:#8b949b; margin-top:6px; line-height:1.45;">{{ s.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- Renvoi vers les deux études de cas (fichiers séparés) -->
+  <section style="max-width:1160px; margin:0 auto; padding:92px 40px 0;">
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:44px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">01 — Études de cas</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#1e2429; border:1px solid #1e2429;">
+      <a href="./Projet Hexacoptere.dc.html" style="display:block; background:#101418; padding:34px 36px;" style-hover="background:#141a1f;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:14px;">Projet · Simulation &amp; commande de vol</div>
+        <h3 style="font-family:'Archivo',sans-serif; font-size:24px; font-weight:600; color:#e7eaec; margin:0 0 14px;">Simulateur haute fidélité d'un hexacoptère industriel</h3>
+        <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0;">Dynamique non linéaire, propulsion, atmosphère, capteurs, estimation et commande. Voir l'étude de cas complète →</p>
+      </a>
+      <a href="./Projet Acoustique.dc.html" style="display:block; background:#101418; padding:34px 36px;" style-hover="background:#141a1f;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:14px;">Projet · Recherche doctorale</div>
+        <h3 style="font-family:'Archivo',sans-serif; font-size:24px; font-weight:600; color:#e7eaec; margin:0 0 14px;">Contrôle actif large bande d'une double paroi acoustique</h3>
+        <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0;">Modélisation vibroacoustique, identification expérimentale, contrôle adaptatif multicanal. Voir l'étude de cas complète →</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Autres travaux : projets courts sans page dédiée -->
+  <section style="max-width:1160px; margin:0 auto; padding:92px 40px 0;">
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:44px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">02 — Autres travaux</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429;">
+      <sc-for list="{{ otherProjects }}" as="o" hint-placeholder-count="3">
+        <div style="background:#101418; padding:30px 30px 34px;" style-hover="background:#141a1f;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:14px;">{{ o.kicker }}</div>
+          <h3 style="font-family:'Archivo',sans-serif; font-size:20px; font-weight:600; line-height:1.2; margin:0 0 14px;">{{ o.title }}</h3>
+          <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0 0 18px;">{{ o.text }}</p>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#7fd6d0;">{{ o.stack }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Expertise : suit le profil sélectionné en haut de page -->
+  <section id="expertise" style="max-width:1160px; margin:0 auto; padding:92px 40px 0;">
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:20px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">03 — Expertise</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14.5px; color:#7c868e; margin:0 0 40px;">Profil affiché : <span style="color:#c3cad0;">{{ profile.label }}</span> — les compétences ci-dessous suivent le profil choisi en haut de page.</p>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:44px;">
+      <sc-for list="{{ profile.expertise }}" as="e" hint-placeholder-count="3">
+        <div>
+          <h3 style="font-family:'Archivo',sans-serif; font-size:19px; font-weight:600; margin:0 0 6px;">{{ e.title }}</h3>
+          <div style="height:2px; width:34px; background:#7fd6d0; margin-bottom:20px;"></div>
+          <ul style="display:flex; flex-direction:column; gap:11px;">
+            <sc-for list="{{ e.items }}" as="it" hint-placeholder-count="5">
+              <li style="font-size:14.5px; line-height:1.5; color:#a5aeb5; border-bottom:1px solid #191f24; padding-bottom:11px;">{{ it }}</li>
+            </sc-for>
+          </ul>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- Parcours professionnel -->
+  <section id="parcours" style="max-width:1160px; margin:0 auto; padding:92px 40px 0;">
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:44px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">04 — Parcours</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <div style="display:flex; flex-direction:column;">
+      <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="7">
+        <div style="display:grid; grid-template-columns:150px 1fr 320px; gap:32px; padding:22px 0; border-top:1px solid #191f24; align-items:baseline;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#7fd6d0;">{{ t.years }}</div>
+          <div>
+            <div style="font-size:16px; font-weight:600;">{{ t.role }}</div>
+            <div style="font-size:13.5px; color:#7c868e; margin-top:4px;">{{ t.place }}</div>
+          </div>
+          <div style="font-size:14px; line-height:1.6; color:#9aa3aa;">{{ t.detail }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- Formation + certification/langues -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:44px; margin-top:56px;">
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:20px;">Formation</div>
+        <div style="display:flex; flex-direction:column;">
+          <sc-for list="{{ education }}" as="d" hint-placeholder-count="4">
+            <div style="border-top:1px solid #191f24; padding:16px 0;">
+              <div style="display:flex; gap:14px; align-items:baseline;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7fd6d0; min-width:88px;">{{ d.years }}</span>
+                <span style="font-size:15px; font-weight:600;">{{ d.degree }}</span>
+              </div>
+              <div style="font-size:13.5px; color:#7c868e; margin-top:6px; padding-left:102px;">{{ d.place }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:20px;">Certification &amp; langues</div>
+        <div style="border-top:1px solid #191f24; padding:16px 0;">
+          <div style="font-size:15px; font-weight:600;">SolidWorks CSWP</div>
+          <div style="font-size:13.5px; color:#8b949b; margin-top:6px; line-height:1.55;">Mechanical Design · Simulation · Advanced Weldments · Advanced Surfacing</div>
+        </div>
+        <div style="border-top:1px solid #191f24; padding:16px 0;">
+          <div style="font-size:15px; font-weight:600;">Langues</div>
+          <div style="font-size:13.5px; color:#8b949b; margin-top:6px; line-height:1.55;">Français — langue de travail · Anglais — rédaction et lecture scientifiques</div>
+        </div>
+        <div style="border-top:1px solid #191f24; padding:16px 0;">
+          <div style="font-size:15px; font-weight:600;">Thèse doctorale</div>
+          <div style="font-size:13.5px; color:#8b949b; margin-top:6px; line-height:1.55;">Contrôle actif à large bande avec compensation du signal d'erreur appliqué à l'isolation acoustique de doubles cloisons — dir. P. Micheau et A. Berry.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Publications (masquable via le tweak showPublications) -->
+  <sc-if value="{{ showPublications }}" hint-placeholder-val="{{ true }}">
+    <section id="publications" style="max-width:1160px; margin:0 auto; padding:92px 40px 0;">
+      <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:40px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">05 — Publications</span>
+        <span style="flex:1; height:1px; background:#1e2429;"></span>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <sc-for list="{{ publications }}" as="p" hint-placeholder-count="3">
+          <div style="display:grid; grid-template-columns:28px 1fr; gap:14px; border-left:1px solid #24383a; padding:2px 0 2px 20px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7fd6d0;">{{ p.num }}</span>
+            <div>
+              <div style="font-size:15.5px; line-height:1.5; color:#d3d9dd;">{{ p.title }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7c868e; margin-top:6px; line-height:1.5;">{{ p.ref }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </sc-if>
+
+  <!-- Contact -->
+  <section style="max-width:1160px; margin:0 auto; padding:100px 40px 0;">
+    <div style="border-top:1px solid #1e2429; padding-top:56px; display:grid; grid-template-columns:1fr auto; gap:48px; align-items:end;">
+      <div>
+        <h2 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:42px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 18px; max-width:640px;">Un système à modéliser, à commander ou à valider ?</h2>
+        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; max-width:520px; margin:0;">Ouvert aux mandats de R&amp;D, collaborations de recherche, postes en commande et simulation, et charges de cours.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
+        <a href="mailto:mifunduj@gmail.com" style="font-family:'Archivo',sans-serif; font-size:18px; font-weight:600; color:#0c0f12; background:#7fd6d0; padding:16px 28px; border-radius:2px;" style-hover="background:#a9e8e3;">mifunduj@gmail.com</a>
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#7c868e;">+1 819 434 6558 · Sherbrooke, QC</span>
+      </div>
+    </div>
+  </section>
+
+  <footer style="max-width:1160px; margin:60px auto 0; padding:22px 40px 44px; border-top:1px solid #191f24; display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6d767d;">
+    <span>Jonathan Mifundu Nzengi, Ph.D. — Portfolio 2026</span>
+    <span>Commande · Vibroacoustique · Simulation · Enseignement</span>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showPublications&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Contenu&quot;}}">
+// PROFILES: un jeu de données par "casquette" (commande, acoustique, FEA, enseignement).
+// Changer de profil via les onglets ne modifie QUE le hero + le bloc Expertise (#expertise) —
+// tout le reste de la page (stats, projets, parcours, publications) est fixe et commun.
+const PROFILES = [
+  {
+    key: 'controle',
+    label: 'Commande & robotique',
+    headline: "Je modélise, simule et commande des systèmes dynamiques — jusqu'à la validation expérimentale.",
+    summary: "Docteur en génie mécanique (Université de Sherbrooke, 2025). Commande adaptative et multivariable temps réel, simulation haute fidélité de véhicules aériens, estimation d'état, systèmes embarqués et automatisation industrielle.",
+    tags: ['PID', 'LQG', 'H∞', 'INDI', 'Filtre de Kalman étendu', 'MATLAB / Simulink', 'C++ · STM32 · ROS', 'HIL temps réel'],
+    expertise: [
+      { title: 'Commande & estimation', items: ['PID, LQG, H∞ — synthèse et réglage', 'Commande multivariable (MIMO) et robuste', 'INDI et inversion dynamique', 'Commande adaptative (FxLMS, FxNLMS, IMC)', 'Filtrage de Kalman, observateurs non linéaires'] },
+      { title: 'Robotique & mécatronique', items: ['ROS, intégration capteurs et actionneurs', 'Apprentissage kinesthésique, robots collaboratifs', 'Prototypage et validation fonctionnelle', 'Automates Siemens (TIA Portal, PLCSIM), LADDER', 'Systèmes embarqués : Arduino, STM32 (CubeMX, Keil)'] },
+      { title: 'Simulation & mise en œuvre', items: ['Représentation d\u2019état et identification expérimentale', 'Simulation HIL et génération de code', 'MATLAB / Simulink, Python, C++', 'Acquisition multicanale, conditionnement du signal', 'Analyse fréquentielle en boucle fermée'] },
+    ],
+  },
+  {
+    key: 'acoustique',
+    label: 'Acoustique & contrôle actif',
+    headline: "Je réduis le bruit là où la masse ne suffit plus : contrôle actif, vibroacoustique, validation sur banc.",
+    summary: "Quatre ans de recherche doctorale sur la réduction active du bruit basses fréquences transmis par les doubles cloisons — algorithmes adaptatifs, identification des chemins acoustiques, contrôle multicanal et corrélation essai-calcul.",
+    tags: ['ANC · FxLMS / FxNLMS', 'Contrôle IMC', 'MIMO multicanal', 'Vibroacoustique', 'COMSOL Multiphysics', 'Identification expérimentale'],
+    expertise: [
+      { title: 'Acoustique & vibroacoustique', items: ['Transmission sonore et rayonnement acoustique', 'Isolation de double cloison', 'Couplage fluide-structure', 'Mesures sur banc d\u2019essai instrumenté', 'Tube d\u2019impédance, sonde intensimétrique'] },
+      { title: 'Contrôle actif', items: ['ANC et contrôle actif des vibrations', 'Algorithmes adaptatifs FxLMS / FxNLMS', 'Contrôle IMC et stratégies MIMO', 'Compensation du signal d\u2019erreur', 'Performance aux points non monitorés'] },
+      { title: 'Traitement du signal', items: ['FFT, filtrage numérique', 'Identification de fonctions de transfert', 'Analyse fréquentielle acoustique et vibratoire', 'Acquisition multivoies, analyseurs FFT', 'MATLAB, Simulink, Python'] },
+    ],
+  },
+  {
+    key: 'fea',
+    label: 'Simulation & FEA',
+    headline: "Je modélise par éléments finis ce qui doit être prédit avant d'être construit — puis je le confronte à l'essai.",
+    summary: "Modélisation par éléments finis appliquée à la dynamique des structures, à l'interaction fluide-structure et à la vibroacoustique : analyse modale, dimensionnement statique et en fatigue, corrélation essai-calcul.",
+    tags: ['COMSOL Multiphysics', 'SolidWorks Simulation', 'Analyse modale', 'Interaction fluide-structure', 'Corrélation essai-calcul'],
+    expertise: [
+      { title: 'Simulation FEM / FEA', items: ['Analyse statique, dynamique et harmonique', 'Analyse modale et réponse vibratoire', 'Interaction fluide-structure (FSI)', 'Simulation vibroacoustique', 'Maillage et conditions aux limites'] },
+      { title: 'Mécanique des structures', items: ['Dynamique des structures, milieux continus', 'Résistance des matériaux', 'Dimensionnement statique et en fatigue', 'Comportement vibratoire des assemblages', 'CAO SolidWorks, Autodesk Inventor'] },
+      { title: 'Validation expérimentale', items: ['Identification expérimentale de fonctions de transfert', 'Corrélation modèle-essai', 'Acquisition multicanale et conditionnement', 'Bancs d\u2019essai vibratoires et acoustiques', 'MATLAB, Python, calcul numérique'] },
+    ],
+  },
+  {
+    key: 'enseignement',
+    label: 'Enseignement',
+    headline: "J'enseigne le génie mécanique : contrôle, structures, simulation et instrumentation — du concept au laboratoire.",
+    summary: "Cinq ans d'enseignement et d'encadrement aux niveaux collégial et universitaire : conception et prestation de cours, supervision de projets intégrateurs, ateliers MATLAB/Simulink et soutien pédagogique en calcul numérique.",
+    tags: ['Conception de cours', 'Projets intégrateurs', 'Capteurs & instrumentation', 'Ateliers MATLAB/Simulink', 'Encadrement d\u2019étudiants'],
+    expertise: [
+      { title: 'Contrôle & automatisation', items: ['Régulation et asservissement (PID)', 'Commande multivariable et adaptative', 'Automatisation industrielle (API, IHM)', 'Systèmes embarqués', 'Robotique'] },
+      { title: 'Structures & simulation', items: ['Résistance des matériaux, dynamique des structures', 'Vibrations mécaniques', 'Éléments finis et analyse modale', 'Calcul numérique, COMSOL, MATLAB', 'Conception d\u2019éléments de machines, CAO'] },
+      { title: 'Mesure & mathématiques', items: ['Capteurs, transducteurs, étalonnage', 'Acquisition et traitement du signal', 'Transformées de Fourier et de Laplace', 'Équations différentielles, algèbre linéaire', 'Analyse numérique'] },
+    ],
+  },
+];
+
+// Contenu fixe (indépendant du profil) : stats, autres travaux, parcours, formation, publications.
+const STATS = [
+  { value: 'Ph.D. 2025', label: 'Génie mécanique — Université de Sherbrooke' },
+  { value: '4 ans', label: 'Recherche appliquée en commande temps réel' },
+  { value: '3', label: 'Publications évaluées par les pairs' },
+  { value: '5 ans', label: 'Enseignement collégial et universitaire' },
+];
+
+const OTHER_PROJECTS = [
+  { kicker: 'Soutien technique · UdeS', title: 'Ventilateur liquidien — projet INOLIVENT', text: "Programmation et validation expérimentale d'un système de ventilation liquidienne : instrumentation, acquisition et essais.", stack: 'Instrumentation · essais · programmation' },
+  { kicker: 'R&D · 3IT', title: "Apprentissage kinesthésique d'un robot collaboratif", text: "Programmation par démonstration sur un robot Baxter : le geste humain est enregistré sur plusieurs répétitions du mouvement, puis synthétisé pour en extraire la meilleure façon de l'exécuter.", stack: 'ROS · Python · robotique collaborative' },
+  { kicker: 'R&D · 3IT', title: 'Peau artificielle pour la robotique de service', text: "Conception et prototypage d'un revêtement sensoriel flexible pour robot.", stack: 'Transducteurs · prototypage · acquisition' },
+];
+
+const TIMELINE = [
+  { years: '2021 — 2025', role: 'Chercheur doctoral — contrôle actif et systèmes adaptatifs', place: 'CRASH-UdeS, Université de Sherbrooke', detail: "Algorithmes adaptatifs temps réel sur banc multicanal, modélisation FEM vibroacoustique et identification expérimentale." },
+  { years: 'Hiver 2026', role: 'Chargé de cours — capteurs et instrumentation', place: 'Cégep de Victoriaville (AEC Instrumentation, automatisation et robotique)', detail: 'Conception et prestation complète du cours (45 h) : mesure, conditionnement, étalonnage, acquisition.' },
+  { years: '2024 & 2025', role: 'Chargé de cours — projet intégrateur de conception mécanique', place: 'Cégep de Lévis (AEC Conception mécanique)', detail: "Encadrement de projets de fin d'études (120 h/session) : CAO, dimensionnement, démarche de conception intégrée." },
+  { years: '2024', role: 'Soutien technique — projet INOLIVENT', place: 'Université de Sherbrooke', detail: "Programmation et validation expérimentale d'un ventilateur liquidien." },
+  { years: '2023 — 2024', role: 'Ambassadeur étudiant MATLAB', place: 'Université de Sherbrooke', detail: 'Animation d\u2019ateliers MATLAB/Simulink pour étudiants et chercheurs.' },
+  { years: '2021 — 2023', role: "Auxiliaire d'enseignement (4 sessions)", place: 'Faculté de génie, Université de Sherbrooke', detail: 'Calcul numérique et outils de simulation : laboratoires, correction, soutien individualisé.' },
+  { years: '2021', role: 'Stages R&D en robotique (2 × 4 mois)', place: '3IT, Université de Sherbrooke', detail: 'Apprentissage kinesthésique sur robot Baxter; peau artificielle pour robot de service.' },
+];
+
+const EDUCATION = [
+  { years: '2021 — 2025', degree: 'Doctorat en génie mécanique', place: 'Université de Sherbrooke, Québec' },
+  { years: '2021', degree: 'DESS en ingénierie', place: 'Université de Sherbrooke, Québec' },
+  { years: '2018 — 2021', degree: "Diplôme d'ingénieur en électromécanique", place: 'ESPRIT, Tunis, Tunisie' },
+  { years: '2014 — 2017', degree: 'Études préparatoires et premier cycle en mécanique', place: 'Faculté polytechnique, Université de Kinshasa, RDC' },
+];
+
+const PUBLICATIONS = [
+  { num: '01', title: 'Active Double Glazing With In-Cavity Compensated Microphones', ref: 'Grandjean, Mifundu Nzengi, Micheau, Berry — Mechanical Systems and Signal Processing, vol. 252, mai 2026, p. 114246' },
+  { num: '02', title: 'Optimizing Loudspeakers Placement for Active Noise Control in Double-Glazing', ref: 'Grandjean, Mifundu Nzengi, Micheau, Berry — INTER-NOISE 2025, vol. 272 (1), p. 3473–3482' },
+  { num: '03', title: 'Preliminary study on active control of double-glazing with pressure compensation using an in-cavity microphone', ref: 'Mifundu Nzengi, Grandjean, Micheau, Berry — INTER-NOISE 2024, vol. 270 (2), p. 9702–9711' },
+];
+
+class Component extends DCLogic {
+  state = { profile: 0 };
+
+  renderVals() {
+    const active = this.state.profile;
+    const profileTabs = PROFILES.map((p, i) => ({
+      label: p.label,
+      select: () => this.setState({ profile: i }),
+      style: i === active
+        ? 'display:inline-flex; align-items:center; white-space:nowrap; font-family:IBM Plex Mono,monospace; font-size:12px; letter-spacing:0.04em; color:#0c0f12; background:#7fd6d0; border:1px solid #7fd6d0; padding:8px 14px; border-radius:2px;'
+        : 'display:inline-flex; align-items:center; white-space:nowrap; font-family:IBM Plex Mono,monospace; font-size:12px; letter-spacing:0.04em; color:#b6bec4; background:transparent; border:1px solid #262d33; padding:8px 14px; border-radius:2px;',
+    }));
+
+    return {
+      profileTabs,
+      profile: PROFILES[active],
+      showPublications: this.props.showPublications ?? true,
+      stats: STATS,
+      otherProjects: OTHER_PROJECTS,
+      timeline: TIMELINE,
+      education: EDUCATION,
+      publications: PUBLICATIONS,
+    };
+  }
+}
+</script>
+</body>
+</html>

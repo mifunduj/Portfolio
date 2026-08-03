@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style id="__om-edit-overrides"></style>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #0c0f12; font-family: 'IBM Plex Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #7fd6d0; text-decoration: none; }
+    a:hover { color: #a9e8e3; text-decoration: underline; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    ::selection { background: #7fd6d0; color: #0c0f12; }
+  </style>
+</helmet>
+
+<!-- Projet Hexacoptere.dc.html — étude de cas isolée. Contenu (piliers, chiffres, normes)
+     centralisé dans le logic class ci-dessous pour rester facile à mettre à jour. -->
+<div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
+
+  <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
+    <div style="max-width:1160px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; gap:26px;">
+      <a href="./CV.dc.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — Hexacoptère</span>
+      <span style="flex:1;"></span>
+      <a href="./CV.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← CV</a>
+      <a href="./Projet Acoustique.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Projet acoustique</a>
+    </div>
+  </nav>
+
+  <section style="max-width:1160px; margin:0 auto; padding:80px 40px 0;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; margin-bottom:52px;">
+      <div>
+        <div style="height:300px; margin:0 0 28px; background:radial-gradient(ellipse at 50% 55%, #161c21 0%, #0c0f12 72%); border:1px solid #1e2429; display:flex; align-items:center; justify-content:center; padding:18px;">
+          <img src="./assets/hexacoptere.png" alt="DJI Matrice 600 Pro, hexacoptère à six rotors coplanaires à pas fixe" style="max-width:100%; max-height:100%; object-fit:contain;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin:10px 0 26px;">VÉHICULE DE RÉFÉRENCE — DJI MATRICE 600 PRO</div>
+        <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:40px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 20px;">Simulateur haute fidélité d'un hexacoptère industriel</h1>
+        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Un environnement de simulation non linéaire complet — corps rigide, propulsion électrique, atmosphère, vent, capteurs, estimation et commande — conçu pour développer et éprouver des lois de commande de vol avant tout essai sur le véhicule physique.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <sc-for list="{{ projectStack }}" as="p" hint-placeholder-count="5">
+            <span style="display:inline-block; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#7fd6d0; border:1px solid #24383a; background:#101a1b; padding:6px 11px; border-radius:2px;">{{ p }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429;">
+        <sc-for list="{{ problemFraming }}" as="f" hint-placeholder-count="3">
+          <div style="background:#101418; padding:22px 24px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:9px;">{{ f.label }}</div>
+            <div style="font-size:14.5px; line-height:1.6; color:#d3d9dd;">{{ f.text }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="height:420px; border:1px solid #1e2429; margin-bottom:16px;">
+      <image-slot id="architecture" shape="rect" placeholder="Schéma d'architecture : guidage → commande INDI → allocation → actionneurs → dynamique → environnement → capteurs → EKF / NDO"></image-slot>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-bottom:60px;">FIG. 01 — Architecture fonctionnelle du simulateur</div>
+
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="4">
+        <div style="background:#101418; padding:32px 34px;">
+          <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:14px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7fd6d0;">{{ p.num }}</span>
+            <h3 style="font-family:'Archivo',sans-serif; font-size:19px; font-weight:600; margin:0;">{{ p.title }}</h3>
+          </div>
+          <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0 0 18px; white-space:pre-line;">{{ p.text }}</p>
+          <ul style="display:flex; flex-direction:column; gap:7px;">
+            <sc-for list="{{ p.points }}" as="pt" hint-placeholder-count="3">
+              <li style="display:grid; grid-template-columns:16px 1fr; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.5; color:#c3cad0;">
+                <span style="color:#4f5b62;">/</span>
+                <span>{{ pt }}</span>
+              </li>
+            </sc-for>
+          </ul>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ vehicleParams }}" as="v" hint-placeholder-count="8">
+        <div style="background:#101418; padding:20px 22px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:16.5px;">{{ v.value }}</div>
+          <div style="font-size:12px; color:#7c868e; margin-top:5px; line-height:1.4;">{{ v.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div>
+        <div style="height:280px; border:1px solid #1e2429;">
+          <image-slot id="fig-vent" shape="rect" placeholder="Validation des modèles de vent : profil logarithmique, rafale 1-cos, DSP von Kármán"></image-slot>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 02 — Environnement atmosphérique</div>
+      </div>
+      <div>
+        <div style="height:280px; border:1px solid #1e2429;">
+          <image-slot id="fig-ekf" shape="rect" placeholder="Validation EKF/NDO : erreurs d'estimation et couple perturbateur estimé"></image-slot>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 03 — Estimation d'état et de perturbation</div>
+      </div>
+    </div>
+
+    <div style="margin-top:60px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:20px;">Normes &amp; références de modélisation</div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429;">
+        <sc-for list="{{ standards }}" as="s" hint-placeholder-count="6">
+          <div style="background:#101418; padding:22px 24px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:13.5px; color:#7fd6d0; margin-bottom:8px;">{{ s.code }}</div>
+            <div style="font-size:14px; font-weight:600; margin-bottom:6px;">{{ s.title }}</div>
+            <div style="font-size:13px; line-height:1.55; color:#8b949b;">{{ s.use }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-top:40px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Statut</div>
+      <div style="font-size:14.5px; line-height:1.65; color:#c3cad0;">Campagne de validation en cours : suivi de trajectoire sous vent, cohérence statistique de l'EKF et convergence de l'observateur. Les figures de résultats seront intégrées dès leur production — aucune performance n'est annoncée avant son calcul effectif.</div>
+    </div>
+  </section>
+
+  <footer style="max-width:1160px; margin:60px auto 0; padding:22px 40px 44px; border-top:1px solid #191f24; display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6d767d;">
+    <a href="./CV.dc.html">← Retour au CV</a>
+    <span>Jonathan Mifundu Nzengi, Ph.D. — Portfolio 2026</span>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+// Toutes les données de cette étude de cas sont ici, séparées par thème,
+// pour être modifiées sans toucher au template.
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      projectStack: ['MATLAB / Simulink', 'matlab.System', 'Quaternions', 'INDI + NDO', 'EKF 13 états'],
+      problemFraming: [
+        { label: 'Problème', text: "Éprouver des lois de commande sur un hexacoptère de 11 kg engage un risque matériel et humain réel à chaque vol d'essai." },
+        { label: 'Approche', text: "Reproduire la chaîne causale complète du vol — dynamique, propulsion, atmosphère, capteurs imparfaits, estimation, commande — plutôt qu'un modèle idéalisé." },
+        { label: 'Livrable', text: "Une plateforme modulaire, compatible génération de code, où un contrôleur validé se transpose directement vers le véhicule physique." },
+      ],
+      pillars: [
+        { num: '01', title: 'Dynamique & perturbations', text: "6 DDL, dynamique non linéaire. Forces aérodynamiques fonction de la vitesse absolue, de l'orientation du drone, de la vitesse et direction du vent, et d'une traînée quadratique. \nAtmosphère selon le standard ISO 2533.", points: ['Vitesse absolue et orientation du drone', 'Vitesse de vent et direction', 'Traînée quadratique', 'Atmosphère : température, densité de l\u2019air, pression, accélération gravitationnelle'] },
+        { num: '02', title: 'Propulsion & vent', text: "Chaîne batterie-ESC-moteurs-hélices à six rotors. Vent selon les standards MIL-F-8785C / MIL-STD-1797.", points: ['Six rotors, régime transitoire, délais ESC, limites de régime', 'Variation de la poussée et du couple avec la densité de l\u2019air', 'Vent moyen en fonction de l\u2019altitude', 'Rafale en 1-cos, \nTurbulence de von Kármán'] },
+        { num: '03', title: 'Capteurs & estimation', text: "IMU & GNSS avec paramètres et effets modélisés, fusionnés par un filtre de Kalman étendu.", points: ['Fréquence d\u2019échantillonnage, bruit gaussien, instabilité du biais, random walk', 'Erreurs de facteur d\u2019échelle, sensibilité croisée entre axes, quantification', 'g-sensitivity (gyroscope) et effets de la température', 'Filtre de Kalman étendu + observateur non linéaire des perturbations rotationnelles'] },
+        { num: '04', title: 'Système de contrôle', text: "Contrôleurs proportionnel dérivée et INDI, validation selon la norme ASTM F3609-25.", points: ['PD : conversion consigne NED-Yaw → consignes de vitesses de rotation (X-Y-Z)', 'INDI : contrôle des vitesses de rotation (X-Y-Z)', 'Validation des performances : ASTM F3609-25'] },
+      ],
+      vehicleParams: [
+        { value: '6', label: 'Rotors (batterie-ESC-moteurs-hélices)' },
+        { value: '6 DDL', label: 'Dynamique non linéaire' },
+        { value: '1', label: 'Contrôleur : PD + INDI' },
+        { value: '2', label: 'Observateurs : EKF + NDO' },
+        { value: '9', label: 'Effets de capteur IMU/GNSS modélisés' },
+        { value: 'ISO 2533', label: 'Atmosphère standard' },
+        { value: 'MIL-F-8785C', label: 'Standard de vent / turbulence' },
+        { value: 'ASTM F3609-25', label: 'Validation des performances' },
+      ],
+      standards: [
+        { code: 'ISO 2533', title: 'Atmosphère type', use: "Température, densité de l'air, pression et accélération gravitationnelle en fonction de l'altitude." },
+        { code: 'MIL-F-8785C', title: 'Flying Qualities — spécification', use: "Vent moyen selon l'altitude, rafale en 1-cos et turbulence de von Kármán." },
+        { code: 'MIL-STD-1797', title: 'Flying Qualities of Piloted Aircraft', use: "Modèles complémentaires de rafale discrète et de turbulence atmosphérique." },
+        { code: 'ASTM F3609-25', title: 'Validation des performances', use: "Référentiel de validation des performances de vol du simulateur." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

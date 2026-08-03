@@ -1,0 +1,3981 @@
+\documentclass[11pt,a4paper,oneside]{report}
+
+% ================================================================
+% Langue, typographie et mise en page
+% ================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,top=2.2cm,bottom=2.2cm,left=2.35cm,right=2.15cm,headheight=15pt]{geometry}
+\usepackage{setspace}
+\setstretch{1.06}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.48em}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\fancyhead[C]{\small\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ================================================================
+% Mathématiques et unités
+% ================================================================
+\usepackage{amsmath,amssymb,bm,mathtools}
+\usepackage{siunitx}
+\sisetup{locale=FR,per-mode=symbol,range-phrase=--,separate-uncertainty=true,detect-all}
+\DeclareSIUnit\rpm{rpm}
+\DeclareSIUnit\ppm{ppm}
+\newcommand{\vect}[1]{\bm{#1}}
+\newcommand{\mat}[1]{\bm{#1}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\trans}{^{\mathsf T}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\diag}{\operatorname{diag}}
+\newcommand{\sat}{\operatorname{sat}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\crossmat}[1]{\left[#1\right]_{\times}}
+\newcommand{\had}{\odot}
+\newcommand{\english}[1]{\textit{#1}}
+
+% ================================================================
+% Tableaux
+% ================================================================
+\usepackage{booktabs,tabularx,longtable,array,multirow}
+%\newcommand{\toprule}{\toprule}
+%\newcommand{\midrule}{\midrule}
+%\newcommand{\bottomrule}{\bottomrule}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\renewcommand{\arraystretch}{1.16}
+
+% ================================================================
+% Figures et couleurs
+% ================================================================
+\usepackage{graphicx}
+\usepackage{svg}
+\usepackage{caption,subcaption}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{xcolor}
+\definecolor{TitleBlue}{HTML}{2E6F95}
+\definecolor{LinkBlue}{HTML}{255D7A}
+\definecolor{SoftBlue}{HTML}{EDF5F9}
+\definecolor{SoftGray}{HTML}{F3F5F6}
+\definecolor{DarkGray}{HTML}{454B50}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries\color{TitleBlue}}
+{\filleft\Large\color{DarkGray}\chaptertitlename\ \thechapter}
+{0.5ex}{\titlerule\vspace{1.0ex}\filright}
+\titleformat{\section}{\Large\bfseries\color{TitleBlue}}{\thesection}{0.7em}{}
+\titleformat{\subsection}{\large\bfseries\color{TitleBlue}}{\thesubsection}{0.7em}{}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{TitleBlue}}{\thesubsubsection}{0.7em}{}
+\captionsetup{font=small,labelfont=bf,justification=justified,singlelinecheck=false}
+\captionsetup[table]{position=top,skip=5pt}
+\captionsetup[figure]{position=bottom,skip=5pt}
+
+\newcommand{\placeholderfigure}[3][0.23\textheight]{%
+	\begin{figure}[H]\centering
+		\fcolorbox{TitleBlue}{SoftBlue}{%
+			\parbox[c][#1][c]{0.90\textwidth}{\centering
+				\textbf{Emplacement réservé}\par\medskip
+				\texttt{\detokenize{#2}}}}
+		\caption{#3}\label{fig_#2}
+\end{figure}}
+
+\newcommand{\resultsdir}{../results/fig_export/HiFi_INDI_30-07-2026_20h57min22s/}
+
+\graphicspath{{\resultsdir}}
+
+\newcommand{\resultspdf}[3][0.94\textwidth]{%
+	\begin{figure}[H]
+		\centering
+		\IfFileExists{\resultsdir#2.pdf}{%
+			\includegraphics[width=#1]{#2}%
+		}{%
+			\fcolorbox{TitleBlue}{SoftBlue}{%
+				\parbox[c][0.22\textheight][c]{0.90\textwidth}{%
+					\centering
+					\textbf{Fichier PDF attendu}\par\medskip
+					\texttt{\resultsdir\detokenize{#2}.pdf}%
+				}%
+			}%
+		}%
+		\caption{#3}
+		\label{fig_#2}
+	\end{figure}%
+}
+
+% ================================================================
+% Références croisées et bibliographie numérique
+% ================================================================
+\usepackage{csquotes}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	linkcolor=LinkBlue,
+	citecolor=LinkBlue,
+	urlcolor=LinkBlue,
+	pdftitle={Rapport de développement d'un simulateur haute fidélité d'hexacoptère},
+	pdfauthor={Jonathan Mifundu Nzengi}}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+\crefname{equation}{équation}{équations}
+\crefname{figure}{figure}{figures}
+\crefname{table}{tableau}{tableaux}
+\crefname{chapter}{chapitre}{chapitres}
+\crefname{section}{section}{sections}
+\usepackage[backend=biber,style=numeric-comp,sorting=none,maxbibnames=99,giveninits=true,doi=true,url=false,isbn=false]{biblatex}
+\addbibresource{Hexacoptere_Haute_Fidelite_rapport.bib}
+
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{2}
+
+
+
+% ================================================================
+% Document
+% ================================================================
+\begin{document}
+	\pagenumbering{gobble}
+	
+	\begin{titlepage}
+		\centering
+		\vspace*{1.5cm}
+		{\color{TitleBlue}\rule{0.82\textwidth}{1.2pt}}\\[1.2cm]
+		{\Huge\bfseries\color{TitleBlue} Développement d'un environnement de simulation haute fidélité d'un hexacoptère industriel\par}
+		\vspace{0.9cm}
+		{\Large Rapport de modélisation, estimation, commande et procédure de validation\par}
+		\vspace{1.4cm}
+		\fcolorbox{TitleBlue}{SoftBlue}{\parbox[c][5.2cm][c]{0.74\textwidth}{\centering
+				\textbf{Emplacement réservé à l'image du véhicule de référence}\par\medskip
+				DJI Matrice 600 Pro\par\smallskip
+				\texttt{figures/dji\_matrice\_600\_pro}}}
+		\vfill
+		{\large Jonathan Mifundu Nzengi\par}
+		\vspace{0.35cm}
+		{\large \today\par}
+		\vspace{0.9cm}
+		{\color{TitleBlue}\rule{0.82\textwidth}{1.2pt}}
+		
+	\end{titlepage}
+	
+	\pagenumbering{roman}
+	
+	\chapter*{Résumé}
+	\addcontentsline{toc}{chapter}{Résumé}
+	Ce rapport documente la procédure adoptée pour construire un environnement de simulation non linéaire d'un hexacoptère industriel inspiré du DJI Matrice 600 Pro. La démarche relie les conventions de repères, la dynamique du corps rigide, la propulsion électrique, l'atmosphère, les perturbations de vent, les capteurs, l'estimation d'état, l'observation des couples perturbateurs, le guidage et la commande des vitesses angulaires du corps. Les valeurs numériques configurées sont regroupées dans des tableaux afin de séparer les hypothèses, les paramètres et les équations générales. Les résultats ne sont ni recalculés ni anticipés : le rapport fournit une structure de validation reproductible destinée à recevoir les figures SVG déjà générées par le projet.
+	
+	\textbf{Mots-clés :} hexacoptère, simulation non linéaire, dynamique de vol, INDI, EKF, observateur de perturbations, vent de von Kármán, suivi de trajectoire.
+	
+	\tableofcontents
+	\listoffigures
+	\listoftables
+	\clearpage
+	
+	% ================================================================
+	\chapter*{Acronymes}
+	\addcontentsline{toc}{chapter}{Acronymes}
+	Les acronymes employés dans le rapport sont regroupés ci-dessous afin d'en faciliter la consultation.
+	
+	\begin{longtable}{@{}L{3.0cm}L{11.6cm}@{}}
+		\toprule
+		\textbf{Acronyme} & \textbf{Définition}\\
+		\midrule
+		BLDC & \english{Brushless Direct Current}, moteur électrique sans balais.\\
+		C2 & \english{Command and Control}, commande et contrôle.\\
+		ESC & \english{Electronic Speed Controller}, variateur électronique de vitesse.\\
+		EKF & \english{Extended Kalman Filter}, filtre de Kalman étendu.\\
+		GNSS & \english{Global Navigation Satellite System}.\\
+		IAE & \english{Integral of Absolute Error}.\\
+		IMU & \english{Inertial Measurement Unit}.\\
+		INDI & \english{Incremental Nonlinear Dynamic Inversion}.\\
+		ISE & \english{Integral of Squared Error}.\\
+		ITAE & \english{Integral of Time-weighted Absolute Error}.\\
+		NDO & \english{Nonlinear Disturbance Observer}.\\
+		NED & \english{North--East--Down}.\\
+		PNT & \english{Positioning, Navigation and Time Synchronization}.\\
+		PSD & \english{Power Spectral Density}.\\
+		RMSE & \english{Root Mean Square Error}.\\
+		RTK & \english{Real-Time Kinematic}.\\
+		UAS & \english{Unmanned Aircraft System}.\\
+		UAV & \english{Unmanned Aerial Vehicle}.\\
+		\bottomrule
+	\end{longtable}
+	
+	% ================================================================
+	\chapter*{Constantes, symboles et opérateurs}
+	\addcontentsline{toc}{chapter}{Constantes, symboles et opérateurs}
+	
+	Ce chapitre rassemble les constantes physiques, les symboles et les opérateurs utilisés dans les modèles afin d'assurer l'uniformité des notations.
+	
+	\section*{Constantes}
+	\addcontentsline{toc}{section}{Constantes}
+	Les constantes physiques et atmosphériques utilisées dans le simulateur sont présentées dans le tableau suivant.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Constantes physiques et atmosphériques utilisées.}
+		\label{tab_constantes}
+		\begin{tabularx}{\textwidth}{@{}L{2.3cm}L{3.1cm}L{2.5cm}Y@{}}
+			\toprule
+			\textbf{Symbole} & \textbf{Valeur} & \textbf{Unité} & \textbf{Définition}\\
+			\midrule
+			$g_0$ & \num{9.80665} & \si{m.s^{-2}} & Accélération normale de la pesanteur.\\
+			$t_0$ & \num{288.15} & \si{K} & Température standard au niveau moyen de la mer.\\
+			$p_0$ & \num{101325} & \si{Pa} & Pression standard au niveau moyen de la mer.\\
+			$\rho_0$ & \num{1.225} & \si{kg.m^{-3}} & Masse volumique de référence au niveau moyen de la mer.\\
+			$r_a$ & \num{287.05287} & \si{J.kg^{-1}.K^{-1}} & Constante spécifique de l'air sec.\\
+			$\beta$ & \num{-0.0065} & \si{K.m^{-1}} & Gradient thermique de la couche troposphérique utilisée.\\
+			$r_e$ & \num{6356766} & \si{m} & Rayon terrestre employé pour la conversion géométrique--géopotentielle.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	Les constantes atmosphériques sont conformes à l'atmosphère type ISO pour le domaine modélisé \cite{ISO2533_1975}.
+	
+	\section*{Symboles}
+	\addcontentsline{toc}{section}{Symboles}
+	Les principaux symboles, leurs unités et leur signification sont définis ci-dessous.
+	
+	\begin{longtable}{@{}L{3.2cm}L{2.5cm}L{10.0cm}@{}}
+		\toprule
+		\textbf{Symbole} & \textbf{Unité} & \textbf{Signification}\\
+		\midrule
+		$\mathcal F_E$ & -- & Repère Terre local NED.\\
+		$\mathcal F_B$ & -- & Repère corps, origine au centre de masse.\\
+		$\vect p_E$ & \si{m} & Position du centre de masse exprimée dans $\mathcal F_E$.\\
+		$\vect v_B$, $\vect v_E$ & \si{m.s^{-1}} & Vitesse de translation exprimée respectivement dans $\mathcal F_B$ et $\mathcal F_E$.\\
+		$\vect\omega_B=[p\ q\ r]\trans$ & \si{rad.s^{-1}} & Vitesse angulaire du corps exprimée dans $\mathcal F_B$.\\
+		$\vect q_{EB}=[q_x\ q_y\ q_z\ q_w]\trans$ & -- & Quaternion unitaire corps-vers-Terre, scalaire en dernière position.\\
+		$\mat C_{EB}$, $\mat C_{BE}$ & -- & Matrices de rotation corps-vers-Terre et Terre-vers-corps.\\
+		$\mat J_B$ & \si{kg.m^2} & Tenseur d'inertie au centre de masse, exprimé dans $\mathcal F_B$.\\
+		$m$ & \si{kg} & Masse du véhicule.\\
+		$\vect f_B$ & \si{N} & Somme des forces non gravitationnelles exprimées dans $\mathcal F_B$.\\
+		$\vect\tau_B$ & \si{N.m} & Somme des moments appliqués au centre de masse, exprimés dans $\mathcal F_B$.\\
+		$\vect w_E$ & \si{m.s^{-1}} & Vitesse du vent exprimée dans $\mathcal F_E$.\\
+		$\vect v_{a,B}$ & \si{m.s^{-1}} & Vitesse relative à l'air exprimée dans $\mathcal F_B$.\\
+		$\omega_i$ & \si{rad.s^{-1}} & Vitesse angulaire du rotor $i$.\\
+		$t_i$ & \si{N} & Poussée positive produite par le rotor $i$.\\
+		$q_i$ & \si{N.m} & Amplitude du couple réactif du rotor $i$.\\
+		$k_{t,0}$, $k_{q,0}$ & unités dimensionnelles & Coefficients quadratiques de poussée et de couple identifiés à $\rho_0$.\\
+		$c_{t,0}$, $c_{q,0}$ & -- & Coefficients aérodynamiques sans dimension à $\rho_0$.\\
+		$\vect x$, $\vect y$ & variables & Vecteur d'état et vecteur de mesure de l'estimateur.\\
+		$\mat P$, $\mat Q$, $\mat R$ & variables & Covariance d'estimation, covariance du procédé et covariance de mesure.\\
+		$\vect e$ & variable & Erreur définie par la grandeur de référence moins la grandeur observée, sauf indication contraire.\\
+		\bottomrule
+	\end{longtable}
+	
+	\section*{Opérateurs}
+	\addcontentsline{toc}{section}{Opérateurs}
+	Les opérateurs mathématiques employés dans les équations sont définis ci-dessous.
+	
+	\vspace{3mm}
+	\begin{tabbing}
+		\hspace{4cm} \= \kill
+		$\crossmat{\vect a}$ \> Matrice antisymétrique telle que $\crossmat{\vect a}\vect b=\vect a\times\vect b$.\\
+		$(\cdot)\trans$ \> Transposée.\\
+		$(\cdot)^{-1}$ \> Inverse, lorsqu'elle existe.\\
+		$(\cdot)^{\dagger}$ \> Pseudo-inverse de Moore--Penrose.\\
+		$\diag(\cdot)$ \> Matrice diagonale.\\
+		$\norm{\cdot}$ \> Norme euclidienne.\\
+		$\sat_{[a,b]}(\cdot)$ \> Saturation entre les bornes scalaires ou vectorielles $a$ et $b$.\\
+		$\E[\cdot]$ \> Espérance mathématique.\\
+		$\had$ \> Produit de Hadamard.\\
+	\end{tabbing}
+	
+	\clearpage
+	\pagenumbering{arabic}
+	
+	% ================================================================
+	\chapter{Introduction}
+	\label{chap_introduction}
+	
+	Les multicoptères combinent une dynamique non linéaire, un couplage rotation--translation et une autorité de commande limitée par les actionneurs. Un modèle utile à la conception de lois de commande doit donc conserver les conventions de repères, les limites de propulsion, les dynamiques électriques et mécaniques, les erreurs de mesure ainsi que les perturbations atmosphériques. La formulation générale suit les équations de Newton--Euler appliquées aux multirotors \cite{Mahony2012,Quan2017}, tandis que les paramètres spécifiques du véhicule sont issus du modèle identifié du DJI Matrice 600 Pro et des données constructeur effectivement retenues \cite{BauerNagy2024,DJI_M600_2018}.
+	
+	Le rapport décrit les modèles et les critères avant de réserver une partie distincte aux résultats, à leur interprétation et aux conclusions. Il ne calcule aucune performance du véhicule à partir de valeurs incomplètes.
+	
+	\section{Objectif}
+	
+	L'objectif de cette étude est de mettre en place un simulateur haute fidélité permettant de représenter aussi précisément que possible la dynamique de vol d'un hexacoptère ainsi que les effets des perturbations sur ses performances. Grâce à la précision de la modélisation de la dynamique et des perturbations, limitées dans cette étude au vent et aux imperfections des capteurs, les contrôleurs développés sur cette plateforme devraient conduire à des performances comparables en simulation et en expérimentation. Ainsi, le modèle haute fidélité présenté ici devrait accélérer le développement et les essais des contrôleurs sans nécessiter leur implantation immédiate sur l'hexacoptère physique, ce qui réduit les risques de bris matériel et les risques pour la sécurité pendant les essais en vol.
+	
+	
+	
+	\section{Périmètre du modèle}
+	La configuration étudiée est un hexacoptère symétrique à rotors coplanaires et à pas fixe. Chaque rotor est représenté par une poussée axiale et un couple réactif quadratiques en vitesse de rotation. La cellule est assimilée à un corps rigide.
+	
+	Les effets de sol, l'effet de plafond, l'interaction avec les parois, les interférences aérodynamiques entre rotors et la déformation structurale ne sont pas pris en compte dans la version documentée. En conséquence, le domaine de validité doit exclure les configurations où la distance à une surface ou le recouvrement des sillages modifie sensiblement la poussée, le couple ou les efforts latéraux. Cette exclusion est une limite du modèle, et non une affirmation de négligeabilité physique ou une affirmation que les contrôleurs développés avec ce modèle seraient incapables d'asservir l'hexacoptère proche du sol, plafond ou des parois.
+	
+	\section{Organisation de la procédure}
+	La procédure est organisée suivant la chaîne causale de la simulation : définition du véhicule, dynamique et propulsion, environnement, mesure, estimation, guidage, commande et validation. Les sous-modèles ont été encapsulés dans des objets \texttt{matlab.System} compatibles avec l'intégration Simulink et la génération de code. Cette décision d'architecture est mentionnée uniquement pour préciser la reproductibilité logicielle; les chapitres suivants décrivent la méthode physique et algorithmique, non l'organisation interne du code.
+	
+	\placeholderfigure[0.25\textheight]{figures/architecture_generale}{Architecture fonctionnelle du simulateur. Le schéma doit montrer les consignes de trajectoire, le guidage, la commande INDI, l'allocation, les actionneurs, la dynamique du véhicule, l'environnement, les capteurs, l'EKF et l'observateur des couples perturbateurs.}
+	
+	% ================================================================
+	\chapter{Configuration du véhicule et hypothèses}
+	\label{chap_configuration}
+	
+	La configuration géométrique détermine le bras de levier des poussées individuelles et la matrice d'allocation. Les paramètres de masse et d'inertie fixent directement la réponse aux efforts. Deux états de chargement sont conservés afin de permettre l'étude ultérieure d'une variation de charge utile sans modifier la structure des équations.
+	
+	\section{Géométrie et ordre des rotors}
+	La géométrie de la cellule, l'ordre d'indexation et le sens de rotation des rotors définissent les bras de levier et les signes utilisés dans la matrice d'allocation.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres géométriques de la configuration de référence.}
+		\label{tab_geometrie}
+		\begin{tabularx}{\textwidth}{@{}L{4.0cm}L{3.0cm}L{2.2cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Origine ou rôle}\\
+			\midrule
+			Nombre de rotors $n_r$ & \num{6} & -- & Configuration hexacoptère.\\
+			Longueur de bras $l$ & \num{0.60285} & \si{m} & Centre de masse vers axe moteur.\\
+			Rayon de rotor $r_p$ & \num{0.2665} & \si{m} & Géométrie de l'hélice.\\
+			Aire de disque $a_p$ & $\pi(\num{0.2665})^2$ & \si{m^2} & Aire balayée par un rotor.\\
+			Empattement diagonal $d$ & \num{1.133} & \si{m} & Dimension de référence constructeur.\\
+			Ordre des rotors & LB, LF, LS, RB, RF, RS & -- & Ordre utilisé dans les vecteurs et matrices d'allocation.\\
+			Angles $\alpha_i$ & $[300,60,180,240,120,0]\trans$ & \si{\degree} & Mesurés depuis $x_B$ dans le plan des rotors.\\
+			Sens $s_i$ & $[-1,-1,+1,+1,+1,-1]\trans$ & -- & Signe du couple réactif de lacet dans l'ordre retenu.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	Les valeurs de la \cref{tab_geometrie} sont celles du modèle identifié du véhicule de référence \cite{BauerNagy2024}.
+	
+	\placeholderfigure[0.25\textheight]{figures/configuration_rotors}{Vue de dessus de la configuration. La figure doit identifier $x_B$, $y_B$, les angles $\alpha_i$, l'ordre LB--LF--LS--RB--RF--RS et le signe de rotation de chaque rotor.}
+	
+	\section{Masse et inertie}
+	La masse et le tenseur d'inertie déterminent directement les accélérations de translation et de rotation produites par les efforts appliqués au véhicule.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres de masse pour les deux états de chargement.}
+		\label{tab_masses}
+		\begin{tabularx}{\textwidth}{@{}L{5.7cm}L{3.0cm}L{2.2cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Remarque}\\
+			\midrule
+			Masse sans charge utile & \num{10.040} & \si{kg} & Cellule avec batteries TB48S.\\
+			Masse avec charge utile & \num{11.665} & \si{kg} & Configuration chargée.\\
+			Masse de charge utile & \num{1.625} & \si{kg} & Différence des deux configurations.\\
+			Marge de masse de commande & \num{0.1} & \si{kg} & Marge de configuration du contrôleur.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Composantes indépendantes des tenseurs d'inertie exprimés dans le repère corps.}
+		\label{tab_inerties}
+		\small
+		\begin{tabular}{@{}lrrrrrrl@{}}
+			\toprule
+			\textbf{Configuration} & $j_{xx}$ & $j_{yy}$ & $j_{zz}$ & $j_{xy}$ & $j_{xz}$ & $j_{yz}$ & \textbf{Unité}\\
+			\midrule
+			Sans charge utile & 0.6949 & 0.6026 & 1.2860 & 0 & 0 & 0 & \si{kg.m^2}\\
+			Avec charge utile & 0.7456 & 0.6582 & 1.2980 & $-1.376109\!\times\!10^{-4}$ & $-8.849862\!\times\!10^{-4}$ & $1.216184\!\times\!10^{-4}$ & \si{kg.m^2}\\
+			\bottomrule
+		\end{tabular}
+	\end{table}
+	Le tenseur plein est conservé dans les équations. Cette précaution évite d'annuler artificiellement les produits d'inertie de la configuration chargée.
+	
+	\section{Hypothèses de validité}
+	Les hypothèses retenues délimitent le domaine dans lequel les résultats du simulateur peuvent être interprétés quantitativement.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Hypothèses et exclusions du modèle.}
+		\label{tab_hypotheses}
+		\begin{tabularx}{\textwidth}{@{}L{4.1cm}Y L{3.2cm}@{}}
+			\toprule
+			\textbf{Élément} & \textbf{Hypothèse adoptée} & \textbf{Conséquence}\\
+			\midrule
+			Cellule & Corps rigide à masse et inertie constantes pendant un scénario. & Pas de modes flexibles ni de déplacement de charge.\\
+			Rotors & Disques coplanaires, axes fixes, pas fixe. & La commande agit par variation de vitesse.\\
+			Interactions rotor--rotor & Non modélisées. & Les poussées individuelles sont additionnées indépendamment.\\
+			Effets de proximité & Effet de sol, de plafond et de paroi non modélisés. & Les essais proches de surfaces sortent du domaine de validation.\\
+			Atmosphère & Air sec parfait; couche troposphérique utilisée. & L'humidité et les inversions thermiques ne sont pas représentées.\\
+			Vent turbulent & Champ ponctuel appliqué au centre de masse. & Les gradients spatiaux sur l'envergure ne sont pas représentés.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	% ================================================================
+	\chapter{Modèle dynamique et propulsion}
+	\label{chap_dynamique}
+	Pour modéliser la dynamique de l'hexacoptère, deux référentiels sont utilisés : le référentiel corps, appelé \textit{Body}, et le référentiel inertiel, appelé \textit{Earth}.
+	Les vecteurs exprimés dans ces référentiels sont respectivement notés avec les indices $(\cdot)_B$ et $(\cdot)_E$. Le référentiel corps est lié au véhicule. Les équations de la dynamique y sont plus simples, puisqu'il constitue le référentiel naturel de l'hexacoptère.
+	Le référentiel inertiel est lié à la Terre. Il est essentiel au guidage, car les missions sont planifiées à partir de positions terrestres. La convention adoptée est le repère NED (\textit{North--East--Down}), dont les axes sont orientés vers le nord, l'est et le bas. La rotation de la Terre est négligée en raison de la durée et de la portée limitées des missions considérées. 
+	
+	
+	
+	La dynamique est formulée de manière à conserver la vitesse de translation dans le repère corps. Ce choix rend explicites le terme de transport $\vect\omega_B\times\vect v_B$ et l'application des forces aérodynamiques et propulsives dans leur repère naturel. La position demeure exprimée dans le repère Terre NED.
+	
+	
+	
+	\section{Dynamique de rotation}
+	La dynamique de rotation du véhicule, exprimée dans le repère corps
+	\(\mathcal{f}_B\), est décrite par l'équation d'Euler du corps rigide :
+	\begin{equation}
+		\mathbf{J}_B \dot{\boldsymbol{\omega}}_B
+		= -\crossmat{\vect\omega_B}
+		\mathbf{J}_B
+		\boldsymbol{\omega}_B
+		+
+		\boldsymbol{\tau}_B,
+		\label{eq_rotational_dynamics_general}
+	\end{equation}
+	où
+	\(\mathbf{J}_B \in \mathbb{R}^{3\times3}\) est la matrice d'inertie du véhicule
+	exprimée dans le repère corps,
+	\(\boldsymbol{\omega}_B =
+	\begin{bmatrix}
+		p & q & r
+	\end{bmatrix}^{\top}\)
+	est le vecteur des vitesses angulaires du corps,
+	\(\dot{\boldsymbol{\omega}}_B\) est le vecteur des accélérations angulaires,
+	\(\boldsymbol{\omega}_B^{\times}\) est la matrice antisymétrique associée au
+	produit vectoriel, et
+	\(\boldsymbol{\tau}_B =
+	\begin{bmatrix}
+		\tau_{x,B} & \tau_{y,B} & \tau_{z,B}
+	\end{bmatrix}^{\top}\)
+	regroupe les couples extérieurs appliqués au véhicule.
+	La matrice antisymétrique est définie par
+	\begin{equation}
+		\crossmat{\vect\omega_B}
+		=
+		\begin{bmatrix}
+			0 & -r & q\\
+			r & 0 & -p\\
+			-q & p & 0
+		\end{bmatrix}.
+		\label{eq_skew_omega}
+	\end{equation}
+	L'accélération angulaire s'écrit alors :
+	\begin{equation}
+		\dot{\boldsymbol{\omega}}_B
+		=
+		\mathbf{J}_B^{-1}
+		\left(
+		-\crossmat{\vect\omega_B}
+		\mathbf{J}_B
+		\boldsymbol{\omega}_B
+		+
+		\boldsymbol{\tau}_B
+		\right).
+		\label{eq_angular_acceleration}
+	\end{equation}
+	
+	\subsection{Cinématique d'orientation}
+	La cinématique d'orientation relie les vitesses angulaires exprimées dans le repère corps à l'évolution de l'attitude du véhicule.
+	
+	\subsubsection{Représentation des angles d'Euler}
+	La relation classique entre les vitesses angulaires du corps et les dérivées des angles d'Euler peut s'écrire sous la forme
+	\begin{equation}
+		\begin{bmatrix}
+			\dot{\phi}\\
+			\dot{\theta}\\
+			\dot{\psi}
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			1 & \sin\phi\,\tan\theta & \cos\phi\,\tan\theta\\
+			0 & \cos\phi & -\sin\phi\\
+			0 & \dfrac{\sin\phi}{\cos\theta} & \dfrac{\cos\phi}{\cos\theta}
+		\end{bmatrix}
+		\begin{bmatrix}
+			p\\
+			q\\
+			r
+		\end{bmatrix}.
+		\label{eq_euler_kinematics}
+	\end{equation}
+	Cette représentation présente toutefois une singularité cinématique lorsque \(\cos\theta=0\), c'est-à-dire pour \(\theta=\pm\pi/2\). Pour éviter cette singularité, l'orientation du véhicule est propagée dans le simulateur au moyen du quaternion unitaire \(\mathbf{q}_{EB}\), tandis que les angles d'Euler sont uniquement calculés lorsque leur interprétation est requise.
+	
+	\subsubsection{Représentation du quaternion}
+	Le quaternion
+	\begin{equation}
+		\mathbf{q}_{EB}
+		=
+		\begin{bmatrix}
+			q_x & q_y & q_z & q_w
+		\end{bmatrix}^{\top}
+		=
+		\begin{bmatrix}
+			\mathbf{q}_v^{\top} & q_w
+		\end{bmatrix}^{\top}
+	\end{equation}
+	décrit l'orientation du repère corps \(\mathcal{f}_B\) relativement au repère Terre \(\mathcal{f}_E\). La convention utilisée place la composante scalaire \(q_w\) en dernière position. Pour une vitesse angulaire du corps
+	\(\boldsymbol{\omega}_B=\begin{bmatrix}p&q&r\end{bmatrix}^{\top}\), la cinématique du quaternion est donnée par
+	\begin{equation}
+		\dot{\mathbf{q}}_{EB}
+		=
+		\frac{1}{2}
+		\begin{bmatrix}
+			q_w\,\mathbf{I}_3+\mathbf{q}_v^{\times}\\
+			-\mathbf{q}_v^{\top}
+		\end{bmatrix}
+		\boldsymbol{\omega}_B.
+		\label{eq_quaternion_kinematics_compact}
+	\end{equation}
+	La matrice antisymétrique associée à la partie vectorielle du quaternion est
+	\begin{equation}
+		\crossmat{\vect q}
+		=
+		\begin{bmatrix}
+			0 & -q_z & q_y\\
+			q_z & 0 & -q_x\\
+			-q_y & q_x & 0
+		\end{bmatrix}.
+		\label{eq_quaternion_vector_skew}
+	\end{equation}
+	Sous forme développée, la dynamique du quaternion devient
+	\begin{equation}
+		\begin{bmatrix}
+			\dot{q}_x\\
+			\dot{q}_y\\
+			\dot{q}_z\\
+			\dot{q}_w
+		\end{bmatrix}
+		=
+		\frac{1}{2}
+		\begin{bmatrix}
+			q_w & -q_z & q_y\\
+			q_z & q_w & -q_x\\
+			-q_y & q_x & q_w\\
+			-q_x & -q_y & -q_z
+		\end{bmatrix}
+		\begin{bmatrix}
+			p\\
+			q\\
+			r
+		\end{bmatrix}.
+		\label{eq_quaternion_kinematics}
+	\end{equation}
+	Le quaternion doit satisfaire la contrainte d'unité
+	\begin{equation}
+		\left\lVert\mathbf{q}_{EB}\right\rVert
+		=
+		\sqrt{q_x^2+q_y^2+q_z^2+q_w^2}
+		=
+		1.
+		\label{eq_quaternion_unit_constraint}
+	\end{equation}
+	Afin de limiter la dérive numérique produite par l'intégration, le quaternion est renormalisé après intégration selon
+	\begin{equation}
+		\mathbf{q}_{EB}
+		\leftarrow
+		\frac{\mathbf{q}_{EB}}
+		{\left\lVert\mathbf{q}_{EB}\right\rVert}.
+		\label{eq_quaternion_normalization}
+	\end{equation}
+	
+	\subsection{Décomposition des couples appliqués}
+	Le vecteur des couples appliqués au véhicule est décomposé selon :
+	\begin{equation}
+		\boldsymbol{\tau}_B=\boldsymbol{\tau}_{prop,B}+\boldsymbol{\tau}_{gyro,B}+\boldsymbol{\tau}_{aero,B}+\boldsymbol{\tau}_{dist,B}.
+		\label{eq_torque_decomposition}
+	\end{equation}
+	Le terme \(\boldsymbol{\tau}_{prop,B}\) regroupe les moments produits par les poussées et les couples réactifs des six rotors, \(\boldsymbol{\tau}_{gyro,B}\) représente les effets gyroscopiques des ensembles rotor--hélice, \(\boldsymbol{\tau}_{aero,B}\) contient les moments d'amortissement aérodynamique et \(\boldsymbol{\tau}_{dist,B}\) regroupe les couples perturbateurs non modélisés.
+	
+	\paragraph{Couple de roulis}
+	Le couple de roulis combine l'effet gyroscopique des rotors, les moments des poussées, la dépendance de la poussée à la vitesse d'air verticale et l'amortissement aérodynamique :
+	\begin{align}
+		\tau_{x,B}={}&-q\,J_r\left(\Omega_{LB}+\Omega_{LF}-\Omega_{LS}-\Omega_{RB}-\Omega_{RF}+\Omega_{RS}\right)\nonumber\\
+		&+c_{T0}\,\rho\,A\,R^2\,\frac{l}{2}\left(\Omega_{LB}^2+\Omega_{LF}^2+2\,\Omega_{LS}^2-\Omega_{RB}^2-\Omega_{RF}^2-2\,\Omega_{RS}^2\right)\nonumber\\
+		&+\frac{k_c(v_{a,z})}{100}\,v_{a,z}\,\rho\,A\,R\,\frac{l}{2}\left(\Omega_{LB}+\Omega_{LF}+2\,\Omega_{LS}-\Omega_{RB}-\Omega_{RF}-2\,\Omega_{RS}\right)-k_{\omega,x}\,p\,|p|.
+		\label{eq_roll_torque}
+	\end{align}
+	Le paramètre \(J_r\) est l'inertie équivalente d'un ensemble rotor--hélice, \(l\) est la distance entre le centre de gravité et l'axe du rotor et \(k_{\omega,x}\) est le coefficient d'amortissement aérodynamique en roulis.
+	
+	\paragraph{Couple de tangage}
+	Le couple de tangage est modélisé par :
+	\begin{align}
+		\tau_{y,B}={}&p\,J_r\left(\Omega_{LB}+\Omega_{LF}-\Omega_{LS}-\Omega_{RB}-\Omega_{RF}+\Omega_{RS}\right)\nonumber\\
+		&+c_{T0}\,\rho\,A\,R^2\,\frac{\sqrt{3}\,l}{2}\left(-\Omega_{LB}^2+\Omega_{LF}^2-\Omega_{RB}^2+\Omega_{RF}^2\right)\nonumber\\
+		&+\frac{k_c(v_{a,z})}{100}\,v_{a,z}\,\rho\,A\,R\,\frac{\sqrt{3}\,l}{2}\left(-\Omega_{LB}+\Omega_{LF}-\Omega_{RB}+\Omega_{RF}\right)-k_{\omega,y}\,q\,|q|.
+		\label{eq_pitch_torque}
+	\end{align}
+	Le coefficient \(k_{\omega,y}\) représente l'amortissement aérodynamique en tangage.
+	
+	\paragraph{Couple de lacet}
+	Le couple de lacet résulte principalement des couples réactifs des hélices, de leur dépendance à la vitesse d'air verticale et de l'amortissement aérodynamique en lacet :
+	\begin{align}
+		\tau_{z,B}={}&\frac{c_{P0}}{100}\,\rho\,A\,R^3\left(-\Omega_{LB}^2-\Omega_{LF}^2+\Omega_{LS}^2+\Omega_{RB}^2+\Omega_{RF}^2-\Omega_{RS}^2\right)\nonumber\\
+		&+k_P\,\rho\,A\,v_{a,z}\,R^2\left(-\Omega_{LB}-\Omega_{LF}+\Omega_{LS}+\Omega_{RB}+\Omega_{RF}-\Omega_{RS}\right)-k_{\omega,z}\,r\,|r|.
+		\label{eq_yaw_torque}
+	\end{align}
+	Le coefficient \(c_{P0}\) est le coefficient de puissance en vol stationnaire, \(k_P\) caractérise sa variation avec la vitesse d'air verticale et \(k_{\omega,z}\) est le coefficient d'amortissement en lacet.
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	Le bilan des moments au centre de masse s'écrit
+	\begin{equation}
+		\mat J_B\dot{\vect\omega}_B=-\crossmat{\vect\omega_B}\mat J_B\vect\omega_B+\vect\tau_B.
+		\label{eq_rotation_dynamics}
+	\end{equation}
+	Le moment total est décomposé suivant
+	\begin{equation}
+		\vect\tau_B=\vect\tau_{p,B}+\vect\tau_{g,B}+\vect\tau_{a,B}+\vect d_{\tau,B},
+		\label{eq_torque_decomposition}
+	\end{equation}
+	où les indices désignent respectivement la propulsion, l'effet gyroscopique des rotors, l'aérodynamique et les perturbations non modélisées.
+	
+	Lorsque l'effet gyroscopique est considéré, la contribution des rotors est décrite par
+	\begin{equation}
+		\vect\tau_{g,B}=\sum_{i=1}^{n_r}j_r s_i\omega_i\left(\vect\omega_B\times\vect e_{z,B}\right).
+		\label{eq_gyro_torque}
+	\end{equation}
+	La valeur de $j_r$ est regroupée avec les paramètres de propulsion dans la \cref{tab_propulsion}.
+	
+	\section{Dynamique de translation}
+	
+	La dynamique de translation du centre de masse, exprimée dans le repère corps \(\mathcal{f}_B\), est donnée par :
+	\begin{equation}
+		m\,\dot{\mathbf{v}}_B= -\boldsymbol{\omega_B} \times m\mathbf{v}_B\,+ m\,\mathbf{g}_B+ \,\mathbf{f}_B.
+		\label{eq_translational_dynamics_earth}
+	\end{equation}
+	
+	
+	
+	Le terme \(-m\,\boldsymbol{\omega}_B^{\times}\,\mathbf{v}_B\) représente le couplage cinématique produit par la rotation du repère corps. Dans l'\cref{eq_translational_dynamics_earth}, \(m\) est la masse totale du véhicule, \(\mathbf{v}_E\) est la vitesse du centre de masse exprimée dans le repère Terre, \(\dot{\mathbf{v}}_E\) est son accélération,
+	\(\mathbf{g}_B\) est l'accélération de la gravité dans le repère corps et \(\mathbf{f}_B\) est la somme des forces non gravitationnelles exprimées dans le repère corps.
+	L'\cref{eq_translational_dynamics_earth} peut être développée comme :
+	
+	\begin{equation}
+		\begin{bmatrix}
+			\dot{u}\\
+			\dot{v}\\
+			\dot{w}
+		\end{bmatrix}
+		=
+		\begin{bmatrix}
+			r\,v-q\,w\\
+			p\,w-r\,u\\
+			q\,u-p\,v
+		\end{bmatrix}
+		+\mathbf{g}_B+\frac{1}{m}
+		\begin{bmatrix}
+			f_{x,B}\\
+			f_{y,B}\\
+			f_{z,B}
+		\end{bmatrix}.
+		\label{eq_translational_dynamics_body_expanded}
+	\end{equation}
+	
+	L'expression de la gravité dans le repère corps est obtenue en transformant le vecteur gravité du repère Terre vers le repère corps, comme indiqué à la \cref{eq_gravity_body} : 
+	\begin{equation}
+		\mathbf{g}_B=\mathbf{C}_{BE}\,\mathbf{g}_E.
+		\label{eq_gravity_body}
+	\end{equation}
+	
+	avec \(\mathbf{g}_E = [0\, 0\, g]^T\) où g est l'accélération de la gravité et \(\mathbf{C}_{BE}\) la matrice de rotation Terre vers corps donnée par l'\cref{eq_earth_to_body_matrix}.
+	
+	\begin{equation}
+		\mathbf{C}_{BE}
+		=
+		\begin{bmatrix}
+			1-2\left(q_y^2+q_z^2\right) &
+			2\left(q_xq_y+q_wq_z\right) &
+			2\left(q_xq_z-q_wq_y\right)
+			\\
+			2\left(q_xq_y-q_wq_z\right) &
+			1-2\left(q_x^2+q_z^2\right) &
+			2\left(q_yq_z+q_wq_x\right)
+			\\
+			2\left(q_xq_z+q_wq_y\right) &
+			2\left(q_yq_z-q_wq_x\right) &
+			1-2\left(q_x^2+q_y^2\right)
+		\end{bmatrix}.
+		\label{eq_earth_to_body_matrix}
+	\end{equation}
+	
+	La matrice de rotation du repère Terre vers le repère corps de la \cref{eq_earth_to_body_matrix} peut également être obtenue à partir des angles d'Euler, comme indiqué à la \cref{eq_earth_to_body_matrix_euler}.
+	
+	\begin{equation}
+		\mathbf{C}_{EB}
+		=
+		\begin{bmatrix}
+			\cos\theta\cos\psi
+			&
+			\cos\theta\sin\psi
+			&
+			-\sin\theta
+			\\
+			\sin\phi\sin\theta\cos\psi-\cos\phi\sin\psi
+			&
+			\sin\phi\sin\theta\sin\psi+\cos\phi\cos\psi
+			&
+			\sin\phi\cos\theta
+			\\
+			\cos\phi\sin\theta\cos\psi+\sin\phi\sin\psi
+			&
+			\cos\phi\sin\theta\sin\psi-\sin\phi\cos\psi
+			&
+			\cos\phi\cos\theta
+		\end{bmatrix}
+		\label{eq_earth_to_body_matrix_euler}
+	\end{equation}
+	
+	
+	
+	La transformation inverse, du repère corps vers le repère Terre, est obtenue par transposition :
+	\begin{equation}
+		\mathbf{C}_{EB}
+		=
+		\mathbf{C}_{BE}^{\top},
+		\qquad
+		\mathbf{v}_E
+		=
+		\mathbf{C}_{EB}\,\mathbf{v}_B.
+		\label{eq_body_to_earth_matrix}
+	\end{equation}
+	
+	
+	La cinématique de la position est alors obtenue à partir de la vitesse linéaire de l'hexacoptère donnée par l'\cref{eq_translational_dynamics_body_expanded} 
+	
+	
+	\begin{equation}
+		\begin{bmatrix}
+			\dot{N}\\
+			\dot{E}\\
+			\dot{D}
+		\end{bmatrix}
+		=
+		\mathbf{C}_{BE}
+		\begin{bmatrix}
+			u\\
+			v\\
+			w
+		\end{bmatrix}
+	\end{equation}
+	
+	
+	
+	
+	%----------------------------------------------------------------------------------------------------------- 
+	\subsection{Décomposition des forces appliquées}
+	Le vecteur des forces exprimées dans le repère corps est décomposé selon :
+	\begin{equation}
+		\mathbf{f}_B=\mathbf{f}_{prop,B}+\mathbf{f}_{aero,B}+\mathbf{f}_{dist,B}.
+		\label{eq_force_decomposition}
+	\end{equation}
+	Le terme \(\mathbf{f}_{prop,B}\) représente les forces produites par les rotors, \(\mathbf{f}_{aero,B}\) regroupe les forces aérodynamiques associées au mouvement relatif dans l'air et \(\mathbf{f}_{dist,B}\) représente les forces perturbatrices externes ou non modélisées.
+	Les forces aérodynamiques sont déterminées à partir de la vitesse du véhicule relativement à la masse d'air. Dans le repère Terre, la vitesse d'air relative est :
+	\begin{equation}
+		\mathbf{v}_{a,E}=\mathbf{v}_E-\mathbf{w}_E.
+		\label{eq_relative_air_velocity_earth}
+	\end{equation}
+	où \(\mathbf{w}_E=\begin{bmatrix}w_N&w_E&w_D\end{bmatrix}^{\top}\) est le vecteur de vitesse du vent exprimé dans le repère Terre. La vitesse d'air relative exprimée dans le repère corps est ensuite :
+	\begin{equation}
+		\mathbf{v}_{a,B}=\mathbf{C}_{BE}\,\mathbf{v}_{a,E}=
+		\begin{bmatrix}
+			v_{a,x}\\
+			v_{a,y}\\
+			v_{a,z}
+		\end{bmatrix}.
+		\label{eq_relative_air_velocity_body}
+	\end{equation}
+	
+	
+	
+	
+	\paragraph{Forces aérodynamiques horizontales}
+	Les forces longitudinales et latérales sont représentées par la somme d'une force aérodynamique de moyeu dépendant de la vitesse des rotors et d'une force de traînée quadratique :
+	\begin{align}
+		f_{x,B}&=-\frac{k_{h,x}}{100}\,\rho\,A\,R\,v_{a,x}\sum_{i=1}^{6}\Omega_i-k_x\,v_{a,x}\,|v_{a,x}|,\label{eq_longitudinal_aero_force}\\
+		f_{y,B}&=-\frac{k_{h,y}}{100}\,\rho\,A\,R\,v_{a,y}\sum_{i=1}^{6}\Omega_i-k_y\,v_{a,y}\,|v_{a,y}|.\label{eq_lateral_aero_force}
+	\end{align}
+	Les paramètres \(k_{h,x}\) et \(k_{h,y}\) caractérisent les forces de moyeu, tandis que \(k_x\) et \(k_y\) représentent les coefficients équivalents de traînée quadratique selon les axes \(x_B\) et \(y_B\). L'utilisation de la vitesse d'air relative permet d'intégrer explicitement l'intensité et l'orientation du vent.
+	
+	\paragraph{Force propulsive verticale}
+	La force verticale produite par les six rotors, incluant la variation de poussée avec la vitesse d'air axiale, est donnée par :
+	\begin{equation}
+		f_{z,B}=-c_{T0}\,\rho\,A\,R^2\sum_{i=1}^{6}\Omega_i^2-\frac{k_c(v_{a,z})}{100}\,v_{a,z}\,\rho\,A\,R\sum_{i=1}^{6}\Omega_i.
+		\label{eq_vertical_body_force}
+	\end{equation}
+	Le premier terme représente la poussée nominale produite par les six rotors. Le second terme représente la modification de la poussée causée par la vitesse d'air verticale pendant la montée, la descente ou un vol incliné.
+	
+	\paragraph{Coefficient de poussée dépendant de la vitesse d'air verticale}
+	Dans le modèle identifié du DJI M600 Pro, Bauer et Nagy ont retenu la relation symétrique :
+	\begin{equation}
+		k_c(v_{a,z})=0.0243\,v_{a,z}^{2}+2.8851.
+		\label{eq_vertical_thrust_coefficient}
+	\end{equation}
+	Cette relation a été obtenue à partir de données de vol du DJI M600 Pro et ne constitue pas un modèle universel de rotor. Les coefficients doivent être réidentifiés pour une autre combinaison moteur--hélice ou une autre géométrie de véhicule.
+	
+	
+	
+	
+	
+	Les coefficients associés sont spécifiques au véhicule identifié et ne doivent pas être transférés sans réidentification \cite{BauerNagy2024}.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres aérodynamiques identifiés pour les efforts et moments du corps.}
+		\label{tab_aero_coefficients}
+		\begin{tabularx}{\textwidth}{@{}L{3.5cm}L{3.0cm}L{2.3cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Rôle}\\
+			\midrule
+			$k_{h,x}$ & \num{0.94} & -- & Force de moyeu selon $x_B$.\\
+			$k_{h,y}$ & \num{0.7641} & -- & Force de moyeu selon $y_B$.\\
+			$k_x$ & \num{0.072} & cohérente au modèle & Traînée quadratique selon $x_B$.\\
+			$k_y$ & \num{0.0663} & cohérente au modèle & Traînée quadratique selon $y_B$.\\
+			$k_p$ & \num{10} & cohérente au modèle & Amortissement aérodynamique en roulis.\\
+			$k_q$ & \num{10} & cohérente au modèle & Amortissement aérodynamique en tangage.\\
+			$k_r$ & \num{0.3542} & cohérente au modèle & Amortissement aérodynamique en lacet.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	Les unités exactes des coefficients de traînée dépendent de la forme normalisée retenue lors de l'identification. Elles doivent être conservées avec l'équation et non interprétées comme des coefficients aérodynamiques classiques sans dimension.
+	
+	\section{Poussée, couple et allocation}
+	Pour un rotor isolé, la représentation dimensionnelle est
+	\begin{equation}
+		t_i=k_t(\rho)\omega_i^2,
+		\qquad
+		q_i=k_q(\rho)\omega_i^2,
+		\label{eq_rotor_dimensional}
+	\end{equation}
+	avec
+	\begin{equation}
+		k_t(\rho)=k_{t,0}\frac{\rho}{\rho_0},
+		\qquad
+		k_q(\rho)=k_{q,0}\frac{\rho}{\rho_0}.
+		\label{eq_density_scaling}
+	\end{equation}
+	La forme sans dimension équivalente est
+	\begin{equation}
+		t_i=c_t\rho a_pr_p^2\omega_i^2,
+		\qquad
+		q_i=c_q\rho a_pr_p^3\omega_i^2.
+		\label{eq_rotor_nondimensional}
+	\end{equation}
+	Cette écriture rend explicite la dépendance à la masse volumique et à la géométrie du rotor \cite{Vu2019}. Les coefficients $k_{t,0}$, $k_{q,0}$, $c_{t,0}$ et $c_{q,0}$ du projet sont définis à la masse volumique de référence $\rho_0$.
+	
+	La correction axiale identifiée est introduite par
+	\begin{equation}
+		k_c(v_{a,z})=k_{c,0}+k_{c,2}v_{a,z}^2,
+		\label{eq_axial_correction}
+	\end{equation}
+	ce qui permet de modifier le coefficient de poussée en fonction de l'écoulement axial. Son domaine de validité reste celui des essais d'identification.
+	
+	La poussée totale agit suivant $-z_B$ :
+	\begin{equation}
+		\vect f_{p,B}=\begin{bmatrix}0&0&-\sum_{i=1}^{n_r}t_i\end{bmatrix}\trans.
+		\label{eq_total_thrust}
+	\end{equation}
+	En regroupant la force axiale et les moments, l'allocation s'écrit
+	\begin{equation}
+		\vect\lambda_B=
+		\begin{bmatrix}f_{p,z}&\tau_{p,x}&\tau_{p,y}&\tau_{p,z}\end{bmatrix}\trans
+		=\rho\mat B_{\omega^2}\left(\vect\omega_r\had\vect\omega_r\right),
+		\label{eq_allocation}
+	\end{equation}
+	où $\vect\omega_r=[\omega_1\ \cdots\ \omega_{n_r}]\trans$ et $\mat B_{\omega^2}$ est construite à partir de $l$, $c_{t,0}$, $c_{q,0}$, des angles $\alpha_i$ et des signes $s_i$.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres de propulsion et limites d'actionnement configurés.}
+		\label{tab_propulsion}
+		\begin{tabularx}{\textwidth}{@{}L{4.2cm}L{3.0cm}L{2.6cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Rôle}\\
+			\midrule
+			$c_{t,0}$ & \num{0.0105} & -- & Coefficient nominal de poussée à $\rho_0$.\\
+			$k_{c,0}$ & \num{2.8851} & -- & Terme constant de correction axiale.\\
+			$k_{c,2}$ & \num{0.0243} & \si{s^2.m^{-2}} & Terme quadratique de correction axiale.\\
+			$c_{p,0}$ & \num{0.2795} & -- & Paramètre de couple réactif utilisé dans l'allocation.\\
+			$\omega_{\mathrm{hov}}$ & \num{283.032} & \si{rad.s^{-1}} & Référence de vitesse rotor en vol stationnaire.\\
+			$\omega_{\min}$ & \num{0} & \si{rad.s^{-1}} & Limite inférieure.\\
+			$\omega_{\max}$ & \num{456.45} & \si{rad.s^{-1}} & Limite supérieure.\\
+			$j_r$ & \num{7e-4} & \si{kg.m^2} & Inertie équivalente rotor--hélice.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	
+	
+	\section{Dynamique ESC--BLDC--hélice}
+	Cette section présente la modélisation de la chaîne de propulsion composée d'un ESC (\english{Electronic Speed Controller}), d'un moteur sans balais à courant continu BLDC (\english{Brushless Direct Current}) et d'une hélice. Cette modélisation permet de simuler une réponse réaliste à une consigne de vitesse en tenant compte de la dynamique transitoire de l'ESC et du moteur, ainsi que de la force et du couple propulsifs produits à partir de la vitesse instantanée du rotor.
+	
+	\begin{equation}
+		v_{c,i}=\sat_{[0,v_{b,i}]}(d_iv_{b,i}).
+		\label{eq_voltage_command}
+	\end{equation}
+	La dynamique de tension de premier ordre est discrétisée exactement :
+	\begin{equation}
+		v_{m,i}[k+1]=a_ev_{m,i}[k]+(1-a_e)v_{c,i}[k],
+		\qquad
+		a_e=\exp\left(-\frac{t_s}{\tau_e}\right).
+		\label{eq_esc_discrete}
+	\end{equation}
+	Le courant moteur suit
+	\begin{equation}
+		i_i[k+1]=a_ii_i[k]+\frac{1-a_i}{r_m}\left(v_{m,i}[k]-k_e\omega_i[k]\right),
+		\qquad
+		a_i=\exp\left(-\frac{r_mt_s}{l_m}\right).
+		\label{eq_current_discrete}
+	\end{equation}
+	Avec $k_e=60/(2\pi k_v)$ en unités SI compatibles, le couple électromagnétique est $k_ei_i$. La dynamique mécanique est
+	\begin{equation}
+		\omega_i[k+1]=a_m\omega_i[k]+\frac{1-a_m}{b_m}\left(k_ei_i[k]-q_i[k]\right),
+		\qquad
+		a_m=\exp\left(-\frac{b_mt_s}{j_m}\right),
+		\label{eq_motor_speed_discrete}
+	\end{equation}
+	avec intégration explicite lorsque $b_m=0$. Le courant et la vitesse sont ensuite saturés.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres électriques et mécaniques de l'actionneur.}
+		\label{tab_actuator_parameters}
+		\begin{tabularx}{\textwidth}{@{}L{4.0cm}L{3.0cm}L{2.7cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Rôle}\\
+			\midrule
+			Constante moteur $k_v$ & \num{100} & \si{\rpm.V^{-1}} & Conversion tension--vitesse à vide.\\
+			Résistance $r_m$ & \num{0.101} & \si{ohm} & Modèle électrique équivalent.\\
+			Inductance $l_m$ & \num{1e-3} & \si{H} & Modèle électrique équivalent.\\
+			Courant maximal $i_{\max}$ & \num{32.4} & \si{A} & Saturation motrice.\\
+			Courant régénératif maximal & \num{10} & \si{A} & Limite lorsque la régénération est autorisée.\\
+			Inertie mécanique $j_m$ & \num{1e-3} & \si{kg.m^2} & Inertie équivalente de la chaîne tournante.\\
+			Frottement visqueux $b_m$ & \num{1e-5} & \si{N.m.s.rad^{-1}} & Perte mécanique linéaire.\\
+			Temps de réponse ESC & \num{0.300} & \si{s} & Temps d'établissement configuré.\\
+			Fréquence de rafraîchissement & \num{400} & \si{Hz} & Mise à jour de commande.\\
+			Diamètre d'hélice & \num{0.533} & \si{m} & Deux fois le rayon du rotor.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\placeholderfigure[0.25\textheight]{figures/chaine_actionnement}{Schéma-blocs de la chaîne d'actionnement : maintien de commande, dynamique ESC, circuit BLDC, dynamique mécanique, saturations, poussée et couple.}
+	
+	% ================================================================
+	\chapter{Atmosphère et perturbations de vent}
+	\label{chap_vent}
+	
+	Le modèle environnemental présenté dans ce chapitre comprend deux parties : le modèle atmosphérique et le modèle de vent. Le modèle atmosphérique influence directement la dynamique du véhicule, tandis que le modèle de vent représente les perturbations extérieures. 
+	
+	\section{Atmosphère standard}
+	\label{sec_atmosphere}
+	
+	Certains paramètres intervenant dans les équations de la dynamique de l'hexacoptère dépendent de l'altitude, notamment la masse volumique de l'air \(\rho(h)\) et l'accélération gravitationnelle \(g(h)\). Au-delà de ces deux paramètres, il est nécessaire de modéliser les variations de la pression atmosphérique \(p(h)\), de la célérité du son \(c(h)\) et de la température \(t(h)\), car ces grandeurs affectent également les données fournies par les capteurs.
+	Le modèle de l'atmosphère type défini par la norme ISO 2533:1975 \cite{ISO2533_1975} sépare l'atmosphère en différentes couches. Les constantes et les paramètres intervenant dans les équations ci-dessous portent donc l'indice \(b\), qui désigne la limite inférieure de la couche dans laquelle le véhicule évolue. Dans cette étude, l'hexacoptère évolue à basse altitude; le modèle utilisé est celui de la troposphère, limitée à une altitude de \(h = 11\,000\,\si{\meter}\), sous l'hypothèse d'un air sec parfait. 
+	
+	%\begin{subequations}
+	%\label{eq_iso_atmosphere}
+	%\begin{align}
+	%t(h)	&= t_b+\beta (h - h_b),\\
+	%p(h)	&= p_b\left(\frac{t(h)}{t_b}\right)^{-g_0/(r_a\beta)},\\
+	%\rho(h)	&= \frac{p(h)}{r_a\, t(h)}\\
+	%c(h)	&= \sqrt{\kappa r_a \, t(h)}\\
+	%g(h)	&= 
+	%\end{align}
+	%\end{subequations}
+	
+	L'accélération gravitationnelle \cref{eq_gravite} diminue avec l'altitude \(h\) avec une diminution d'environ \(0.3452\, \% \) à \(h = 11\,000 \si{\meter}\). 
+	\begin{equation}
+		g(h) = g_0 \, \left(\frac{r}{r + h}\right)^2
+		\label{eq_gravite}
+	\end{equation}
+	%---------------------------------------------------------------
+	où \(g = 9.80665\, \si{\meter \per \second^2} \) est l'accélération de la gravité pour une altitude nulle et \(r = 6\,356\,766\, \si{\meter}\) est le rayon de la terre.
+	
+	La variation de la température exprimée en Kelvin est obtenue par l'\cref{eq_temperature} où \(t_b = 288.15\, \si{\kelvin}\) est la température de référence et \(\beta = -0.0065\, \si{\kelvin \per \meter} \) est le gradient de température.
+	
+	\begin{equation}
+		t(h)	= t_b+\beta (h - h_b)
+		\label{eq_temperature}
+	\end{equation}
+	
+	La pression est donnée par l'\cref{eq_pression} où \(r_a = \) est la constante de gaz spécifique à l'air.
+	%---------------------------------------------------------------
+	\begin{equation}
+		p(h) = p_b\left(\frac{t(h)}{t_b}\right)^{-g_0/(r_a\beta)}
+		\label{eq_pression}
+	\end{equation}
+	
+	%---------------------------------------------------------------
+	La variation de la masse volumique en fonction de l'altitude dépend à la fois de la température, donnée par la \cref{eq_temperature}, et de la pression, donnée par la \cref{eq_pression}. 
+	\begin{equation}
+		\rho(h)	= \frac{p(h)}{r_a\, t(h)}
+		\label{eq_densite}
+	\end{equation}
+	%---------------------------------------------------------------
+	
+	La célérité du son dans l'air, donnée par la \cref{eq_son}, dépend de la température définie par la \cref{eq_temperature}. Dans cette équation, la constante \(\kappa = 1.4\) est le rapport entre la capacité thermique massique de l'air à pression constante et celle à volume constant.
+	\begin{equation}
+		c(h) = \sqrt{\kappa r_a \, t(h)}
+		\label{eq_son}
+	\end{equation}
+	
+	\section{Modèle de perturbation de vent}
+	\label{sec_wind_disturbance_model}
+	
+	Le champ de vent utilisé dans la simulation est décomposé en une composante moyenne, une composante de cisaillement de basse altitude, une rafale discrète et une turbulence continue :
+	\begin{equation}
+		\vect w_E
+		=
+		\vect w_{m,E}
+		+
+		\vect w_{\ell,E}
+		+
+		\vect w_{g,E}
+		+
+		\vect w_{v,E}.
+		\label{eq_wind_sum}
+	\end{equation}
+	Dans cette expression, $\vect w_{m,E}$ est le vent moyen de référence, $\vect w_{\ell,E}$ est l'incrément de vitesse associé au cisaillement logarithmique, $\vect w_{g,E}$ est la rafale discrète et $\vect w_{v,E}$ est la turbulence continue de von Kármán. Toutes ces composantes sont exprimées dans le repère Terre $\mathcal F_E$.
+	
+	Cette décomposition permet de représenter séparément les contributions stationnaires, spatialement variables, transitoires et stochastiques de l'environnement atmosphérique. Les composantes peuvent être activées indépendamment ou superposées afin de construire un scénario combiné. Le MIL-F-8785C prévoit notamment que le cisaillement, la turbulence et les rafales puissent être analysés séparément, tout en recommandant également l'étude de leurs effets cumulés dans une représentation complète de l'environnement \cite{MILF8785C}. Le MIL-HDBK-1797 reprend ces modèles à titre de guide de modélisation et de simulation, et non comme exigences de conformité applicables directement au véhicule étudié \cite{MILHDBK1797}.
+	
+	\subsection{Vent moyen}
+	
+	Le vent moyen est défini par
+	\begin{equation}
+		\vect w_{m,E}
+		=
+		u_r\vect e_w,
+		\label{eq_mean_wind}
+	\end{equation}
+	où $u_r$ est la vitesse moyenne du vent à la hauteur de référence $h_r$ et $\vect e_w\in\mathbb{R}^3$ est un vecteur unitaire définissant la direction du vent dans le repère Terre :
+	\begin{equation}
+		\norm{\vect e_w}_2=1.
+		\label{eq_mean_wind_direction_unit}
+	\end{equation}
+	
+	\subsection{Profil logarithmique de basse altitude}
+	
+	Le cisaillement vertical du vent dans la couche limite atmosphérique est représenté par un profil logarithmique. La vitesse moyenne à l'altitude $h$ est donnée par
+	\begin{equation}
+		u_{\ell}(h)
+		=
+		u_r
+		\frac{\ln\!\left(h/z_0\right)}
+		{\ln\!\left(h_r/z_0\right)},
+		\qquad
+		h>z_0,
+		\label{eq_log_wind_speed}
+	\end{equation}
+	où $z_0$ est la longueur de rugosité aérodynamique du terrain.
+	
+	Comme le vent moyen $\vect w_{m,E}=u_r\vect e_w$ est déjà inclus dans la somme de l'\cref{eq_wind_sum}, la composante logarithmique est définie comme l'incrément par rapport à la vitesse de référence :
+	\begin{equation}
+		\vect w_{\ell,E}(h)
+		=
+		\left[
+		u_{\ell}(h)-u_r
+		\right]\vect e_w.
+		\label{eq_log_wind_increment}
+	\end{equation}
+	Cette formulation vérifie
+	\begin{equation}
+		\vect w_{\ell,E}(h_r)=\vect 0,
+	\end{equation}
+	de sorte que
+	\begin{equation}
+		\vect w_{m,E}+\vect w_{\ell,E}(h)
+		=
+		u_{\ell}(h)\vect e_w.
+		\label{eq_total_mean_sheared_wind}
+	\end{equation}
+	Elle évite ainsi de compter deux fois le vent de référence à l'altitude $h_r$.
+	
+	Le profil logarithmique n'est pas défini pour $h\leq z_0$. Dans l'implémentation numérique, la hauteur utilisée doit donc satisfaire
+	\begin{equation}
+		h_{\mathrm{eff}}
+		=
+		\max\left(h,z_0+\varepsilon_h\right),
+		\label{eq_effective_log_height}
+	\end{equation}
+	où $\varepsilon_h>0$ est une constante numérique suffisamment faible. Cette régularisation prévient la singularité logarithmique sans étendre la validité physique du modèle sous la hauteur de rugosité.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres de référence du profil logarithmique de basse altitude \cite{MILF8785C}.}
+		\label{tab_log_wind_reference}
+		\begin{tabularx}{\textwidth}{@{}L{4.8cm}L{3.0cm}L{2.4cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} &
+			\textbf{Valeur} &
+			\textbf{Unité} &
+			\textbf{Définition}\\
+			\midrule
+			$h_r$ &
+			\num{6.096} &
+			\si{m} &
+			Hauteur de référence correspondant à \SI{20}{ft}.\\
+			$z_0$, phases terminales de catégorie C &
+			\num{0.04572} &
+			\si{m} &
+			Longueur de rugosité correspondant à \SI{0.15}{ft}.\\
+			$z_0$, autres phases de vol &
+			\num{0.6096} &
+			\si{m} &
+			Longueur de rugosité correspondant à \SI{2}{ft}.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	Ces valeurs proviennent d'un modèle historique élaboré pour l'évaluation des qualités de vol des avions pilotés. Elles sont utilisées ici comme paramètres de simulation et ne constituent pas une caractérisation générale de tous les terrains ni une exigence de conformité applicable à l'hexacoptère.
+	
+	\subsection{Rafale discrète \english{1-minus-cosine}}
+	
+	La rafale discrète est représentée par une fonction en versine, également appelée profil \english{1-minus-cosine}. Pour une distance de pénétration $s$, son amplitude scalaire est définie par
+	\begin{equation}
+		u_g(s)
+		=
+		\begin{cases}
+			\dfrac{u_{g,\max}}{2}
+			\left[
+			1-\cos\!\left(
+			\dfrac{\pi s}{h_g}
+			\right)
+			\right],
+			&
+			0\leq s\leq 2h_g,
+			\\[3mm]
+			0,
+			&
+			\text{sinon},
+		\end{cases}
+		\label{eq_one_minus_cos}
+	\end{equation}
+	où $u_{g,\max}$ est l'amplitude maximale de la rafale et $h_g$ est la demi-longueur spatiale du profil.
+	
+	La rafale est nulle à l'entrée et à la sortie de la zone perturbée :
+	\begin{equation}
+		u_g(0)=u_g(2h_g)=0,
+	\end{equation}
+	et atteint sa valeur maximale au centre :
+	\begin{equation}
+		u_g(h_g)=u_{g,\max}.
+	\end{equation}
+	
+	Le vecteur de rafale exprimé dans le repère Terre est
+	\begin{equation}
+		\vect w_{g,E}(s)
+		=
+		u_g(s)\vect e_g,
+		\label{eq_gust_vector}
+	\end{equation}
+	où $\vect e_g$ est un vecteur unitaire définissant sa direction :
+	\begin{equation}
+		\norm{\vect e_g}_2=1.
+	\end{equation}
+	
+	Lorsque la rafale est convectée à une vitesse constante $v_c>0$, la distance de pénétration est
+	\begin{equation}
+		s(t)
+		=
+		v_c\left(t-t_g\right),
+		\qquad
+		t\geq t_g,
+		\label{eq_gust_penetration_distance}
+	\end{equation}
+	où $t_g$ est l'instant d'entrée dans la rafale. La durée totale du profil est alors
+	\begin{equation}
+		t_{g,\mathrm{dur}}
+		=
+		\frac{2h_g}{v_c}.
+		\label{eq_gust_duration}
+	\end{equation}
+	La longueur, la durée et la vitesse de convection ne sont donc pas des paramètres indépendants lorsqu'elles décrivent une même rafale physique.
+	
+	Les modèles de type versine sont employés comme rafales discrètes dans les modèles atmosphériques historiques associés aux MIL-F-8785B et MIL-F-8785C \cite{MILF8785C,MILHDBK1797}. La pénétration de la rafale peut être représentée par une conversion espace--temps ou par des retards purs lorsque plusieurs points de la cellule sont considérés \cite{LyChan1980}.
+	
+\subsection{Turbulence continue de von Kármán}
+
+La turbulence de von Kármán est générée dans le domaine temporel en excitant des filtres linéaires de mise en forme par des bruits blancs gaussiens indépendants. La réalisation adoptée correspond à l'approximation rationnelle proposée par Ly et Chan pour reproduire les spectres longitudinaux et transversaux de von Kármán sous forme d'état \cite{LyChan1980}. L'article distingue un filtre longitudinal d'ordre deux et un filtre transversal d'ordre trois. :contentReference[oaicite:0]{index=0}
+
+Pour chaque composante, le paramètre
+\begin{equation}
+	\gamma_i=\frac{v_a}{l_i}
+	\label{eq_vk_gamma}
+\end{equation}
+est introduit, où $v_a$ est la vitesse de convection du champ turbulent et $l_i$ est l'échelle de turbulence associée à la composante considérée.
+
+\subsubsection{Composante longitudinale}
+
+La composante longitudinale $u_v$ est obtenue à partir d'un modèle d'état d'ordre deux :
+\begin{subequations}
+	\label{eq_vk_longitudinal_state_space}
+	\begin{align}
+		\dot{\vect x}_{v,u}
+		&=
+		\mathbf A_{v,u}\vect x_{v,u}
+		+
+		\mathbf B_{v,u}\,\xi_u,
+		\\
+		u_v
+		&=
+		\mathbf C_{v,u}\vect x_{v,u},
+	\end{align}
+\end{subequations}
+avec
+\begin{equation}
+	\mathbf A_{v,u}
+	=
+	\begin{bmatrix}
+		-0.8403\gamma_u & 0\\
+		4.7300\gamma_u & -5.9880\gamma_u
+	\end{bmatrix},
+	\label{eq_vk_longitudinal_state_matrix}
+\end{equation}
+\begin{equation}
+	\mathbf B_{v,u}
+	=
+	\sigma_u
+	\begin{bmatrix}
+		0.8403\sqrt{\gamma_u}\\
+		1.2580\sqrt{\gamma_u}
+	\end{bmatrix},
+	\qquad
+	\mathbf C_{v,u}
+	=
+	\begin{bmatrix}
+		0 & 1
+	\end{bmatrix}.
+	\label{eq_vk_longitudinal_input_output_matrices}
+\end{equation}
+Dans ces expressions, $\vect x_{v,u}\in\mathbb{R}^2$ est l'état du filtre longitudinal, $\sigma_u$ est l'écart-type prescrit de la composante longitudinale et $\xi_u$ est un bruit blanc gaussien de moyenne nulle et d'intensité unitaire.
+
+La fonction de transfert équivalente est
+\begin{equation}
+	H_u(s)
+	=
+	\frac{\sigma_u}{\sqrt{\gamma_u}}
+	\frac{1+0.25\gamma_u^{-1}s}
+	{\left(1+1.19\gamma_u^{-1}s\right)
+		\left(1+0.167\gamma_u^{-1}s\right)}.
+	\label{eq_vk_longitudinal_transfer_function}
+\end{equation}
+
+\subsubsection{Composantes transversales}
+
+Les composantes transversales $v_v$ et $w_v$ sont générées indépendamment à l'aide de deux réalisations identiques d'un filtre d'ordre trois. Pour $i\in\{v,w\}$,
+\begin{subequations}
+	\label{eq_vk_transverse_state_space}
+	\begin{align}
+		\dot{\vect x}_{v,i}
+		&=
+		\mathbf A_{v,i}\vect x_{v,i}
+		+
+		\mathbf B_{v,i}\,\xi_i,
+		\\
+		w_{v,i}
+		&=
+		\mathbf C_{v,i}\vect x_{v,i},
+	\end{align}
+\end{subequations}
+où $w_{v,v}=v_v$ et $w_{v,w}=w_v$. Les matrices sont
+\begin{equation}
+	\mathbf A_{v,i}
+	=
+	\begin{bmatrix}
+		-0.4801\gamma_i & 0 & 0\\
+		-0.3121\gamma_i & -1.2151\gamma_i & 0\\
+		-3.4764\gamma_i^2 & 9.3826\gamma_i & -11.1396\gamma_i
+	\end{bmatrix},
+	\label{eq_vk_transverse_state_matrix}
+\end{equation}
+\begin{equation}
+	\mathbf B_{v,i}
+	=
+	\sigma_i
+	\begin{bmatrix}
+		0.3395\sqrt{\gamma_i}\\
+		1.0799\sqrt{\gamma_i}\\
+		12.0291\gamma_i\sqrt{\gamma_i}
+	\end{bmatrix},
+	\qquad
+	\mathbf C_{v,i}
+	=
+	\begin{bmatrix}
+		0 & 0 & 1
+	\end{bmatrix}.
+	\label{eq_vk_transverse_input_output_matrices}
+\end{equation}
+Les variables $\vect x_{v,i}\in\mathbb{R}^3$, $\sigma_i$, $l_i$ et $\xi_i$ désignent respectivement l'état du filtre, l'écart-type prescrit, l'échelle de turbulence et le bruit blanc associé à la composante transversale $i$.
+
+La fonction de transfert correspondante est
+\begin{equation}
+	H_i(s)
+	=
+	\frac{\sigma_i}{\sqrt{2\gamma_i}}
+	\frac{
+		\left(1+2.618\gamma_i^{-1}s\right)
+		\left(1+0.12981\gamma_i^{-1}s\right)
+	}{
+		\left(1+2.083\gamma_i^{-1}s\right)
+		\left(1+0.823\gamma_i^{-1}s\right)
+		\left(1+0.08977\gamma_i^{-1}s\right)
+	},
+	\qquad i\in\{v,w\}.
+	\label{eq_vk_transverse_transfer_function}
+\end{equation}
+
+Le vecteur de turbulence est finalement formé par
+\begin{equation}
+	\vect w_{v,E}
+	=
+	\begin{bmatrix}
+		u_v & v_v & w_v
+	\end{bmatrix}\trans.
+	\label{eq_vk_turbulence_vector}
+\end{equation}
+Les trois filtres sont excités par des bruits blancs indépendants :
+\begin{equation}
+	\E[\xi_i(t)]=0,
+	\qquad
+	\E[\xi_i(t)\xi_j(\tau)]
+	=
+	\delta_{ij}\delta(t-\tau),
+	\qquad
+	i,j\in\{u,v,w\}.
+	\label{eq_vk_white_noise_properties}
+\end{equation}
+
+Cette réalisation constitue une approximation rationnelle du modèle spectral de von Kármán. Ly et Chan indiquent que les filtres approchés sont destinés à reproduire le spectre sur une plage limitée de fréquences normalisées; leur validation doit donc être effectuée en comparant la densité spectrale de puissance des signaux générés aux spectres théoriques sur la bande fréquentielle utile du véhicule. :contentReference[oaicite:1]{index=1}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres du scénario de vent configuré.}
+		\label{tab_wind_scenario}
+		\begin{tabularx}{\textwidth}{@{}L{4.7cm}L{3.2cm}L{2.3cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} &
+			\textbf{Valeur} &
+			\textbf{Unité} &
+			\textbf{Définition}\\
+			\midrule
+			$u_{\mathrm{tot}}$ &
+			\num{8.0} &
+			\si{m.s^{-1}} &
+			Amplitude nominale utilisée pour paramétrer les composantes du scénario.\\
+			$\alpha_m$ &
+			\num{0.50} &
+			-- &
+			Fraction attribuée au vent moyen.\\
+			$\alpha_{\ell}$ &
+			\num{0.25} &
+			-- &
+			Fraction attribuée au cisaillement logarithmique.\\
+			$\alpha_g$ &
+			\num{0.25} &
+			-- &
+			Fraction attribuée à la rafale discrète.\\
+			$\alpha_v$ &
+			\num{0.00} &
+			-- &
+			Fraction attribuée à la turbulence continue.\\
+			$\vect e_w$ &
+			$[1,0,0]\trans$ &
+			-- &
+			Direction du vent moyen et du cisaillement dans le repère NED.\\
+			$\vect e_g$ &
+			$[0,0,1]\trans$ &
+			-- &
+			Direction de la rafale dans le repère NED.\\
+			$\vect h_g$ &
+			$[100,100,100]\trans$ &
+			\si{m} &
+			Demi-longueurs spatiales de rafale selon les trois axes.\\
+			$t_{g,\mathrm{dur}}$ &
+			\num{7.62} &
+			\si{s} &
+			Durée temporelle configurée de la rafale.\\
+			$h_{\mathrm{nom}}$ &
+			\num{100} &
+			\si{m} &
+			Altitude nominale du scénario.\\
+			$h_v$ &
+			\num{100} &
+			\si{m} &
+			Altitude utilisée pour paramétrer la turbulence.\\
+			$\sigma_w$ &
+			\num{0} &
+			\si{m.s^{-1}} &
+			Écart-type vertical nul lorsque la turbulence est désactivée.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	Les coefficients de pondération satisfont
+	\begin{equation}
+		\alpha_m+\alpha_{\ell}+\alpha_g+\alpha_v=1.
+		\label{eq_wind_component_fraction_sum}
+	\end{equation}
+	Ils constituent des paramètres de construction du scénario et ne doivent pas être interprétés comme une loi physique universelle de répartition de l'énergie du vent.
+	
+	Pour les valeurs $h_g=\SI{100}{m}$ et $t_{g,\mathrm{dur}}=\SI{7.62}{s}$, la vitesse de convection compatible avec l'\cref{eq_gust_duration} est
+	\begin{equation}
+		v_c
+		=
+		\frac{2h_g}{t_{g,\mathrm{dur}}}
+		\simeq
+		\SI{26.25}{m.s^{-1}}.
+		\label{eq_configured_gust_convection_speed}
+	\end{equation}
+	Cette valeur doit être comparée à la vitesse de convection effectivement utilisée dans la simulation afin de garantir la cohérence entre la longueur spatiale et la durée temporelle du profil.
+	
+	\placeholderfigure[0.25\textheight]{figures/validation_vent}{Validation des modèles de vent : profil logarithmique, rafale discrète et densités spectrales de puissance des composantes turbulentes comparées à leurs expressions théoriques.}
+
+	
+	% ================================================================
+	\chapter{Capteurs et modèles de mesure}
+	\label{chap_capteurs}
+	
+	La simulation des capteurs vise à représenter aussi fidèlement que possible leurs principales imperfections, contrairement à une modélisation simplifiée limitée à l'ajout d'un bruit blanc.
+	
+	\section{Modèle générique d'une IMU}
+	
+	Les erreurs prises en compte comprennent le bruit blanc, les erreurs de facteur d'échelle, les couplages interaxes et les biais, lesquels incluent l'erreur d'étalonnage et la dérive thermique. Dans l'implémentation pratique, les erreurs dues à la résolution du capteur sont également prises en compte. Le modèle du gyroscope intègre en outre la sensibilité à l'accélération \(g_s\).
+	
+	Les mesures accélérométriques sont représentées par \cref{eq_accelerometre} et celles du gyroscope par \cref{eq_gyroscope}.
+	
+	\begin{equation}
+		\tilde{\vect f}_B =\vect b_a(\vartheta) + \mathbf M_a\vect f_B^{\,s} +\vect\eta_a
+		\label{eq_accelerometre}
+	\end{equation}
+	%-----------------------------------------------------------
+	\begin{equation}
+		\vect b_a(\vartheta) = \vect b_{a,r} + \vect \lambda_a (\vartheta - \vartheta_r)
+	\end{equation}
+	%-------------------------------------------------------------------------------------------
+	\begin{equation}
+		\tilde{\vect\omega}_B =\vect b_g(\vartheta) + \mathbf M_g\vect\omega_B + g_s\vect f_B^{\,s} + \vect\eta_g,
+		\label{eq_gyroscope}
+	\end{equation}
+	\begin{equation}
+		\vect b_g(\vartheta) = \vect b_{g,r} + \vect \lambda_g (\vartheta - \vartheta_r)
+	\end{equation}
+	
+	où $\vect f_B^{\,s}$ est la force spécifique, $\vartheta$ la température, $\mathbf M_a$ et $\mathbf M_g$ regroupent respectivement les erreurs de facteur d'échelle et les couplages interaxes de l'accéléromètre et du gyroscope, $\vect\eta_a$ et $\vect\eta_g$ sont les bruits aléatoires, et $\vect b_{a,r}$ et $\vect b_{g,r}$ sont les biais à la température de référence $\vartheta_r$ utilisée lors des essais de caractérisation du constructeur.
+	
+	\[
+	\mathbf{M}_a =
+	\begin{bmatrix}
+		s_{a,x}  & m_{a,xy} & m_{a,xz} \\
+		m_{a,yx} & s_{a,y}  & m_{a,yz} \\
+		m_{a,zx} & m_{a,zy} & s_{a,z}
+	\end{bmatrix},
+	\qquad
+	\mathbf{M}_g =
+	\begin{bmatrix}
+		s_{g,x}  & m_{g,xy} & m_{g,xz} \\
+		m_{g,yx} & s_{g,y}  & m_{g,yz} \\
+		m_{g,zx} & m_{g,zy} & s_{g,z}
+	\end{bmatrix}.
+	\]
+	
+	
+	Dans ces matrices, $\mathbf{M}_a \in \mathbb{R}^{3\times 3}$ et
+	$\mathbf{M}_g \in \mathbb{R}^{3\times 3}$ regroupent respectivement les
+	erreurs multiplicatives de l'accéléromètre et du gyroscope de l'IMU.
+	
+	Les erreurs de facteur d'échelle de l'accéléromètre et du gyroscope sont
+	définies par les vecteurs
+	\[
+	\mathbf{s}_a =
+	\begin{bmatrix}
+		s_{a,x} & s_{a,y} & s_{a,z}
+	\end{bmatrix}^{\mathsf T},
+	\qquad
+	\mathbf{s}_g =
+	\begin{bmatrix}
+		s_{g,x} & s_{g,y} & s_{g,z}
+	\end{bmatrix}^{\mathsf T},
+	\]
+	où $s_{a,i}$ et $s_{g,i}$ désignent les erreurs de facteur d'échelle suivant
+	l'axe $i\in\{x,y,z\}$, respectivement pour l'accéléromètre et le gyroscope.
+	
+	Les coefficients hors diagonale $m_{a,ij}$ et $m_{g,ij}$, avec $i\neq j$,
+	représentent les erreurs interaxes, également appelées facteurs de couplage
+	croisé ou \emph{cross-axis factors}. Le coefficient $m_{a,ij}$ décrit la
+	contribution parasite de la composante mesurée suivant l'axe $j$ à la sortie
+	de l'axe $i$ de l'accéléromètre. De manière analogue, $m_{g,ij}$ décrit la
+	contribution parasite de l'axe $j$ à la sortie de l'axe $i$ du gyroscope.
+	Ces termes modélisent principalement le défaut d'orthogonalité et le
+	désalignement des axes sensibles du capteur.
+	
+	
+	En l'absence d'informations sur les capteurs réellement utilisés dans le DJI Matrice 600 Pro, les paramètres de l'IMU BMI088 sont retenus \cite{BMI088_2024}.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres de l'accéléromètre BMI088.}
+		\label{tab_accel}
+		\begin{tabularx}{\textwidth}{@{}L{5.2cm}L{3.3cm}L{2.8cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Remarque}\\
+			\midrule
+			Fréquence d'échantillonnage & \num{1600} & \si{Hz} & Configuration maximale retenue.\\
+			Étendue & $\pm\num{24}$ & $g$ & Pleine échelle.\\
+			Densité de bruit $x/y/z$ & $[160,160,190]\times10^{-6}$ & $g/\sqrt{\si{Hz}}$ & Valeurs par axe.\\
+			Biais & \num{20} & \si{mg} & Décalage à accélération nulle.\\
+			Résolution & $1/1365$ & $g/\text{LSB}$ & Configuration pleine échelle.\\
+			Non-linéarité & \num{0.5} & \si{\percent} & Fraction de pleine échelle.\\
+			Sensibilité thermique & \num{0.002} & \si{\percent.K^{-1}} & Variation de sensibilité.\\
+			Couplage inter-axes & \num{0.005} & -- & Valeur fractionnaire.\\
+			Dérive thermique du biais & \num{0.2} & \si{mg.K^{-1}} & Borne configurée.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres du gyroscope BMI088.}
+		\label{tab_gyro}
+		\begin{tabularx}{\textwidth}{@{}L{5.2cm}L{3.3cm}L{2.8cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Remarque}\\
+			\midrule
+			Fréquence d'échantillonnage & \num{2000} & \si{Hz} & Configuration maximale retenue.\\
+			Étendue & $\pm\num{2000}$ & \si{\degree.s^{-1}} & Pleine échelle.\\
+			Densité de bruit & \num{0.014} & \si{\degree.s^{-1}.Hz^{-1/2}} & Densité spectrale.\\
+			Bruit RMS & \num{0.1} & \si{\degree.s^{-1}} & Valeur configurée.\\
+			Biais & \num{1} & \si{\degree.s^{-1}} & Décalage à vitesse nulle.\\
+			Résolution & \num{16.384} & $\text{LSB}/(\si{\degree.s^{-1}})$ & Conversion numérique.\\
+			Non-linéarité & \num{0.05} & \si{\percent} & Fraction de pleine échelle.\\
+			Tolérance de sensibilité & \num{1} & \si{\percent} & Erreur de gain.\\
+			Sensibilité thermique & \num{0.03} & \si{\percent.K^{-1}} & Variation de sensibilité.\\
+			Couplage inter-axes & \num{0.01} & -- & Valeur fractionnaire.\\
+			Sensibilité à l'accélération & \num{0.1} & \si{\degree.s^{-1}} par $g$ & Couplage accélération--gyroscope.\\
+			Dérive thermique du biais & \num{0.015} & \si{\degree.s^{-1}.K^{-1}} & Valeur configurée.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	\section{GNSS}
+	La solution GNSS est modélisée par un bruit blanc et un biais de Gauss--Markov du premier ordre :
+	\begin{subequations}
+		\label{eq_gnss_model}
+		\begin{align}
+			\tilde{\vect y}_k&=\vect y_k+\vect b_k+\vect\eta_k,\\
+			\vect b_{k+1}&=\phi_b\vect b_k+\mat L_b\vect\nu_k,
+			\qquad
+			\phi_b=\exp\left(-\frac{t_s}{\tau_b}\right).
+		\end{align}
+	\end{subequations}
+	Le facteur $\mat L_b$ est choisi pour préserver la variance stationnaire du biais. Cette séparation entre bruit de solution et erreur corrélée est cohérente avec les modèles usuels de navigation intégrée \cite{Groves2013}.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Paramètres du modèle GNSS et de l'option RTK.}
+		\label{tab_gnss}
+		\begin{tabularx}{\textwidth}{@{}L{5.2cm}L{3.4cm}L{2.8cm}Y@{}}
+			\toprule
+			\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Usage}\\
+			\midrule
+			Fréquence de solution & \num{50} & \si{Hz} & Position et vitesse.\\
+			Écart-type position horizontale & \num{1.5} & \si{m} & Solution standard.\\
+			Écart-type position verticale & \num{0.5} & \si{m} & Solution standard.\\
+			Bruit blanc de vitesse & $[0.05,0.05,0.05]\trans$ & \si{m.s^{-1}} & Axes NED.\\
+			Écart-type du biais de position & $[1,1,2]\trans$ & \si{m} & Axes NED.\\
+			Écart-type du biais de vitesse & $[0.02,0.02,0.02]\trans$ & \si{m.s^{-1}} & Axes NED.\\
+			Temps de corrélation & \num{1800} & \si{s} & Processus de Gauss--Markov.\\
+			Précision RTK horizontale & \num{0.01} & \si{m} & Accessoire optionnel.\\
+			Précision RTK verticale & \num{0.02} & \si{m} & Accessoire optionnel.\\
+			Terme d'échelle RTK & \num{1} & \si{\ppm} & Dépendance à la ligne de base.\\
+			\bottomrule
+		\end{tabularx}
+	\end{table}
+	
+	%\section{Baromètre et magnétomètre}
+	%Le baromètre est simulé comme une mesure de pression affectée par une erreur de gain, un biais, un bruit, une dérive lente et une dérive thermique. La pression est transformée en altitude par l'inverse du modèle atmosphérique. Les paramètres proviennent de la fiche BMP581 \cite{BMP581_2023}.
+	%
+	%\begin{table}[H]
+	%\centering
+	%\caption{Paramètres du baromètre et du magnétomètre.}
+	%\label{tab_baro_mag}
+	%\begin{tabularx}{\textwidth}{@{}L{5.2cm}L{3.4cm}L{2.8cm}Y@{}}
+	%\toprule
+	%\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité} & \textbf{Remarque}\\
+	%\midrule
+	%Plage de pression & $[30000,125000]$ & \si{Pa} & Domaine du baromètre.\\
+	%Fréquence barométrique & \num{50} & \si{Hz} & Mode normal.\\
+	%Suréchantillonnage de pression & \num{16} & -- & Réglage haute résolution.\\
+	%Résolution de pression & $1/64$ & \si{Pa} & Quantification.\\
+	%Biais de pression & \num{30} & \si{Pa} & Précision absolue configurée.\\
+	%Bruit de pression RMS & \num{0.21} & \si{Pa} & Haute résolution.\\
+	%Dérive à court terme & \num{0.0625} & \si{Pa.h^{-1}} & Valeur configurée.\\
+	%Dérive à long terme & \num{10} & \si{Pa.year^{-1}} & Valeur configurée.\\
+	%Dérive thermique & \num{0.5} & \si{Pa.K^{-1}} & Valeur configurée.\\
+	%Écart-type d'altitude équivalent & \num{2.5} & \si{m} & Paramètre de scénario.\\
+	%Résolution d'altitude équivalente & \num{1.3e-3} & \si{m} & Paramètre de scénario.\\
+	%Nombre de magnétomètres & \num{3} & -- & Redondance du système de référence.\\
+	%Écart-type de cap & \num{1.0} & \si{\degree} & Précision configurée.\\
+	%\bottomrule
+	%\end{tabularx}
+	%\end{table}
+	
+	% ================================================================
+	\chapter{Estimation d'état et des perturbations}
+	\label{chap_estimation}
+	
+	Comme présenté au \cref{chap_capteurs}, les mesures fournies par les capteurs sont entachées d'erreurs, souvent regroupées sous l'appellation de bruits de mesure. Afin d'améliorer la qualité de l'estimation utilisée par la commande, ces mesures sont fusionnées au moyen d'un filtre de Kalman étendu, ou EKF pour \english{Extended Kalman Filter}. Cette formulation tient compte de la non-linéarité du modèle, contrairement au filtre de Kalman linéaire classique.
+	En complément, un observateur non linéaire, ou NDO pour \english{Nonlinear Disturbance Observer}, estime le couple perturbateur résiduel dans la dynamique de rotation. Cette estimation peut être exploitée par la chaîne d'estimation et de commande afin d'améliorer la compensation des perturbations.
+	
+	\section{Filtre de Kalman étendu par matrice de covariance}
+L'EKF combine le modèle dynamique non linéaire et les mesures de l'IMU et du GNSS pour estimer l'état complet du véhicule. Les vecteurs d'état et de mesure sont définis par
+\begin{subequations}
+	\label{eq_ekf_vectors}
+	\begin{align}
+		\vect x&=\begin{bmatrix}\vect\omega_B\trans&\vect q_{EB}\trans&\vect v_E\trans&\vect p_E\trans\end{bmatrix}\trans,\\
+		\vect y&=\begin{bmatrix}\tilde{\vect\omega}_B\trans&\tilde{\vect v}_{E,g}\trans&\tilde{\vect p}_{E,g}\trans\end{bmatrix}\trans.
+	\end{align}
+\end{subequations}
+Dans ces expressions, $\vect x\in\mathbb{R}^{13}$ est le vecteur d'état, $\vect\omega_B\in\mathbb{R}^3$ est le vecteur des vitesses angulaires exprimé dans le repère corps, $\vect q_{EB}\in\mathbb{R}^4$ est le quaternion décrivant l'orientation du repère corps par rapport au repère Terre, $\vect v_E\in\mathbb{R}^3$ est la vitesse de translation exprimée dans le repère Terre et $\vect p_E\in\mathbb{R}^3$ est la position exprimée dans le repère Terre. Le vecteur $\vect y\in\mathbb{R}^9$ regroupe les mesures disponibles, où $\tilde{\vect\omega}_B$ est la vitesse angulaire mesurée par le gyroscope, $\tilde{\vect v}_{E,g}$ est la vitesse mesurée par le GNSS et $\tilde{\vect p}_{E,g}$ est la position mesurée par le GNSS. Le symbole $\tilde{(\cdot)}$ désigne une grandeur mesurée.
+
+Le modèle de mesure est linéaire :
+\begin{equation}
+	\vect y_k=\mathbf C\vect x_k+\vect\eta_k,
+	\label{eq_measurement_model}
+\end{equation}
+où $\vect y_k$ est le vecteur des mesures à l'instant discret $k$, $\vect x_k$ est le vecteur d'état, $\mathbf C$ est la matrice d'observation et $\vect\eta_k$ est le bruit de mesure, supposé centré et de covariance $\mathbf R$.
+
+La matrice d'observation est donnée par
+\begin{equation}
+	\mathbf C=
+	\begin{bmatrix}
+		\mathbf I_3&\mathbf 0_{3\times4}&\mathbf 0_3&\mathbf 0_3\\
+		\mathbf 0_3&\mathbf 0_{3\times4}&\mathbf I_3&\mathbf 0_3\\
+		\mathbf 0_3&\mathbf 0_{3\times4}&\mathbf 0_3&\mathbf I_3
+	\end{bmatrix}.
+	\label{eq_measurement_matrix}
+\end{equation}
+Dans cette matrice, $\mathbf I_3$ est la matrice identité d'ordre trois, $\mathbf 0_3$ est la matrice nulle carrée d'ordre trois et $\mathbf 0_{3\times4}$ est une matrice nulle de dimension $3\times4$. Le quaternion n'est pas mesuré directement; il est corrigé par les covariances croisées établies lors de la propagation.
+
+La transition non linéaire utilise la dynamique de rotation, la cinématique quaternion, la dynamique de translation et la cinématique de position. La vitesse de translation est convertie dans $\mathcal F_E$ à l'intérieur de l'estimateur afin d'être cohérente avec les mesures GNSS :
+\begin{equation}
+	\dot{\vect v}_E=\mathbf C_{EB}\frac{\vect f_B}{m}+\vect g_E.
+	\label{eq_ekf_velocity_E}
+\end{equation}
+Dans cette relation, $\dot{\vect v}_E$ est l'accélération de translation exprimée dans le repère Terre, $\mathbf C_{EB}$ est la matrice de rotation du repère corps vers le repère Terre, $\vect f_B$ est la somme des forces non gravitationnelles exprimées dans le repère corps, $m$ est la masse totale du véhicule et $\vect g_E$ est le vecteur de l'accélération gravitationnelle exprimé dans le repère Terre. Cette relation est équivalente à la \cref{eq_translation_body} si les transformations de repère et les forces sont cohérentes.
+
+Pour une transition discrète $\vect x_{k+1}=\mathcal F_d(\vect x_k,\vect u_k)$, la matrice jacobienne est obtenue numériquement par différences centrées :
+\begin{equation}
+	\mathbf F_k(:,j)=\frac{\mathcal F_d(\vect x_k+h_j\vect e_j,\vect u_k)-\mathcal F_d(\vect x_k-h_j\vect e_j,\vect u_k)}{2h_j}.
+	\label{eq_numeric_jacobian}
+\end{equation}
+Dans cette expression, $\mathcal F_d$ est la fonction de transition d'état discrète, $\vect u_k$ est le vecteur des entrées à l'instant $k$, $\mathbf F_k$ est la matrice jacobienne de la transition, $\mathbf F_k(:,j)$ est sa $j^{\mathrm e}$ colonne, $\vect e_j$ est le $j^{\mathrm e}$ vecteur de la base canonique et $h_j$ est le pas de perturbation utilisé pour le calcul de la dérivée numérique.
+
+La correction par matrice de covariance est
+\begin{subequations}
+	\label{eq_ekf_correction}
+	\begin{align}
+		\vect r_k&=\vect y_k-\mathbf C\hat{\vect x}_k^{-},\\
+		\mathbf S_k&=\mathbf C\mathbf P_k^{-}\mathbf C\trans+\mathbf R,\\
+		\mathbf K_k&=\mathbf P_k^{-}\mathbf C\trans\mathbf S_k^{-1},\\
+		\hat{\vect x}_k^{+}&=\hat{\vect x}_k^{-}+\mathbf K_k\vect r_k.
+	\end{align}
+\end{subequations}
+Dans ces équations, $\vect r_k$ est le vecteur d'innovation, $\mathbf S_k$ est la covariance de l'innovation, $\mathbf K_k$ est le gain de Kalman, $\hat{\vect x}_k^{-}$ est l'estimation a priori de l'état, $\hat{\vect x}_k^{+}$ est l'estimation a posteriori de l'état, $\mathbf P_k^{-}$ est la covariance a priori de l'erreur d'estimation et $\mathbf R$ est la covariance du bruit de mesure.
+
+Après normalisation du quaternion, la covariance est mise à jour sous forme de Joseph :
+\begin{equation}
+	\mathbf P_k^{+}=(\mathbf I-\mathbf K_k\mathbf C)\mathbf P_k^{-}(\mathbf I-\mathbf K_k\mathbf C)\trans+\mathbf K_k\mathbf R\mathbf K_k\trans.
+	\label{eq_joseph}
+\end{equation}
+Dans cette expression, $\mathbf P_k^{+}$ est la covariance a posteriori de l'erreur d'estimation et $\mathbf I$ est la matrice identité de dimension compatible avec le vecteur d'état.
+
+La propagation est ensuite
+\begin{subequations}
+	\label{eq_ekf_propagation}
+	\begin{align}
+		\hat{\vect x}_{k+1}^{-}&=\mathcal F_d(\hat{\vect x}_k^{+},\vect u_k),\\
+		\mathbf P_{k+1}^{-}&=\mathbf F_k\mathbf P_k^{+}\mathbf F_k\trans+\mathbf Q_{d,k}.
+	\end{align}
+\end{subequations}
+Dans ces équations, $\hat{\vect x}_{k+1}^{-}$ est l'estimation a priori de l'état à l'instant $k+1$, $\mathbf P_{k+1}^{-}$ est la covariance a priori correspondante et $\mathbf Q_{d,k}$ est la covariance discrète du bruit de procédé à l'instant $k$. La forme de Joseph maintient mieux la symétrie et la semi-définie positivité en arithmétique finie; la cohérence du quaternion et des rotations suit les conventions définies précédemment \cite{Sola2017}.
+
+\begin{table}[H]
+	\centering
+	\caption{Paramètres numériques de l'EKF.}
+	\label{tab_ekf_parameters}
+	\begin{tabularx}{\textwidth}{@{}L{3.2cm}Y@{}}
+		\toprule
+		\textbf{Paramètre} & \textbf{Valeur configurée}\\
+		\midrule
+		Période de mise à jour & \SI{1e-3}{s}\\
+		$\mathbf Q$ &
+		$\diag\!\left(
+		5{\times}10^{-4},5{\times}10^{-4},5{\times}10^{-4},
+		10^{-6},10^{-6},10^{-6},10^{-6}
+		\right.$\\[-0.2em]
+		& $\left.
+		10^{-2},10^{-2},10^{-2},
+		10^{-4},10^{-4},10^{-4}
+		\right)$\\
+		$\mathbf P_0$ &
+		$\diag\!\left(
+		0.02^2,0.02^2,0.02^2,
+		0.01^2,0.01^2,0.01^2,0.01^2,
+		0.1^2,0.1^2,0.1^2,
+		1^2,1^2,2^2
+		\right)$\\
+		$\mathbf R$ &
+		$\diag\!\left(
+		(\pi/180)^2,(\pi/180)^2,(\pi/180)^2,
+		0.05^2,0.05^2,0.05^2,
+		1^2,1^2,2^2
+		\right)$\\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+Dans ce tableau, $\diag(a_1,\ldots,a_n)$ désigne la matrice diagonale dont les éléments diagonaux sont $a_1,\ldots,a_n$.
+
+\section{Observateur non linéaire du couple perturbateur}
+L'observateur non linéaire est introduit afin d'estimer les couples perturbateurs qui ne sont pas explicitement représentés dans le modèle nominal. La dynamique de rotation est écrite sous la forme
+\begin{equation}
+	\dot{\vect\omega}_B=\vect f_\omega(\vect\omega_B,\vect\tau_c)+\mathbf J_B^{-1}\vect d_{\tau,B},
+	\label{eq_ndo_system}
+\end{equation}
+où $\dot{\vect\omega}_B$ est le vecteur des accélérations angulaires exprimé dans le repère corps, $\vect f_\omega$ est la dynamique nominale de rotation, $\vect\tau_c$ est le couple de commande, $\mathbf J_B$ est le tenseur d'inertie du véhicule exprimé dans le repère corps et $\vect d_{\tau,B}$ est le vecteur des couples perturbateurs exprimé dans le repère corps.
+
+La dynamique nominale est définie par
+\begin{equation}
+	\vect f_\omega=\mathbf J_B^{-1}\left[-\crossmat{\vect\omega_B}\mathbf J_B\vect\omega_B+\vect\tau_c\right].
+	\label{eq_ndo_nominal}
+\end{equation}
+Dans cette expression, $\crossmat{\vect\omega_B}$ est la matrice antisymétrique associée au vecteur $\vect\omega_B$.
+
+L'observateur de type Chen utilise
+\begin{subequations}
+	\label{eq_ndo}
+	\begin{align}
+		\mathbf P_o&=\mathbf L_o\mathbf J_B,\\
+		\vect p_o&=\mathbf P_o\vect\omega_B,\\
+		\hat{\vect d}_{\tau,B}&=\vect z_o+\vect p_o,\\
+		\dot{\vect z}_o&=-\mathbf L_o\vect z_o-\mathbf L_o\left(\vect p_o-\crossmat{\vect\omega_B}\mathbf J_B\vect\omega_B+\vect\tau_c\right).
+	\end{align}
+\end{subequations}
+Dans ces équations, $\mathbf L_o$ est la matrice des gains de l'observateur, $\mathbf P_o$ est une matrice auxiliaire, $\vect p_o$ est un vecteur auxiliaire, $\vect z_o$ est l'état interne de l'observateur, $\dot{\vect z}_o$ est sa dérivée temporelle et $\hat{\vect d}_{\tau,B}$ est l'estimation du vecteur des couples perturbateurs. Sous les hypothèses de variation suffisamment lente de la perturbation et de choix stable de $\mathbf L_o$, l'erreur d'observation converge vers une région déterminée par la dynamique de la perturbation et les erreurs de modèle \cite{Chen2000}. Dans la stratégie du projet, l'observateur porte uniquement sur les couples de rotation; aucun observateur de perturbations de translation n'est inclus.
+
+\begin{table}[H]
+	\centering
+	\caption{Paramètres de l'observateur des couples perturbateurs.}
+	\label{tab_ndo_parameters}
+	\begin{tabularx}{\textwidth}{@{}L{4.6cm}L{4.5cm}Y@{}}
+		\toprule
+		\textbf{Paramètre} & \textbf{Valeur} & \textbf{Interprétation}\\
+		\midrule
+		$\diag(\mathbf L_o)$ & $[0.2,0.2,0.1]$ & Gains d'observation en roulis, tangage et lacet.\\
+		Méthode d'intégration & Runge--Kutta d'ordre $4$ & Propagation de l'état auxiliaire.\\
+		État initial $\vect z_o(0)$ & $[0,0,0]\trans$ & Initialisation sans couple estimé.\\
+		Grandeur estimée & $[d_{\tau,x},d_{\tau,y},d_{\tau,z}]\trans$ & Couple perturbateur exprimé dans $\mathcal F_B$.\\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+Dans ce tableau, $\diag(\mathbf L_o)$ désigne le vecteur formé par les éléments diagonaux de la matrice de gains $\mathbf L_o$. Les paramètres $d_{\tau,x}$, $d_{\tau,y}$ et $d_{\tau,z}$ sont les composantes du couple perturbateur suivant les axes $x_B$, $y_B$ et $z_B$ du repère corps.
+
+La combinaison INDI--NDO est pertinente lorsque l'incrément de commande est calculé à haute fréquence et que l'incertitude résiduelle doit être compensée ou surveillée \cite{KimKim2024}. Dans ce rapport, la validation de l'observateur est toutefois séparée de celle du contrôleur afin de ne pas confondre qualité d'estimation et performance de suivi.
+
+\placeholderfigure[0.26\textheight]{figures/ekf_validation_states}{Validation de l'EKF par comparaison entre états vrais et estimés. La figure doit présenter les erreurs de vitesse angulaire, d'attitude, de vitesse et de position avec les unités et l'intervalle de scénario.}
+
+\placeholderfigure[0.26\textheight]{figures/ekf_validation_innovations}{Validation statistique de l'EKF. La figure doit présenter les innovations, leurs bornes issues de $\mathbf S_k$, et, si disponible, un indicateur normalisé de cohérence.}
+
+\placeholderfigure[0.26\textheight]{figures/ndo_validation}{Validation de l'observateur de couple. La figure doit comparer $\vect d_{\tau,B}$ et $\hat{\vect d}_{\tau,B}$, puis présenter l'erreur d'estimation pour les trois axes.}
+
+		% ================================================================
+	% ================================================================
+\chapter{Guidage, commande et allocation}
+\label{chap_control}
+
+L'architecture de commande repose sur une structure en cascade comportant trois niveaux. La boucle externe de guidage transforme les références de position et de lacet en consignes d'accélération, d'inclinaison et de vitesse angulaire. La boucle interne, fondée sur l'inversion dynamique non linéaire incrémentale INDI, assure le suivi des vitesses angulaires de roulis, de tangage et de lacet. Enfin, l'algorithme d'allocation convertit la force collective et les couples commandés en poussées individuelles, puis en vitesses de rotation des six rotors.
+
+Cette séparation permet d'imposer des dynamiques distinctes aux boucles de position, d'attitude, de vitesse angulaire et d'actionnement. La stabilité et les performances de l'ensemble supposent que les boucles internes soient sensiblement plus rapides que les boucles externes.
+
+\section{Boucle externe de guidage NED--lacet}
+
+La boucle externe détermine l'accélération nécessaire au suivi de la position dans le repère Terre NED. Les erreurs de position et de vitesse sont définies par
+\begin{subequations}
+	\label{eq_outer_loop_errors}
+	\begin{align}
+		\vect e_p
+		&=
+		\vect p_d-\vect p_E,
+		\\
+		\vect e_v
+		&=
+		\vect v_d-\vect v_E,
+	\end{align}
+\end{subequations}
+où $\vect p_d\in\mathbb{R}^3$ et $\vect v_d\in\mathbb{R}^3$ sont respectivement les références de position et de vitesse exprimées dans le repère Terre, tandis que $\vect p_E$ et $\vect v_E$ sont les grandeurs correspondantes du véhicule.
+
+La commande d'accélération est obtenue par une action proportionnelle--dérivée complétée, lorsqu'elle est disponible, par l'accélération de référence :
+\begin{equation}
+	\vect a_c
+	=
+	\vect a_d
+	+
+	\mat K_p\vect e_p
+	+
+	\mat K_v\vect e_v,
+	\label{eq_outer_acceleration}
+\end{equation}
+où $\vect a_d\in\mathbb{R}^3$ est l'accélération de référence, $\mat K_p\in\mathbb{R}^{3\times3}$ est la matrice des gains de position et $\mat K_v\in\mathbb{R}^{3\times3}$ est la matrice des gains de vitesse.
+
+Dans le scénario manuel, les références de vitesse et d'accélération sont nulles :
+\begin{equation}
+	\vect v_d=\vect 0,
+	\qquad
+	\vect a_d=\vect 0.
+	\label{eq_manual_zero_references}
+\end{equation}
+L'\cref{eq_outer_acceleration} devient alors
+\begin{equation}
+	\vect a_c
+	=
+	-\mat K_p\left(\vect p_E-\vect p_d\right)
+	-\mat K_v\vect v_E.
+	\label{eq_outer_acceleration_manual}
+\end{equation}
+
+\subsection{Saturation de l'accélération commandée}
+
+La composante horizontale de l'accélération commandée est définie par
+\begin{equation}
+	\vect a_{c,H}
+	=
+	\begin{bmatrix}
+		a_{c,N} & a_{c,E}
+	\end{bmatrix}\trans.
+	\label{eq_horizontal_acceleration_command}
+\end{equation}
+
+Afin de préserver sa direction tout en limitant sa norme, elle est saturée selon
+\begin{equation}
+	\bar{\vect a}_{c,H}
+	=
+	\vect a_{c,H}
+	\min\left(
+	1,
+	\frac{a_{H,\max}}
+	{\max\!\left(\norm{\vect a_{c,H}}_2,\varepsilon_a\right)}
+	\right),
+	\label{eq_horizontal_acceleration_saturation}
+\end{equation}
+où $a_{H,\max}$ est l'accélération horizontale maximale et $\varepsilon_a>0$ une constante numérique évitant une division par zéro.
+
+La composante verticale est limitée séparément :
+\begin{equation}
+	\bar a_{c,D}
+	=
+	\sat_{[a_{D,\min},a_{D,\max}]}
+	\left(a_{c,D}\right),
+	\label{eq_vertical_acceleration_saturation}
+\end{equation}
+où $a_{D,\min}$ et $a_{D,\max}$ définissent les accélérations verticales admissibles dans la convention NED. Les limites peuvent être asymétriques afin de représenter des capacités différentes en montée et en descente.
+
+L'accélération commandée après saturation est donc
+\begin{equation}
+	\bar{\vect a}_c
+	=
+	\begin{bmatrix}
+		\bar a_{c,N} &
+		\bar a_{c,E} &
+		\bar a_{c,D}
+	\end{bmatrix}\trans.
+	\label{eq_saturated_acceleration_command}
+\end{equation}
+
+\subsection{Génération des consignes de roulis et de tangage}
+
+Sous l'hypothèse de faibles angles d'inclinaison, les accélérations horizontales commandées sont transformées en références de roulis et de tangage. Pour une référence de lacet $\psi_d$, les consignes sont
+\begin{subequations}
+	\label{eq_desired_roll_pitch}
+	\begin{align}
+		\theta_d
+		&=
+		-\frac{
+			\cos\psi_d\,\bar a_{c,N}
+			+
+			\sin\psi_d\,\bar a_{c,E}
+		}{g},
+		\\
+		\phi_d
+		&=
+		\frac{
+			-\sin\psi_d\,\bar a_{c,N}
+			+
+			\cos\psi_d\,\bar a_{c,E}
+		}{g},
+	\end{align}
+\end{subequations}
+où $\phi_d$ et $\theta_d$ sont respectivement les angles de roulis et de tangage commandés, et $g$ est l'accélération de la pesanteur.
+
+Les consignes d'inclinaison sont ensuite limitées :
+\begin{subequations}
+	\label{eq_attitude_command_saturation}
+	\begin{align}
+		\bar\phi_d
+		&=
+		\sat_{[-\phi_{\max},\phi_{\max}]}
+		\left(\phi_d\right),
+		\\
+		\bar\theta_d
+		&=
+		\sat_{[-\theta_{\max},\theta_{\max}]}
+		\left(\theta_d\right),
+	\end{align}
+\end{subequations}
+où $\phi_{\max}$ et $\theta_{\max}$ sont les inclinaisons maximales admissibles.
+
+L'approximation des faibles angles demeure cohérente avec une limitation des inclinaisons à \SI{15}{\degree}. Pour des angles plus importants, une construction géométrique exacte de l'orientation commandée à partir de la direction de poussée serait préférable.
+
+\subsection{Commande de lacet}
+
+L'erreur de lacet est ramenée dans l'intervalle principal $[-\pi,\pi]$ afin de sélectionner la rotation angulaire la plus courte :
+\begin{equation}
+	e_\psi
+	=
+	\operatorname{atan2}
+	\left(
+	\sin(\psi_d-\psi),
+	\cos(\psi_d-\psi)
+	\right),
+	\label{eq_yaw_error}
+\end{equation}
+où $\psi_d$ est le lacet commandé et $\psi$ le lacet mesuré ou estimé.
+
+\subsection{Génération des consignes de vitesse angulaire}
+
+Le vecteur des erreurs d'orientation utilisé par la boucle externe est
+\begin{equation}
+	\vect e_R
+	=
+	\begin{bmatrix}
+		\bar\phi_d-\phi &
+		\bar\theta_d-\theta &
+		e_\psi
+	\end{bmatrix}\trans.
+	\label{eq_attitude_error_outer_loop}
+\end{equation}
+
+Les consignes de vitesse angulaire sont obtenues par
+\begin{equation}
+	\vect\omega_c
+	=
+	\sat_{[-\vect\omega_{\max},\,\vect\omega_{\max}]}
+	\left(
+	\mat K_R\vect e_R
+	\right),
+	\label{eq_body_rate_command}
+\end{equation}
+où
+\begin{equation}
+	\vect\omega_c
+	=
+	\begin{bmatrix}
+		p_c & q_c & r_c
+	\end{bmatrix}\trans
+\end{equation}
+est le vecteur des vitesses angulaires commandées, $\mat K_R\in\mathbb{R}^{3\times3}$ est la matrice de conversion des erreurs d'orientation en vitesses angulaires et $\vect\omega_{\max}$ contient les limites imposées aux trois composantes.
+
+\subsection{Commande collective}
+
+La force spécifique nécessaire à la réalisation de l'accélération commandée est obtenue à partir de la différence entre l'accélération demandée et la gravité :
+\begin{equation}
+	f_c
+	=
+	\norm{
+		\begin{bmatrix}
+			\bar a_{c,N} &
+			\bar a_{c,E} &
+			\bar a_{c,D}-g
+		\end{bmatrix}\trans
+	}_2,
+	\label{eq_collective_specific_force}
+\end{equation}
+où $f_c$ est la norme de la force propulsive spécifique commandée.
+
+La force collective suivant l'axe $z_B$ est alors
+\begin{equation}
+	f_{p,z,c}
+	=
+	-m f_c,
+	\label{eq_collective_force_command}
+\end{equation}
+le signe négatif provenant du fait que la poussée agit suivant $-z_B$.
+
+Une commande incrémentale relative au vol stationnaire peut également être définie par
+\begin{equation}
+	\Delta f_c
+	=
+	g-f_c.
+	\label{eq_collective_command}
+\end{equation}
+Cette convention donne $\Delta f_c=0$ lorsque le véhicule est en vol stationnaire horizontal.
+
+\begin{table}[H]
+	\centering
+	\caption{Paramètres de la boucle externe NED--lacet.}
+	\label{tab_outer_loop}
+	\begin{tabularx}{\textwidth}{@{}L{5.0cm}L{4.5cm}L{2.8cm}Y@{}}
+		\toprule
+		\textbf{Paramètre} &
+		\textbf{Valeur} &
+		\textbf{Unité} &
+		\textbf{Définition}\\
+		\midrule
+		$\vect p_d$ &
+		$[10,50,-50]\trans$ &
+		\si{m} &
+		Référence manuelle de position NED.\\
+		$\psi_d$ &
+		$10\pi/180$ &
+		\si{rad} &
+		Référence manuelle de lacet.\\
+		$\diag(\mat K_p)$ &
+		$[1,1,1]$ &
+		\si{s^{-2}} &
+		Gains de retour de position.\\
+		$\diag(\mat K_v)$ &
+		$[2,2,1.2]$ &
+		\si{s^{-1}} &
+		Gains d'amortissement de vitesse.\\
+		$\diag(\mat K_R)$ &
+		$[6,6,4]$ &
+		\si{s^{-1}} &
+		Conversion des erreurs d'orientation en vitesses angulaires.\\
+		$\phi_{\max}$, $\theta_{\max}$ &
+		\num{15} &
+		\si{\degree} &
+		Limites des consignes de roulis et de tangage.\\
+		$a_{H,\max}$ &
+		\num{1.5} &
+		\si{m.s^{-2}} &
+		Norme maximale de l'accélération horizontale.\\
+		$[a_{D,\min},a_{D,\max}]\trans$ &
+		$[-1,6]\trans$ &
+		\si{m.s^{-2}} &
+		Limites verticales dans la convention NED.\\
+		$\vect\omega_{\max}$ &
+		$[0.4,0.4,0.4]\trans$ &
+		\si{rad.s^{-1}} &
+		Limites des vitesses angulaires commandées.\\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\section{Modèle de référence des vitesses angulaires}
+
+Les consignes issues de la boucle externe sont filtrées par un modèle de référence du premier ordre. Son état $\vect\omega_r$ représente la trajectoire dynamique que la boucle INDI doit suivre :
+\begin{equation}
+	\dot{\vect\omega}_r
+	=
+	\mat A_r\vect\omega_r
+	+
+	\mat B_r\vect\omega_c,
+	\label{eq_reference_model}
+\end{equation}
+où $\mat A_r\in\mathbb{R}^{3\times3}$ est une matrice de Hurwitz et $\mat B_r\in\mathbb{R}^{3\times3}$ est la matrice d'entrée.
+
+Le choix
+\begin{equation}
+	\mat B_r=-\mat A_r
+	\label{eq_reference_model_unity_gain}
+\end{equation}
+confère au modèle de référence un gain statique unitaire :
+\begin{equation}
+	\lim_{t\rightarrow\infty}\vect\omega_r(t)
+	=
+	\vect\omega_c
+\end{equation}
+pour une consigne constante.
+
+Avec
+\begin{equation}
+	\mat A_r
+	=
+	\diag(-4,-4,-2),
+	\qquad
+	\mat B_r
+	=
+	\diag(4,4,2),
+	\label{eq_reference_model_matrices}
+\end{equation}
+les constantes de temps nominales sont
+\begin{equation}
+	\vect\tau_r
+	=
+	\begin{bmatrix}
+		0.25 & 0.25 & 0.50
+	\end{bmatrix}\trans
+	\si{s}.
+	\label{eq_reference_model_time_constants}
+\end{equation}
+
+Pour un système du premier ordre, les temps d'établissement à \SI{2}{\percent} correspondants sont approximativement
+\begin{equation}
+	\vect t_{\mathrm{set},r}
+	\simeq
+	4\vect\tau_r
+	=
+	\begin{bmatrix}
+		1 & 1 & 2
+	\end{bmatrix}\trans
+	\si{s}.
+	\label{eq_reference_model_settling_times}
+\end{equation}
+
+\section{Commande INDI des vitesses angulaires}
+
+La boucle interne commande directement les composantes
+\[
+\vect\omega_B
+=
+\begin{bmatrix}
+	p & q & r
+\end{bmatrix}\trans
+\]
+de la vitesse angulaire du corps.
+
+L'erreur de suivi du modèle de référence est
+\begin{equation}
+	\vect e_\omega
+	=
+	\vect\omega_r-\vect\omega_B.
+	\label{eq_indi_body_rate_error}
+\end{equation}
+
+La pseudo-commande d'accélération angulaire est définie par
+\begin{equation}
+	\vect\nu
+	=
+	\dot{\vect\omega}_r
+	+
+	\mat K_\omega\vect e_\omega,
+	\label{eq_pseudocontrol}
+\end{equation}
+où $\vect\nu\in\mathbb{R}^3$ est l'accélération angulaire désirée et $\mat K_\omega\in\mathbb{R}^{3\times3}$ est la matrice des gains de suivi des vitesses angulaires.
+
+L'\cref{eq_pseudocontrol} peut également s'écrire
+\begin{equation}
+	\vect\nu
+	=
+	\dot{\vect\omega}_r
+	-
+	\mat K_\omega
+	\left(
+	\vect\omega_B-\vect\omega_r
+	\right).
+\end{equation}
+
+\subsection{Modèle dynamique incrémental}
+
+La dynamique angulaire est localement exprimée autour du point de fonctionnement précédent par
+\begin{equation}
+	\dot{\vect\omega}_B
+	\simeq
+	\dot{\hat{\vect\omega}}_{B,0}
+	+
+	\mat G_\omega\Delta\vect\tau_c
+	+
+	\vect\varepsilon,
+	\label{eq_incremental_angular_dynamics}
+\end{equation}
+où :
+
+\begin{itemize}
+	\item $\dot{\hat{\vect\omega}}_{B,0}$ est l'accélération angulaire mesurée ou estimée au point de fonctionnement précédent;
+	\item $\Delta\vect\tau_c$ est l'incrément de couple de commande;
+	\item $\mat G_\omega\in\mathbb{R}^{3\times3}$ est la matrice locale d'efficacité des couples sur l'accélération angulaire;
+	\item $\vect\varepsilon$ regroupe les perturbations, les erreurs de modèle et les variations non représentées par la relation incrémentale.
+\end{itemize}
+
+Lorsque le couple constitue directement l'entrée de la dynamique de rotation, une approximation naturelle de la matrice d'efficacité est
+\begin{equation}
+	\mat G_\omega
+	\simeq
+	\mat J_B^{-1}.
+	\label{eq_angular_control_effectiveness}
+\end{equation}
+
+La variation d'accélération angulaire est alors
+\begin{equation}
+	\Delta\dot{\vect\omega}_B
+	\simeq
+	\mat G_\omega\Delta\vect\tau_c
+	+
+	\vect\varepsilon.
+	\label{eq_incremental_dynamics}
+\end{equation}
+
+\subsection{Calcul de l'incrément de couple}
+
+L'incrément de couple commandé est obtenu par inversion de la matrice d'efficacité :
+\begin{equation}
+	\Delta\vect\tau_c
+	=
+	\mat G_\omega^\dagger
+	\left(
+	\vect\nu
+	-
+	\dot{\hat{\vect\omega}}_{B,0}
+	-
+	\hat{\vect\varepsilon}
+	\right),
+	\label{eq_indi_control_increment}
+\end{equation}
+où $\mat G_\omega^\dagger$ est la pseudo-inverse de Moore--Penrose et $\hat{\vect\varepsilon}$ une estimation éventuelle de la perturbation équivalente en accélération angulaire.
+
+Le couple total demandé est ensuite mis à jour selon
+\begin{equation}
+	\vect\tau_c
+	=
+	\vect\tau_{c,0}
+	+
+	\Delta\vect\tau_c,
+	\label{eq_indi_control}
+\end{equation}
+où $\vect\tau_{c,0}$ est le couple de commande appliqué au pas précédent.
+
+Lorsque l'observateur fournit une estimation du couple perturbateur $\hat{\vect d}_{\tau,B}$, son équivalent en accélération angulaire peut être écrit
+\begin{equation}
+	\hat{\vect\varepsilon}
+	=
+	\mat J_B^{-1}
+	\hat{\vect d}_{\tau,B}.
+	\label{eq_disturbance_acceleration_equivalent}
+\end{equation}
+
+L'intérêt principal de l'INDI réside dans l'utilisation de l'accélération angulaire effectivement mesurée ou estimée. La commande dépend ainsi principalement des variations locales de l'entrée plutôt que d'un modèle absolu complet de la dynamique. Les performances restent néanmoins sensibles à l'estimation de l'accélération angulaire, au filtrage des mesures, à la dynamique des actionneurs, à la période d'échantillonnage et à la précision de $\mat G_\omega$ \cite{KimKim2024}.
+
+\subsection{Estimation discrète de l'accélération angulaire}
+
+Avant filtrage, l'accélération angulaire peut être estimée par différence finie :
+\begin{equation}
+	\dot{\hat{\vect\omega}}_B[k]
+	=
+	\frac{
+		\vect\omega_B[k]-\vect\omega_B[k-1]
+	}{t_s},
+	\label{eq_body_rate_derivative_discrete}
+\end{equation}
+où $t_s$ est la période de mise à jour de la commande.
+
+Cette dérivation amplifie les composantes de haute fréquence du bruit de mesure. Un filtrage doit donc être utilisé afin d'obtenir un compromis entre l'atténuation du bruit et le retard de phase introduit dans la boucle INDI.
+
+\begin{table}[H]
+	\centering
+	\caption{Paramètres du modèle de référence et de la boucle INDI.}
+	\label{tab_indi_parameters}
+	\begin{tabularx}{\textwidth}{@{}L{5.0cm}L{4.2cm}L{2.5cm}Y@{}}
+		\toprule
+		\textbf{Paramètre} &
+		\textbf{Valeur} &
+		\textbf{Unité} &
+		\textbf{Définition}\\
+		\midrule
+		$\mat A_r$ &
+		$\diag(-4,-4,-2)$ &
+		\si{s^{-1}} &
+		Matrice dynamique du modèle de référence.\\
+		$\mat B_r$ &
+		$-\mat A_r$ &
+		\si{s^{-1}} &
+		Matrice d'entrée assurant un gain statique unitaire.\\
+		$\vect\tau_r$ &
+		$[0.25,0.25,0.50]\trans$ &
+		\si{s} &
+		Constantes de temps du modèle de référence.\\
+		$\diag(\mat K_\omega)$ &
+		$[12,12,6]$ &
+		\si{s^{-1}} &
+		Gains de suivi des vitesses angulaires.\\
+		$t_s$ &
+		\num{1e-3} &
+		\si{s} &
+		Période de mise à jour de la commande.\\
+		$\omega_{\min}$ &
+		\num{0} &
+		\si{rad.s^{-1}} &
+		Vitesse minimale admissible des rotors.\\
+		$\omega_{\max}$ &
+		\num{456.45} &
+		\si{rad.s^{-1}} &
+		Vitesse maximale admissible des rotors.\\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+
+\section{Allocation de la force et des couples}
+
+L'allocation de commande répartit l'incrément de force collective et les incréments de couples commandés entre les six rotors. La formulation est établie autour du point d'équilibre correspondant au vol stationnaire. Le vecteur des efforts généralisés incrémentaux est défini par
+\begin{equation}
+	\Delta\vect\lambda_c
+	=
+	\begin{bmatrix}
+		\Delta f_{p,z,c} &
+		\Delta\tau_{x,c} &
+		\Delta\tau_{y,c} &
+		\Delta\tau_{z,c}
+	\end{bmatrix}\trans,
+	\label{eq_incremental_commanded_generalized_wrench}
+\end{equation}
+où $\Delta f_{p,z,c}$ est l'incrément de force propulsive suivant l'axe $z_B$, tandis que $\Delta\tau_{x,c}$, $\Delta\tau_{y,c}$ et $\Delta\tau_{z,c}$ sont les incréments de couple commandés en roulis, en tangage et en lacet.
+
+Le vecteur des incréments de poussée des rotors est
+\begin{equation}
+	\Delta\vect t
+	=
+	\begin{bmatrix}
+		\Delta t_{LB} &
+		\Delta t_{LF} &
+		\Delta t_{LS} &
+		\Delta t_{RB} &
+		\Delta t_{RF} &
+		\Delta t_{RS}
+	\end{bmatrix}\trans,
+	\label{eq_incremental_rotor_thrust_vector}
+\end{equation}
+dans l'ordre LB--LF--LS--RB--RF--RS.
+
+Les modèles de poussée et de couple réactif d'un rotor sont
+\begin{subequations}
+	\label{eq_rotor_thrust_torque_density}
+	\begin{align}
+		t_i
+		&=
+		\rho\,k_{t/\rho}\,\omega_i^2,
+		\\
+		q_i
+		&=
+		\rho\,k_{m/\rho}\,\omega_i^2,
+	\end{align}
+\end{subequations}
+où $\rho$ est la masse volumique instantanée de l'air, $k_{t/\rho}$ est le coefficient de poussée rapporté à la masse volumique et $k_{m/\rho}$ est le coefficient de couple réactif rapporté à la masse volumique.
+
+Le rapport entre le couple réactif et la poussée est défini par
+\begin{equation}
+	\gamma
+	=
+	\frac{k_{m/\rho}}{k_{t/\rho}}.
+	\label{eq_reaction_torque_thrust_ratio}
+\end{equation}
+La masse volumique n'apparaît pas explicitement dans $\gamma$, car elle intervient de manière identique dans les expressions de la poussée et du couple réactif.
+
+La relation entre les incréments de poussée individuels et les efforts généralisés incrémentaux est
+\begin{equation}
+	\Delta\vect\lambda
+	=
+	\mathbf B_t\Delta\vect t,
+	\label{eq_incremental_thrust_allocation}
+\end{equation}
+avec
+\begin{equation}
+	\mathbf B_t
+	=
+	\begin{bmatrix}
+		-1 &
+		-1 &
+		-1 &
+		-1 &
+		-1 &
+		-1
+		\\[1mm]
+		\dfrac{l}{2} &
+		\dfrac{l}{2} &
+		l &
+		-\dfrac{l}{2} &
+		-\dfrac{l}{2} &
+		-l
+		\\[2mm]
+		-\dfrac{\sqrt{3}\,l}{2} &
+		\dfrac{\sqrt{3}\,l}{2} &
+		0 &
+		-\dfrac{\sqrt{3}\,l}{2} &
+		\dfrac{\sqrt{3}\,l}{2} &
+		0
+		\\[2mm]
+		-\gamma &
+		-\gamma &
+		\gamma &
+		\gamma &
+		\gamma &
+		-\gamma
+	\end{bmatrix}.
+	\label{eq_thrust_allocation_matrix}
+\end{equation}
+Dans cette matrice, $l$ est la distance entre le centre de masse et l'axe d'un rotor. La première ligne traduit l'action des poussées suivant $-z_B$, les deuxième et troisième lignes décrivent respectivement les moments de roulis et de tangage produits par les bras de levier, et la quatrième ligne représente les couples réactifs de lacet. Les signes de cette dernière ligne sont déterminés par les sens de rotation des rotors.
+
+\subsection{Calcul des incréments de poussée}
+
+La configuration comporte six actionneurs pour quatre efforts généralisés. La solution de norme euclidienne minimale est obtenue par la pseudo-inverse de Moore--Penrose :
+\begin{equation}
+	\Delta\vect t^{\,\star}
+	=
+	\mathbf B_t^\dagger
+	\Delta\vect\lambda_c,
+	\label{eq_incremental_thrust_allocation_pseudoinverse}
+\end{equation}
+où
+\begin{equation}
+	\mathbf B_t^\dagger
+	=
+	\operatorname{pinv}\!\left(\mathbf B_t\right).
+	\label{eq_thrust_allocation_pseudoinverse}
+\end{equation}
+
+La solution $\Delta\vect t^{\,\star}$ minimise
+\begin{equation}
+	\norm{\Delta\vect t}_2
+\end{equation}
+sous la contrainte
+\begin{equation}
+	\mathbf B_t\Delta\vect t
+	=
+	\Delta\vect\lambda_c,
+\end{equation}
+lorsque les efforts demandés appartiennent à l'ensemble réalisable et qu'aucune contrainte d'actionnement n'est active.
+
+\subsection{Conversion en incréments de vitesse quadratique}
+
+Les incréments de poussée sont convertis en variables quadratiques à l'aide de la masse volumique instantanée :
+\begin{equation}
+	\Delta\vect\chi
+	=
+	\frac{1}
+	{\rho\,k_{t/\rho}}
+	\Delta\vect t^{\,\star},
+	\label{eq_incremental_squared_speed_command}
+\end{equation}
+où
+\begin{equation}
+	\Delta\vect\chi
+	=
+	\begin{bmatrix}
+		\Delta\chi_{LB} &
+		\Delta\chi_{LF} &
+		\Delta\chi_{LS} &
+		\Delta\chi_{RB} &
+		\Delta\chi_{RF} &
+		\Delta\chi_{RS}
+	\end{bmatrix}\trans.
+\end{equation}
+
+La grandeur $\Delta\chi_i$ représente l'incrément associé à la vitesse quadratique du rotor $i$. Elle peut être positive ou négative, puisqu'une réduction de poussée par rapport au vol stationnaire correspond à $\Delta t_i<0$.
+
+\subsection{Vitesse de vol stationnaire}
+
+En vol stationnaire horizontal, la poussée totale équilibre le poids :
+\begin{equation}
+	n_r\,\rho_{\mathrm{hov}}\,k_{t/\rho}\,
+	\omega_{\mathrm{hov}}^2
+	=
+	mg,
+	\label{eq_hover_force_equilibrium}
+\end{equation}
+où $n_r$ est le nombre de rotors, $m$ est la masse du véhicule, $g$ est l'accélération de la pesanteur et $\rho_{\mathrm{hov}}$ est la masse volumique utilisée pour déterminer le point d'équilibre.
+
+La vitesse quadratique de vol stationnaire est donc
+\begin{equation}
+	\omega_{\mathrm{hov}}^2
+	=
+	\frac{mg}
+	{n_r\,\rho_{\mathrm{hov}}\,k_{t/\rho}}.
+	\label{eq_hover_squared_speed}
+\end{equation}
+
+La masse volumique $\rho_{\mathrm{hov}}$ peut être égale à la masse volumique instantanée $\rho$ lorsque le point de vol stationnaire est recalculé en fonction des conditions atmosphériques courantes. Les deux grandeurs sont néanmoins conservées séparément afin de reproduire la structure du modèle de simulation.
+
+La commande quadratique totale de chaque rotor est obtenue en ajoutant l'incrément au point d'équilibre :
+\begin{equation}
+	\chi_{i,c}
+	=
+	\omega_{\mathrm{hov}}^2
+	+
+	\Delta\chi_i.
+	\label{eq_total_signed_squared_speed_command}
+\end{equation}
+
+Sous forme vectorielle,
+\begin{equation}
+	\vect\chi_c
+	=
+	\omega_{\mathrm{hov}}^2
+	\vect 1_{n_r}
+	+
+	\Delta\vect\chi,
+	\label{eq_total_signed_squared_speed_vector}
+\end{equation}
+où $\vect 1_{n_r}\in\mathbb{R}^{n_r}$ est un vecteur dont toutes les composantes sont égales à l'unité.
+
+\subsection{Racine carrée signée et saturation}
+
+La grandeur $\chi_{i,c}$ peut devenir négative lorsqu'une réduction de poussée demandée dépasse la contribution du vol stationnaire. Afin d'éviter une valeur complexe lors de la conversion, la racine carrée signée est définie par
+\begin{equation}
+	\operatorname{ssqrt}(x)
+	=
+	\operatorname{sgn}(x)\sqrt{|x|}.
+	\label{eq_signed_square_root}
+\end{equation}
+
+La vitesse rotor intermédiaire est alors
+\begin{equation}
+	\omega_{i,c}^{\star}
+	=
+	\operatorname{ssqrt}\!\left(\chi_{i,c}\right)
+	=
+	\operatorname{sgn}\!\left(\chi_{i,c}\right)
+	\sqrt{\left|\chi_{i,c}\right|}.
+	\label{eq_rotor_signed_speed_command}
+\end{equation}
+
+La vitesse commandée est finalement limitée par
+\begin{equation}
+	\omega_{i,c}
+	=
+	\sat_{[\omega_{\min},\omega_{\max}]}
+	\left(
+	\omega_{i,c}^{\star}
+	\right).
+	\label{eq_rotor_speed_command_saturation}
+\end{equation}
+
+Lorsque $\omega_{\min}=0$, une valeur négative de $\chi_{i,c}$ conduit, après application de la racine carrée signée et de la saturation, à une vitesse rotor nulle. Cette formulation évite la génération de valeurs non réelles tout en conservant le signe de la commande intermédiaire avant saturation.
+
+Le vecteur des vitesses rotor commandées est
+\begin{equation}
+	\vect\omega_{r,c}
+	=
+	\begin{bmatrix}
+		\omega_{LB,c} &
+		\omega_{LF,c} &
+		\omega_{LS,c} &
+		\omega_{RB,c} &
+		\omega_{RF,c} &
+		\omega_{RS,c}
+	\end{bmatrix}\trans.
+	\label{eq_commanded_rotor_speed_vector}
+\end{equation}
+
+Les vitesses commandées sont ensuite transmises aux modèles dynamiques ESC--BLDC--hélice. Les vitesses effectivement atteintes peuvent différer momentanément des consignes en raison des dynamiques électriques et mécaniques, des limites de tension, des limites de courant et des saturations des actionneurs.
+
+\subsection{Efforts effectivement réalisés}
+
+Après saturation des vitesses rotor, les poussées effectivement produites sont
+\begin{equation}
+	t_{i,a}
+	=
+	\rho\,k_{t/\rho}\,\omega_{i,c}^{2}.
+	\label{eq_achieved_rotor_thrust}
+\end{equation}
+
+Le vecteur correspondant est
+\begin{equation}
+	\vect t_a
+	=
+	\begin{bmatrix}
+		t_{LB,a} &
+		t_{LF,a} &
+		t_{LS,a} &
+		t_{RB,a} &
+		t_{RF,a} &
+		t_{RS,a}
+	\end{bmatrix}\trans.
+\end{equation}
+
+Les efforts généralisés effectivement réalisés sont alors
+\begin{equation}
+	\vect\lambda_a
+	=
+	\mathbf B_t\vect t_a.
+	\label{eq_achievable_generalized_wrench}
+\end{equation}
+
+Lorsque les saturations sont actives, les efforts réalisés peuvent différer des efforts commandés. La pseudo-inverse suivie d'une saturation indépendante des vitesses ne garantit alors ni la conservation exacte de la force collective ni une répartition optimale des couples.
+
+\section{Chaîne complète de commande}
+
+La chaîne complète de commande et d'allocation est résumée par
+\begin{equation}
+	\left(
+	\vect p_d,
+	\vect v_d,
+	\vect a_d,
+	\psi_d
+	\right)
+	\longrightarrow
+	\bar{\vect a}_c
+	\longrightarrow
+	\left(
+	\bar\phi_d,
+	\bar\theta_d,
+	\psi_d
+	\right)
+	\longrightarrow
+	\vect\omega_c
+	\longrightarrow
+	\vect\omega_r
+	\longrightarrow
+	\Delta\vect\tau_c
+	\longrightarrow
+	\Delta\vect\lambda_c
+	\longrightarrow
+	\Delta\vect t^{\,\star}
+	\longrightarrow
+	\Delta\vect\chi
+	\longrightarrow
+	\vect\chi_c
+	\longrightarrow
+	\vect\omega_{r,c}.
+	\label{eq_complete_control_chain}
+\end{equation}
+
+La boucle externe détermine les accélérations nécessaires au suivi de trajectoire. La conversion attitude--vitesse angulaire produit les références de la boucle interne. Le modèle de référence impose la dynamique désirée des vitesses angulaires, tandis que la commande INDI détermine les incréments de couple. L'allocation répartit ensuite les incréments de force et de couple entre les six rotors. Les incréments de poussée sont convertis à l'aide de la masse volumique instantanée $\rho$, puis ajoutés au point de fonctionnement en vol stationnaire défini à partir de $\rho_{\mathrm{hov}}$ avant l'application de la racine carrée signée et des limites d'actionnement.
+	
+
+	\chapter{Protocole de simulation et critères de performance}
+	\label{chap_validation}
+	
+	Le protocole de validation définit, avant l'exécution des simulations, les conditions initiales, la durée du scénario, les grandeurs enregistrées, les fenêtres d'évaluation et les indicateurs de performance. Cette définition préalable limite les biais d'interprétation liés à une sélection a posteriori des résultats et permet de comparer plusieurs lois de commande dans des conditions identiques.
+	
+	L'évaluation distingue quatre propriétés complémentaires : la précision du suivi en régime établi, la qualité de la réponse transitoire, l'utilisation de l'autorité de commande et la qualité des fonctions de positionnement, de navigation et de synchronisation. Aucun indicateur isolé ne permet de conclure à la qualité globale du système.
+	
+
+	
+\begin{table}[H]
+	\centering
+	\caption{Conditions initiales et paramètres temporels du scénario de référence.}
+	\label{tab_initial_conditions}
+	\begin{tabularx}{\textwidth}{@{}L{5.0cm}L{5.5cm}L{2.5cm}@{}}
+		\toprule
+		\textbf{Paramètre} & \textbf{Valeur} & \textbf{Unité}\\
+		\midrule
+		$t_0$ & \num{0} & \si{s}\\
+		$t_f$ & \num{100} & \si{s}\\
+		$t_s$ & \num{1e-3} & \si{s}\\
+		$\vect p_E(0)$ & $[0,0,-10^{-4}]\trans$ & \si{m}\\
+		$\vect v_E(0)$ & $[0,0,0]\trans$ & \si{m.s^{-1}}\\
+		$[\phi(0),\theta(0),\psi(0)]\trans$ & $[0,0,0]\trans$ & \si{rad}\\
+		$\vect q_{EB}(0)$ & $[0,0,0,1]\trans$ & --\\
+		$\vect\omega_B(0)$ & $[0,0,0]\trans$ & \si{rad.s^{-1}}\\
+		$\vect\omega_r(0)$ & $[0,0,0,0,0,0]\trans$ & \si{rad.s^{-1}}\\
+		\bottomrule
+	\end{tabularx}
+\end{table}
+	
+\section{Critères numériques de qualification}
+
+La qualification numérique repose uniquement sur les indicateurs effectivement utilisés pour établir le statut de conformité. Les performances de suivi en régime établi sont évaluées sur la fenêtre temporelle finale
+\begin{equation}
+	\mathcal{T}_f=[t_f-T_f,t_f],
+	\qquad
+	T_f=\SI{5}{s},
+	\label{eq_final_evaluation_window}
+\end{equation}
+où $t_f$ est l'instant final de la simulation et $T_f$ la durée de la fenêtre d'évaluation.
+
+Pour toute grandeur scalaire $y(t)$ associée à une référence $r(t)$, l'erreur de suivi est définie par
+\begin{equation}
+	e(t)=r(t)-y(t).
+	\label{eq_qualification_tracking_error}
+\end{equation}
+Dans cette expression, $r(t)$ désigne la consigne, $y(t)$ la réponse du système et $e(t)$ l'erreur de suivi correspondante.
+
+\subsection{Erreur quadratique moyenne}
+
+Pour une erreur scalaire $e(t)$, l'erreur quadratique moyenne calculée sur la fenêtre finale est définie par
+\begin{equation}
+	e_{\mathrm{rmse}}
+	=
+	\sqrt{
+		\frac{1}{T_f}
+		\int_{t_f-T_f}^{t_f}
+		e^2(t)\dd t
+	}.
+	\label{eq_qualification_rmse}
+\end{equation}
+La RMSE possède la même unité que la grandeur évaluée. Elle quantifie la précision globale du suivi tout en accordant un poids important aux erreurs de grande amplitude.
+
+\subsubsection{RMSE horizontale de position}
+
+L'erreur de position dans le repère Terre NED est
+\begin{equation}
+	\vect e_p(t)
+	=
+	\vect p_{E,\mathrm{ref}}(t)-\vect p_E(t)
+	=
+	\begin{bmatrix}
+		e_N(t) & e_E(t) & e_D(t)
+	\end{bmatrix}\trans,
+	\label{eq_position_tracking_error}
+\end{equation}
+où $\vect p_{E,\mathrm{ref}}$ est la position de référence, $\vect p_E$ la position réelle, et $e_N$, $e_E$ et $e_D$ les erreurs suivant les axes Nord, Est et Bas.
+
+La RMSE horizontale est définie par
+\begin{equation}
+	e_{\mathrm{rmse},H}
+	=
+	\sqrt{
+		e_{\mathrm{rmse},N}^{2}
+		+
+		e_{\mathrm{rmse},E}^{2}
+	},
+	\label{eq_qualification_horizontal_rmse}
+\end{equation}
+où $e_{\mathrm{rmse},N}$ et $e_{\mathrm{rmse},E}$ sont les RMSE des erreurs de position suivant les axes Nord et Est.
+
+Le critère de qualification est
+\begin{equation}
+	e_{\mathrm{rmse},H}\leq\SI{0.50}{m}.
+	\label{eq_horizontal_rmse_requirement}
+\end{equation}
+Cet indicateur évalue la précision résultante du suivi dans le plan horizontal.
+
+\subsubsection{RMSE verticale de position}
+
+La RMSE verticale est calculée à partir de la composante $e_D(t)$ :
+\begin{equation}
+	e_{\mathrm{rmse},D}
+	=
+	\sqrt{
+		\frac{1}{T_f}
+		\int_{t_f-T_f}^{t_f}
+		e_D^2(t)\dd t
+	}.
+	\label{eq_qualification_vertical_rmse}
+\end{equation}
+
+Le critère associé est
+\begin{equation}
+	e_{\mathrm{rmse},D}\leq\SI{0.50}{m}.
+	\label{eq_vertical_rmse_requirement}
+\end{equation}
+Cet indicateur caractérise la précision du suivi vertical et, dans la convention NED, la qualité de la commande d'altitude.
+
+\subsubsection{RMSE de la vitesse de translation}
+
+L'erreur de vitesse est définie par
+\begin{equation}
+	\vect e_v(t)
+	=
+	\vect v_{E,\mathrm{ref}}(t)-\vect v_E(t)
+	=
+	\begin{bmatrix}
+		e_{v_N}(t) & e_{v_E}(t) & e_{v_D}(t)
+	\end{bmatrix}\trans,
+	\label{eq_velocity_tracking_error}
+\end{equation}
+où $\vect v_{E,\mathrm{ref}}$ est la vitesse de référence et $\vect v_E$ la vitesse réelle, toutes deux exprimées dans le repère Terre.
+
+La RMSE résultante de vitesse est donnée par
+\begin{equation}
+	e_{\mathrm{rmse},v}
+	=
+	\sqrt{
+		e_{\mathrm{rmse},v_N}^{2}
+		+
+		e_{\mathrm{rmse},v_E}^{2}
+		+
+		e_{\mathrm{rmse},v_D}^{2}
+	}.
+	\label{eq_velocity_resultant_rmse}
+\end{equation}
+
+Le critère de qualification est
+\begin{equation}
+	e_{\mathrm{rmse},v}
+	\leq
+	\SI{0.35}{m.s^{-1}}.
+	\label{eq_velocity_rmse_requirement}
+\end{equation}
+Cet indicateur mesure la précision globale du suivi cinématique. Une faible erreur de vitesse contribue à limiter les oscillations de position et les écarts de trajectoire.
+
+\subsubsection{RMSE en roulis et en tangage}
+
+Les erreurs d'attitude sont définies par
+\begin{equation}
+	\vect e_\eta(t)
+	=
+	\begin{bmatrix}
+		e_\phi(t) & e_\theta(t) & e_\psi(t)
+	\end{bmatrix}\trans,
+	\label{eq_attitude_tracking_error}
+\end{equation}
+où $e_\phi$, $e_\theta$ et $e_\psi$ sont respectivement les erreurs de roulis, de tangage et de lacet. Les différences angulaires sont ramenées dans l'intervalle principal afin d'éviter les discontinuités associées à la périodicité des angles.
+
+L'indicateur retenu pour le roulis et le tangage est
+\begin{equation}
+	e_{\mathrm{rmse},\phi\theta}
+	=
+	\max\left(
+	e_{\mathrm{rmse},\phi},
+	e_{\mathrm{rmse},\theta}
+	\right).
+	\label{eq_qualification_roll_pitch_rmse}
+\end{equation}
+
+Le critère associé est
+\begin{equation}
+	e_{\mathrm{rmse},\phi\theta}
+	\leq
+	\SI{2.0}{\degree}.
+	\label{eq_roll_pitch_rmse_requirement}
+\end{equation}
+L'utilisation du maximum impose que les deux axes satisfassent individuellement la limite. Cet indicateur évalue la précision des inclinaisons responsables de l'accélération latérale du véhicule.
+
+\subsubsection{RMSE en lacet}
+
+La RMSE de lacet est définie par
+\begin{equation}
+	e_{\mathrm{rmse},\psi}
+	=
+	\sqrt{
+		\frac{1}{T_f}
+		\int_{t_f-T_f}^{t_f}
+		e_\psi^2(t)\dd t
+	}.
+	\label{eq_qualification_yaw_rmse}
+\end{equation}
+
+Le critère de qualification est
+\begin{equation}
+	e_{\mathrm{rmse},\psi}
+	\leq
+	\SI{5.0}{\degree}.
+	\label{eq_yaw_rmse_requirement}
+\end{equation}
+Cet indicateur mesure la précision de l'orientation du véhicule autour de l'axe vertical.
+
+\subsubsection{RMSE des vitesses angulaires}
+
+L'erreur de vitesse angulaire est
+\begin{equation}
+	\vect e_\omega(t)
+	=
+	\vect\omega_{B,\mathrm{ref}}(t)-\vect\omega_B(t)
+	=
+	\begin{bmatrix}
+		e_p(t) & e_q(t) & e_r(t)
+	\end{bmatrix}\trans,
+	\label{eq_body_rate_tracking_error}
+\end{equation}
+où $\vect\omega_{B,\mathrm{ref}}$ est la vitesse angulaire de référence, $\vect\omega_B$ la vitesse angulaire réelle, et $p$, $q$ et $r$ les composantes de roulis, de tangage et de lacet.
+
+L'indicateur de qualification est défini par
+\begin{equation}
+	e_{\mathrm{rmse},\omega}
+	=
+	\max\left(
+	e_{\mathrm{rmse},p},
+	e_{\mathrm{rmse},q},
+	e_{\mathrm{rmse},r}
+	\right).
+	\label{eq_body_rate_max_rmse}
+\end{equation}
+
+Le critère associé est
+\begin{equation}
+	e_{\mathrm{rmse},\omega}
+	\leq
+	\SI{5.0}{\degree.s^{-1}}.
+	\label{eq_body_rate_rmse_requirement}
+\end{equation}
+Cet indicateur évalue la précision de la boucle interne de commande des vitesses angulaires. La performance de cette boucle conditionne directement la rapidité et l'amortissement de la dynamique d'attitude.
+
+\subsection{Percentiles des erreurs de position}
+
+Pour un signal d'erreur positif $z(t)$, le percentile 95, noté $\operatorname{P}_{95}(z)$, est la valeur satisfaisant
+\begin{equation}
+	\Pr\!\left(
+	z(t)\leq\operatorname{P}_{95}(z)
+	\right)=0.95.
+	\label{eq_percentile_95_definition}
+\end{equation}
+Il représente une borne qui n'est dépassée que pendant \SI{5}{\percent} de la fenêtre d'évaluation. Contrairement à l'erreur maximale, il est peu sensible à un échantillon isolé.
+
+\subsubsection{Percentile 95 de l'erreur tridimensionnelle de navigation}
+
+L'erreur tridimensionnelle de navigation est définie par
+\begin{equation}
+	e_{\mathrm{NP}}(t)
+	=
+	\norm{
+		\vect p_{E,\mathrm{ref}}(t)-\vect p_E(t)
+	}_2
+	=
+	\sqrt{
+		e_N^2(t)+e_E^2(t)+e_D^2(t)
+	}.
+	\label{eq_navigation_3d_error}
+\end{equation}
+
+Le percentile correspondant sur la fenêtre finale est
+\begin{equation}
+	e_{\mathrm{NP},95}
+	=
+	\operatorname{P}_{95}
+	\left\{
+	e_{\mathrm{NP}}(t):
+	t\in\mathcal T_f
+	\right\}.
+	\label{eq_navigation_final_p95}
+\end{equation}
+
+Le critère de qualification est
+\begin{equation}
+	e_{\mathrm{NP},95}
+	\leq
+	\SI{1.00}{m}.
+	\label{eq_navigation_p95_requirement}
+\end{equation}
+Cet indicateur caractérise la précision globale du suivi tridimensionnel pendant la majeure partie de la fenêtre d'évaluation.
+
+\subsubsection{Percentile 95 de l'erreur horizontale d'estimation}
+
+Lorsque la position estimée est disponible, l'erreur horizontale d'estimation est définie par
+\begin{equation}
+	e_{\mathrm{PH}}(t)
+	=
+	\sqrt{
+		\left(\hat p_N(t)-p_N(t)\right)^2
+		+
+		\left(\hat p_E(t)-p_E(t)\right)^2
+	},
+	\label{eq_horizontal_estimation_error}
+\end{equation}
+où $\hat p_N$ et $\hat p_E$ sont les composantes estimées de la position, tandis que $p_N$ et $p_E$ sont les composantes réelles.
+
+Le percentile 95 est
+\begin{equation}
+	e_{\mathrm{PH},95}
+	=
+	\operatorname{P}_{95}
+	\left\{
+	e_{\mathrm{PH}}(t):
+	t\in\mathcal T_f
+	\right\}.
+	\label{eq_horizontal_estimation_p95}
+\end{equation}
+
+Le critère associé est
+\begin{equation}
+	e_{\mathrm{PH},95}
+	\leq
+	\SI{8}{m}.
+	\label{eq_horizontal_assurance_requirement}
+\end{equation}
+Cet indicateur isole la qualité de l'estimation horizontale de la performance propre du contrôleur.
+
+\subsubsection{Percentile 95 de l'erreur verticale d'estimation}
+
+L'erreur verticale d'estimation est définie par
+\begin{equation}
+	e_{\mathrm{PV}}(t)
+	=
+	\left|
+	\hat p_D(t)-p_D(t)
+	\right|,
+	\label{eq_vertical_estimation_error}
+\end{equation}
+où $\hat p_D$ est la position verticale estimée et $p_D$ la position verticale réelle dans la convention NED.
+
+Le percentile 95 correspondant est
+\begin{equation}
+	e_{\mathrm{PV},95}
+	=
+	\operatorname{P}_{95}
+	\left\{
+	e_{\mathrm{PV}}(t):
+	t\in\mathcal T_f
+	\right\}.
+	\label{eq_vertical_estimation_p95}
+\end{equation}
+
+Le critère de qualification est
+\begin{equation}
+	e_{\mathrm{PV},95}
+	\leq
+	\SI{13}{m}.
+	\label{eq_vertical_assurance_requirement}
+\end{equation}
+Cet indicateur caractérise la précision verticale de l'estimation indépendamment de la qualité du suivi de la consigne.
+
+\subsection{Indicateurs de réponse transitoire}
+
+Les caractéristiques transitoires sont évaluées à partir du plus grand échelon détecté dans le signal de référence. Soit un échelon appliqué à l'instant $t_s$, d'amplitude
+\begin{equation}
+	\Delta r
+	=
+	r(t_s^{+})-r(t_s^{-}).
+	\label{eq_qualification_step_amplitude}
+\end{equation}
+Dans cette expression, $r(t_s^{-})$ et $r(t_s^{+})$ sont les valeurs de la référence immédiatement avant et après l'échelon.
+
+\subsubsection{Délai de réponse}
+
+La réponse normalisée est définie par
+\begin{equation}
+	y_n(t)
+	=
+	\frac{
+		s_{\Delta r}\left[y(t)-y_0\right]
+	}{
+		|\Delta r|
+	},
+	\qquad
+	s_{\Delta r}=\operatorname{sign}(\Delta r),
+	\label{eq_normalized_step_response}
+\end{equation}
+où $y_0$ est la valeur initiale de la réponse et $s_{\Delta r}$ le signe de l'échelon.
+
+Le délai de réponse est
+\begin{equation}
+	t_d=t_{\alpha}-t_s,
+	\label{eq_qualification_delay}
+\end{equation}
+où $t_{\alpha}$ est le premier instant auquel
+\begin{equation}
+	y_n(t_{\alpha})\geq\alpha,
+	\qquad
+	\alpha=0.02.
+	\label{eq_delay_detection_threshold}
+\end{equation}
+
+Le critère de qualification est
+\begin{equation}
+	t_d\leq\SI{0.300}{s}.
+	\label{eq_delay_requirement}
+\end{equation}
+Le délai quantifie la latence cumulée introduite par les capteurs, l'estimation, le calcul de la commande et la dynamique des actionneurs.
+
+\subsubsection{Temps de montée}
+
+Le temps de montée est défini par
+\begin{equation}
+	t_r=t_{90}-t_{10},
+	\label{eq_qualification_rise_time}
+\end{equation}
+où $t_{10}$ et $t_{90}$ sont les premiers instants auxquels la réponse normalisée atteint respectivement \num{0.10} et \num{0.90}.
+
+Le critère associé est
+\begin{equation}
+	t_r\leq\SI{1.0}{s}.
+	\label{eq_rise_time_requirement}
+\end{equation}
+Le temps de montée mesure la rapidité de la réponse en boucle fermée. Il doit être interprété conjointement avec le dépassement et l'utilisation des actionneurs.
+
+\subsubsection{Temps d'établissement}
+
+Le temps d'établissement est défini par
+\begin{equation}
+	t_{\mathrm{set}}
+	=
+	\inf
+	\left\{
+	t-t_s:
+	|y(\tau)-y_f|
+	\leq
+	\delta|\Delta r|,
+	\quad
+	\forall \tau\geq t
+	\right\},
+	\label{eq_qualification_settling_time}
+\end{equation}
+où $y_f$ est la valeur finale de la réponse et
+\begin{equation}
+	\delta=0.02
+	\label{eq_settling_band}
+\end{equation}
+est la largeur relative de la bande d'établissement.
+
+Le critère de qualification est
+\begin{equation}
+	t_{\mathrm{set}}
+	\leq
+	\SI{2.0}{s}.
+	\label{eq_settling_time_requirement}
+\end{equation}
+Cet indicateur mesure le temps nécessaire pour que la réponse entre définitivement dans une bande de \SI{2}{\percent} autour de sa valeur finale.
+
+\subsubsection{Dépassement relatif}
+
+Pour un échelon positif, le dépassement relatif est défini par
+\begin{equation}
+	M_p
+	=
+	100
+	\frac{
+		y_{\max}-y_f
+	}{
+		|\Delta r|
+	},
+	\label{eq_positive_overshoot}
+\end{equation}
+où $y_{\max}$ est la valeur maximale atteinte pendant le transitoire.
+
+Pour un échelon négatif, il est défini de manière symétrique par
+\begin{equation}
+	M_p
+	=
+	100
+	\frac{
+		y_f-y_{\min}
+	}{
+		|\Delta r|
+	},
+	\label{eq_negative_overshoot}
+\end{equation}
+où $y_{\min}$ est la valeur minimale atteinte.
+
+Le critère associé est
+\begin{equation}
+	M_p\leq\SI{10}{\percent}.
+	\label{eq_overshoot_requirement}
+\end{equation}
+Le dépassement renseigne sur l'amortissement de la réponse et sur l'amplitude maximale de l'excursion au-delà de la valeur finale.
+
+\subsection{Utilisation des actionneurs}
+
+Pour le canal de commande $i$, la commande $u_i(t)$ est contrainte par
+\begin{equation}
+	u_{i,\min}
+	\leq
+	u_i(t)
+	\leq
+	u_{i,\max},
+	\label{eq_actuator_limits}
+\end{equation}
+où $u_{i,\min}$ et $u_{i,\max}$ sont respectivement les limites inférieure et supérieure de l'actionneur.
+
+La marge normalisée par rapport à la limite la plus proche est définie par
+\begin{equation}
+	\mu_i(t)
+	=
+	\frac{
+		\min\left[
+		u_i(t)-u_{i,\min},
+		u_{i,\max}-u_i(t)
+		\right]
+	}{
+		u_{i,\max}-u_{i,\min}
+	}.
+	\label{eq_actuator_normalized_margin}
+\end{equation}
+La grandeur $\mu_i(t)$ est sans dimension. Une valeur nulle indique que l'actionneur se trouve exactement sur l'une de ses limites.
+
+Un actionneur est considéré comme proche d'une limite lorsque
+\begin{equation}
+	\mu_i(t)\leq\mu_{\mathrm{lim}},
+	\qquad
+	\mu_{\mathrm{lim}}=0.05.
+	\label{eq_actuator_near_limit}
+\end{equation}
+
+La fraction temporelle pendant laquelle au moins un actionneur se trouve près de ses limites est définie par
+\begin{equation}
+	f_{\mathrm{sat}}
+	=
+	\frac{1}{t_f-t_0}
+	\int_{t_0}^{t_f}
+	\mathbb{I}
+	\left[
+	\min_i\mu_i(t)\leq\mu_{\mathrm{lim}}
+	\right]
+	\dd t,
+	\label{eq_actuator_near_limit_fraction}
+\end{equation}
+où $\mathbb{I}[\cdot]$ est la fonction indicatrice, égale à $1$ lorsque la condition est satisfaite et à $0$ dans le cas contraire.
+
+Le critère de qualification est
+\begin{equation}
+	f_{\mathrm{sat}}
+	\leq
+	0.01.
+	\label{eq_actuator_fraction_requirement}
+\end{equation}
+Cette limite signifie qu'au moins un actionneur ne doit fonctionner à moins de \SI{5}{\percent} de l'une de ses limites pendant plus de \SI{1}{\percent} de la durée totale de la simulation. Cet indicateur vérifie que les performances de suivi ne sont pas obtenues au prix d'une perte prolongée d'autorité de commande.
+
+La qualification est déclarée satisfaite lorsque tous les indicateurs disponibles respectent simultanément leurs limites respectives. Lorsqu'une grandeur nécessaire au calcul d'un indicateur n'est pas disponible, celui-ci est déclaré non évalué et ne doit pas être interprété comme conforme.
+	
+		% =================================================================================================
+	% =================================================================================================
+\chapter{Résultats}
+\label{chap_results}
+
+Les résultats présentés dans ce chapitre sont issus d'une simulation d'une durée de \SI{100}{s}, exécutée avec un pas fondamental de \SI{1e-3}{s}. Les données enregistrées contiennent \num{100001} échantillons. Le scénario ne comporte aucune perturbation de vent, les trois composantes du vecteur de vent étant nulles pendant toute la simulation. Les résultats permettent donc d'évaluer le suivi de trajectoire, la commande des vitesses angulaires, l'estimation d'état, l'observation des couples perturbateurs et l'utilisation des actionneurs, mais ils ne permettent pas de conclure sur le rejet des perturbations aérodynamiques.
+
+La trajectoire de référence décrit une spirale spatiale ascendante comportant deux révolutions autour de l'axe vertical. La distance horizontale à l'origine augmente de \SI{2}{m} à \SI{12}{m}, tandis que l'altitude passe de \SI{10}{m} à \SI{20}{m}. Dans la convention NED, cette variation correspond à une composante verticale $D$ évoluant de \SI{-10}{m} à \SI{-20}{m}.
+
+Les indicateurs de régime établi sont calculés sur la fenêtre temporelle
+\begin{equation}
+	\mathcal T_f=[95,100]\ \si{s}.
+	\label{eq_results_final_window}
+\end{equation}
+Cette fenêtre finale est distinguée de l'ensemble de la simulation afin de séparer la précision asymptotique des erreurs associées à l'initialisation et aux phases intermédiaires de la trajectoire.
+
+\section{Trajectoire et suivi de position}
+
+La \cref{fig_01_trajectory} compare la trajectoire de référence à la trajectoire effectivement suivie par l'hexacoptère. La représentation tridimensionnelle permet d'apprécier la géométrie globale du mouvement, tandis que les projections horizontale et verticale mettent en évidence les écarts locaux.
+
+\resultspdf{01_trajectory}{Trajectoire de référence et trajectoire simulée dans le repère NED pour une simulation de \SI{100}{s} sans perturbation de vent.}
+
+Les conditions initiales de la trajectoire de référence et du véhicule ne sont pas identiques. À l'instant initial,
+\begin{equation}
+	\vect p_{E,\mathrm{ref}}(0)
+	=
+	\begin{bmatrix}
+		2 & 0 & -10
+	\end{bmatrix}\trans
+	\si{m},
+	\qquad
+	\vect p_E(0)
+	=
+	\begin{bmatrix}
+		0 & 0 & -10^{-4}
+	\end{bmatrix}\trans
+	\si{m}.
+	\label{eq_results_initial_position_mismatch}
+\end{equation}
+L'erreur initiale de position est par conséquent
+\begin{equation}
+	\vect e_p(0)
+	=
+	\begin{bmatrix}
+		2 & 0 & -9.9999
+	\end{bmatrix}\trans
+	\si{m},
+	\qquad
+	\norm{\vect e_p(0)}_2
+	=
+	\SI{10.198}{m}.
+	\label{eq_results_initial_position_error}
+\end{equation}
+
+Cette différence explique la forte erreur observée pendant la phase initiale. Elle doit être interprétée comme une phase d'acquisition de la trajectoire et non comme une erreur de régime établi.
+
+La \cref{fig_02_position_tracking} présente séparément les composantes Nord, Est et Bas. La réponse rejoint la trajectoire après la phase initiale, mais des écarts importants subsistent pendant certaines portions de la spirale. Après les dix premières secondes, l'erreur tridimensionnelle maximale atteint
+\begin{equation}
+	\max_{t\in[10,100]}
+	\norm{\vect e_p(t)}_2
+	=
+	\SI{4.023}{m},
+	\label{eq_results_position_max_after_initialization}
+\end{equation}
+à l'instant $t=\SI{60.964}{s}$.
+
+\resultspdf{02_position_tracking}{Suivi des composantes Nord, Est et Bas de la position et évolution de la norme de l'erreur tridimensionnelle.}
+
+Sur la totalité de la simulation, les RMSE suivant les trois axes sont
+\begin{equation}
+	\begin{bmatrix}
+		e_{\mathrm{rmse},N} &
+		e_{\mathrm{rmse},E} &
+		e_{\mathrm{rmse},D}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		1.573 &
+		1.489 &
+		1.758
+	\end{bmatrix}
+	\si{m}.
+	\label{eq_results_position_rmse_full}
+\end{equation}
+
+La RMSE de la norme tridimensionnelle sur les \SI{100}{s} est
+\begin{equation}
+	e_{\mathrm{rmse},3D}
+	=
+	\sqrt{
+		e_{\mathrm{rmse},N}^{2}
+		+
+		e_{\mathrm{rmse},E}^{2}
+		+
+		e_{\mathrm{rmse},D}^{2}
+	}
+	=
+	\SI{2.790}{m}.
+	\label{eq_results_position_3d_rmse_full}
+\end{equation}
+Cette valeur est fortement influencée par l'écart initial et par les erreurs observées dans la partie centrale de la trajectoire.
+
+Sur la fenêtre finale $\mathcal T_f$, les RMSE par axe deviennent
+\begin{equation}
+	\begin{bmatrix}
+		e_{\mathrm{rmse},N} &
+		e_{\mathrm{rmse},E} &
+		e_{\mathrm{rmse},D}
+	\end{bmatrix}_{\mathcal T_f}
+	=
+	\begin{bmatrix}
+		0.181 &
+		0.208 &
+		0.594
+	\end{bmatrix}
+	\si{m}.
+	\label{eq_results_position_rmse_final}
+\end{equation}
+
+La RMSE horizontale résultante est alors
+\begin{equation}
+	e_{\mathrm{rmse},H}
+	=
+	\sqrt{
+		e_{\mathrm{rmse},N}^{2}
+		+
+		e_{\mathrm{rmse},E}^{2}
+	}
+	=
+	\SI{0.276}{m}.
+	\label{eq_results_horizontal_rmse}
+\end{equation}
+Elle respecte la limite de \SI{0.50}{m} retenue pour l'évaluation.
+
+En revanche, la RMSE verticale vérifie
+\begin{equation}
+	e_{\mathrm{rmse},D}
+	=
+	\SI{0.594}{m}
+	>
+	\SI{0.50}{m}.
+	\label{eq_results_vertical_rmse}
+\end{equation}
+Le critère de précision verticale n'est donc pas satisfait.
+
+Le biais moyen de position sur la fenêtre finale est
+\begin{equation}
+	\overline{\vect e}_p
+	=
+	\begin{bmatrix}
+		0.179 &
+		0.188 &
+		-0.593
+	\end{bmatrix}\trans
+	\si{m}.
+	\label{eq_results_position_bias_final}
+\end{equation}
+La composante verticale montre ainsi que l'altitude réelle demeure en moyenne inférieure d'environ \SI{0.59}{m} à l'altitude demandée.
+
+Le percentile 95 de la norme de l'erreur tridimensionnelle sur la fenêtre finale est
+\begin{equation}
+	e_{\mathrm{NP},95}^{(5\,\mathrm{s})}
+	=
+	\SI{0.728}{m}.
+	\label{eq_results_navigation_p95_final}
+\end{equation}
+Cette valeur respecte la limite de \SI{1}{m} lorsqu'elle est évaluée uniquement sur les cinq dernières secondes.
+
+\section{Suivi des vitesses angulaires}
+
+La boucle interne reçoit les références de vitesses angulaires
+\begin{equation}
+	\vect\omega_{B,\mathrm{ref}}
+	=
+	\begin{bmatrix}
+		p_{\mathrm{ref}} &
+		q_{\mathrm{ref}} &
+		r_{\mathrm{ref}}
+	\end{bmatrix}\trans
+\end{equation}
+et commande les six rotors afin de réaliser les mouvements de roulis, de tangage et de lacet requis par le guidage.
+
+\resultspdf{body_rates_tracking}{Suivi des vitesses angulaires $p$, $q$ et $r$ par la boucle interne de commande INDI.}
+
+Sur l'ensemble de la simulation, les RMSE sont
+\begin{equation}
+	\begin{bmatrix}
+		e_{\mathrm{rmse},p} &
+		e_{\mathrm{rmse},q} &
+		e_{\mathrm{rmse},r}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		3.708 &
+		4.014 &
+		1.991
+	\end{bmatrix}
+	\si{\degree.s^{-1}}.
+	\label{eq_results_body_rate_rmse_full}
+\end{equation}
+
+Sur la fenêtre finale, elles deviennent
+\begin{equation}
+	\begin{bmatrix}
+		e_{\mathrm{rmse},p} &
+		e_{\mathrm{rmse},q} &
+		e_{\mathrm{rmse},r}
+	\end{bmatrix}_{\mathcal T_f}
+	=
+	\begin{bmatrix}
+		3.342 &
+		3.165 &
+		0.158
+	\end{bmatrix}
+	\si{\degree.s^{-1}}.
+	\label{eq_results_body_rate_rmse_final}
+\end{equation}
+
+L'indicateur retenu pour la boucle interne correspond à la plus grande RMSE parmi les trois axes :
+\begin{equation}
+	e_{\mathrm{rmse},\omega}
+	=
+	\max\left(
+	e_{\mathrm{rmse},p},
+	e_{\mathrm{rmse},q},
+	e_{\mathrm{rmse},r}
+	\right)
+	=
+	\SI{3.342}{\degree.s^{-1}}.
+	\label{eq_results_body_rate_max_rmse}
+\end{equation}
+La limite de \SI{5}{\degree.s^{-1}} est donc respectée.
+
+Le lacet présente une erreur nettement inférieure à celles du roulis et du tangage pendant la fenêtre finale. Les performances de la boucle interne sont néanmoins à rapprocher des erreurs de position observées au milieu de la trajectoire : le respect du critère sur les vitesses angulaires ne garantit pas, à lui seul, une précision uniforme de la boucle externe de position.
+
+Les données enregistrées ne contiennent pas de références explicites de vitesse de translation ni d'attitude. Les performances de suivi de $\vect v_E$, $\phi$, $\theta$ et $\psi$ ne peuvent donc pas être évaluées directement dans ce scénario. Seules les erreurs d'estimation de ces grandeurs peuvent être calculées.
+
+\section{Estimation d'état}
+
+L'estimation est évaluée en comparant les états produits par l'EKF aux états simulés. L'erreur d'estimation d'une grandeur $\vect z$ est définie par
+\begin{equation}
+	\tilde{\vect z}(t)
+	=
+	\hat{\vect z}(t)-\vect z(t),
+	\label{eq_results_estimation_error}
+\end{equation}
+où $\hat{\vect z}$ est l'estimation et $\vect z$ la valeur simulée considérée comme référence.
+
+\subsection{Estimation de la position}
+
+Sur la fenêtre finale, les RMSE de position sont
+\begin{equation}
+	\begin{bmatrix}
+		\tilde p_{N,\mathrm{rmse}} &
+		\tilde p_{E,\mathrm{rmse}} &
+		\tilde p_{D,\mathrm{rmse}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0.073 &
+		0.186 &
+		0.636
+	\end{bmatrix}
+	\si{m}.
+	\label{eq_results_ekf_position_rmse}
+\end{equation}
+
+Les percentiles 95 des erreurs horizontale et verticale valent respectivement
+\begin{equation}
+	e_{\mathrm{PH},95}^{(5\,\mathrm{s})}
+	=
+	\SI{0.244}{m},
+	\qquad
+	e_{\mathrm{PV},95}^{(5\,\mathrm{s})}
+	=
+	\SI{0.744}{m}.
+	\label{eq_results_ekf_position_p95}
+\end{equation}
+
+Le biais moyen de l'estimation de position est
+\begin{equation}
+	\overline{\tilde{\vect p}}_E
+	=
+	\begin{bmatrix}
+		0.070 &
+		0.183 &
+		-0.632
+	\end{bmatrix}\trans
+	\si{m}.
+	\label{eq_results_ekf_position_bias}
+\end{equation}
+
+La composante verticale estimée présente donc un décalage presque constant d'environ \SI{0.63}{m}. Ce décalage est du même ordre de grandeur que l'erreur verticale de suivi observée sur la même fenêtre. Si la commande d'altitude utilise directement la position estimée, cette concordance est compatible avec l'hypothèse selon laquelle le biais d'estimation contribue à l'erreur verticale résiduelle. Une relation causale ne peut toutefois être établie sans une simulation complémentaire utilisant l'état réel dans la boucle de retour.
+
+\subsection{Estimation de la vitesse}
+
+Les RMSE de l'estimation de la vitesse sur la fenêtre finale sont
+\begin{equation}
+	\begin{bmatrix}
+		\tilde v_{N,\mathrm{rmse}} &
+		\tilde v_{E,\mathrm{rmse}} &
+		\tilde v_{D,\mathrm{rmse}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0.0376 &
+		0.0326 &
+		0.0331
+	\end{bmatrix}
+	\si{m.s^{-1}}.
+	\label{eq_results_ekf_velocity_rmse}
+\end{equation}
+Ces valeurs indiquent une estimation précise de la vitesse de translation dans les trois directions.
+
+\subsection{Estimation de l'attitude}
+
+Après traitement de la périodicité des angles, les RMSE d'attitude sur la fenêtre finale sont
+\begin{equation}
+	\begin{bmatrix}
+		\tilde\phi_{\mathrm{rmse}} &
+		\tilde\theta_{\mathrm{rmse}} &
+		\tilde\psi_{\mathrm{rmse}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0.709 &
+		0.961 &
+		3.939
+	\end{bmatrix}
+	\si{\degree}.
+	\label{eq_results_ekf_attitude_rmse}
+\end{equation}
+
+Les biais moyens correspondants sont
+\begin{equation}
+	\begin{bmatrix}
+		\overline{\tilde\phi} &
+		\overline{\tilde\theta} &
+		\overline{\tilde\psi}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		-0.707 &
+		0.960 &
+		-3.937
+	\end{bmatrix}
+	\si{\degree}.
+	\label{eq_results_ekf_attitude_bias}
+\end{equation}
+Les RMSE sont presque entièrement expliquées par des décalages quasi constants, particulièrement en lacet.
+
+Les innovations, leurs covariances $\mathbf S_k$ et les statistiques normalisées associées ne sont pas enregistrées dans les données analysées. La comparaison avec les états simulés permet d'évaluer l'exactitude apparente de l'estimation, mais elle ne suffit pas à vérifier la cohérence statistique de l'EKF.
+
+\section{Intégrales d'erreur}
+
+Les intégrales d'erreur permettent de visualiser l'accumulation des écarts pendant la simulation. Elles sont fortement influencées par l'erreur initiale de position et par les écarts observés pendant la partie centrale de la trajectoire.
+
+\resultspdf{06_error_integrals}{Normes instantanées et intégrales cumulées des erreurs de suivi de position et de vitesse angulaire.}
+
+Sur l'ensemble de la simulation, les intégrales absolues des erreurs de position valent
+\begin{equation}
+	\begin{bmatrix}
+		e_{\mathrm{iae},N} &
+		e_{\mathrm{iae},E} &
+		e_{\mathrm{iae},D}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		112.50 &
+		106.77 &
+		75.30
+	\end{bmatrix}
+	\si{m.s}.
+	\label{eq_results_position_iae}
+\end{equation}
+
+Ces valeurs ne doivent pas être utilisées pour comparer directement des scénarios de durées différentes sans normalisation. Elles renseignent ici sur l'erreur totale accumulée pendant les \SI{100}{s} de simulation.
+
+\section{Évaluation du positionnement et de la navigation}
+
+L'évaluation glissante est calculée sur une fenêtre de \SI{60}{s}, actualisée toutes les secondes. Le premier indicateur valide est donc obtenu à $t=\SI{60}{s}$.
+
+\resultspdf{07_pnt_f3609}{Percentiles 95 glissants des erreurs de navigation et d'estimation de position sur une fenêtre précédente de \SI{60}{s}.}
+
+À $t=\SI{60}{s}$, le percentile 95 glissant de l'erreur de navigation vaut
+\begin{equation}
+	e_{\mathrm{NP},95}^{(60\,\mathrm{s})}(60)
+	=
+	\SI{6.822}{m}.
+	\label{eq_results_np_p95_60}
+\end{equation}
+
+À la fin de la simulation, il demeure égal à
+\begin{equation}
+	e_{\mathrm{NP},95}^{(60\,\mathrm{s})}(100)
+	=
+	\SI{3.999}{m}.
+	\label{eq_results_np_p95_100}
+\end{equation}
+La limite NP1 de \SI{1}{m} n'est donc pas satisfaite sur la fenêtre glissante. Le dépassement persiste pendant \SI{40}{s}, ce qui excède le temps d'alerte de \SI{15}{s} associé à l'évaluation configurée.
+
+Les percentiles 95 glissants des erreurs d'estimation horizontale et verticale à $t=\SI{100}{s}$ sont
+\begin{equation}
+	e_{\mathrm{PH},95}^{(60\,\mathrm{s})}(100)
+	=
+	\SI{0.395}{m},
+	\qquad
+	e_{\mathrm{PV},95}^{(60\,\mathrm{s})}(100)
+	=
+	\SI{0.683}{m}.
+	\label{eq_results_ph_pv_rolling}
+\end{equation}
+Ces valeurs demeurent inférieures aux niveaux PH8 et PV13 retenus.
+
+Il existe ainsi une différence importante entre les deux évaluations suivantes :
+\begin{align}
+	e_{\mathrm{NP},95}^{(5\,\mathrm{s})}
+	&=
+	\SI{0.728}{m},
+	\\
+	e_{\mathrm{NP},95}^{(60\,\mathrm{s})}(100)
+	&=
+	\SI{3.999}{m}.
+\end{align}
+La première caractérise uniquement le régime atteint à la fin de la simulation, tandis que la seconde conserve dans sa fenêtre les erreurs importantes observées au cours de la dernière minute. Le respect du seuil sur la fenêtre finale de cinq secondes ne doit donc pas être présenté comme une satisfaction du niveau NP1 sur la fenêtre glissante de \SI{60}{s}.
+
+\section{Utilisation des actionneurs}
+
+La \cref{fig_08_actuators} présente les vitesses des six rotors et leur position relative aux limites d'actionnement.
+
+\resultspdf{08_actuators}{Vitesses des six rotors, limites d'actionnement et fraction temporelle de fonctionnement à proximité des limites.}
+
+Sur l'ensemble du scénario, les vitesses des rotors restent comprises entre
+\begin{equation}
+	\omega_{\min,\mathrm{obs}}
+	=
+	\SI{202.224}{rad.s^{-1}},
+	\qquad
+	\omega_{\max,\mathrm{obs}}
+	=
+	\SI{373.959}{rad.s^{-1}}.
+	\label{eq_results_rotor_speed_range}
+\end{equation}
+La limite supérieure configurée est
+\begin{equation}
+	\omega_{\max}
+	=
+	\SI{456.45}{rad.s^{-1}}.
+\end{equation}
+
+La plus faible marge normalisée observée est
+\begin{equation}
+	\mu_{\min}
+	=
+	\num{0.1807},
+	\label{eq_results_minimum_actuator_margin}
+\end{equation}
+soit une réserve minimale de \SI{18.07}{\percent} par rapport à la plage totale de fonctionnement.
+
+La fraction de temps pendant laquelle au moins un rotor se trouve à moins de \SI{5}{\percent} de l'une de ses limites est
+\begin{equation}
+	f_{\mathrm{sat}}
+	=
+	\SI{0}{\percent}.
+	\label{eq_results_actuator_fraction}
+\end{equation}
+
+Aucune saturation ni fonctionnement prolongé à proximité des limites n'est donc observé. Les erreurs de position ne peuvent pas être attribuées à une perte d'autorité causée par les limites de vitesse des rotors dans ce scénario.
+
+\section{Estimation des couples perturbateurs}
+
+L'observateur non linéaire est évalué par comparaison entre les couples perturbateurs appliqués et leurs estimations suivant les axes du repère corps.
+
+\resultspdf{09_disturbance_real_vs_estimated}{Comparaison des couples perturbateurs appliqués et estimés suivant les axes de roulis, de tangage et de lacet.}
+
+Sur la fenêtre finale, les RMSE d'observation sont
+\begin{equation}
+	\begin{bmatrix}
+		e_{d_{\tau,x},\mathrm{rmse}} &
+		e_{d_{\tau,y},\mathrm{rmse}} &
+		e_{d_{\tau,z},\mathrm{rmse}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0.510 &
+		0.436 &
+		0.436
+	\end{bmatrix}
+	\si{N.m}.
+	\label{eq_results_ndo_rmse}
+\end{equation}
+
+Les valeurs efficaces des couples réels sur cette même fenêtre sont
+\begin{equation}
+	\begin{bmatrix}
+		d_{\tau,x,\mathrm{rms}} &
+		d_{\tau,y,\mathrm{rms}} &
+		d_{\tau,z,\mathrm{rms}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0.505 &
+		0.432 &
+		0.436
+	\end{bmatrix}
+	\si{N.m}.
+	\label{eq_results_real_disturbance_rms}
+\end{equation}
+
+En comparaison, les valeurs efficaces des couples estimés sont
+\begin{equation}
+	\begin{bmatrix}
+		\hat d_{\tau,x,\mathrm{rms}} &
+		\hat d_{\tau,y,\mathrm{rms}} &
+		\hat d_{\tau,z,\mathrm{rms}}
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0.0164 &
+		0.0136 &
+		0.0031
+	\end{bmatrix}
+	\si{N.m}.
+	\label{eq_results_estimated_disturbance_rms}
+\end{equation}
+
+Les rapports entre les amplitudes efficaces estimées et réelles sont ainsi
+\begin{equation}
+	\begin{bmatrix}
+		0.0325 &
+		0.0316 &
+		0.0072
+	\end{bmatrix}.
+	\label{eq_results_ndo_amplitude_ratios}
+\end{equation}
+L'observateur ne restitue donc qu'une faible fraction de l'amplitude des perturbations appliquées.
+
+Les coefficients de corrélation calculés sur la fenêtre finale sont
+\begin{equation}
+	\begin{bmatrix}
+		\rho_x &
+		\rho_y &
+		\rho_z
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		-0.265 &
+		-0.256 &
+		-0.062
+	\end{bmatrix}.
+	\label{eq_results_ndo_correlations}
+\end{equation}
+Ces valeurs ne montrent pas de correspondance satisfaisante entre les couples injectés et les couples estimés. L'observateur de perturbations n'est donc pas validé par ce scénario.
+
+\section{Réponse transitoire}
+
+Les temps de retard, de montée et d'établissement ainsi que le dépassement sont définis pour des réponses à échelon. Or, la trajectoire de référence utilisée est continue et lissée.
+
+Les plus grandes variations entre deux échantillons successifs sont
+\begin{equation}
+	\begin{bmatrix}
+		\max|\Delta p_{N,\mathrm{ref}}| &
+		\max|\Delta p_{E,\mathrm{ref}}| &
+		\max|\Delta p_{D,\mathrm{ref}}|
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		1.892\times10^{-3} &
+		1.900\times10^{-3} &
+		1.875\times10^{-4}
+	\end{bmatrix}
+	\si{m}.
+	\label{eq_results_reference_sample_increments}
+\end{equation}
+Ces variations sont inférieures au seuil de détection de \SI{0.10}{m}. Aucun échelon de position admissible n'est donc détecté.
+
+Les indicateurs $t_d$, $t_r$, $t_{\mathrm{set}}$ et $M_p$ ne sont pas évaluables à partir de cette trajectoire. Leur détermination nécessite des scénarios distincts contenant des changements de consigne explicitement définis.
+
+\section{Contenu fréquentiel des erreurs}
+
+L'analyse fréquentielle est appliquée aux normes des erreurs après suppression de leur valeur moyenne.
+
+\resultspdf{10_error_spectrum}{Spectres des normes des erreurs de position et de vitesse angulaire dans la bande de \SI{0}{Hz} à \SI{20}{Hz}.}
+
+Le spectre de l'erreur de position est dominé par des composantes inférieures à \SI{0.1}{Hz}, avec une composante maximale à environ \SI{0.01}{Hz}. Le spectre de l'erreur de vitesse angulaire présente également une concentration d'énergie aux très basses fréquences, avec un maximum voisin de \SI{0.03}{Hz}.
+
+Ces fréquences sont cohérentes avec la durée de la trajectoire, ses variations lentes et l'évolution non stationnaire de l'erreur. Elles ne constituent pas, à elles seules, la preuve de la présence d'un mode oscillatoire du véhicule. L'identification d'un mode de boucle fermée nécessiterait une excitation dédiée et une estimation fréquentielle réalisée sur un signal approximativement stationnaire.
+
+\section{Synthèse de la qualification}
+
+Les résultats obtenus sur la fenêtre finale peuvent être résumés par
+\begin{align}
+	e_{\mathrm{rmse},H}
+	&=
+	\SI{0.276}{m}
+	\leq
+	\SI{0.50}{m},
+	\\
+	e_{\mathrm{rmse},D}
+	&=
+	\SI{0.594}{m}
+	>
+	\SI{0.50}{m},
+	\\
+	e_{\mathrm{NP},95}^{(5\,\mathrm{s})}
+	&=
+	\SI{0.728}{m}
+	\leq
+	\SI{1.00}{m},
+	\\
+	e_{\mathrm{rmse},\omega}
+	&=
+	\SI{3.342}{\degree.s^{-1}}
+	\leq
+	\SI{5.00}{\degree.s^{-1}},
+	\\
+	f_{\mathrm{sat}}
+	&=
+	\SI{0}{\percent}
+	\leq
+	\SI{1}{\percent}.
+\end{align}
+
+La qualification fondée sur la fenêtre finale n'est pas entièrement satisfaite en raison du dépassement de la limite de RMSE verticale. En outre, le niveau NP1 n'est pas satisfait lorsque l'erreur de navigation est évaluée sur la fenêtre glissante de \SI{60}{s}. Les critères de réponse transitoire ne peuvent pas être évalués avec la trajectoire continue utilisée.
+
+% ================================================================
+\chapter{Discussion}
+\label{chap_discussion}
+
+\section{Performance de la commande de trajectoire}
+
+La boucle interne de commande des vitesses angulaires satisfait le critère de RMSE sur les trois axes sans provoquer de saturation des rotors. Cette observation confirme que l'allocation de commande dispose d'une réserve suffisante dans le scénario considéré. La marge minimale de \SI{18.07}{\percent} montre que les actionneurs conservent une capacité d'intervention appréciable, y compris pendant les phases où l'erreur de trajectoire augmente.
+
+Les écarts de position observés au cours de la trajectoire ne résultent donc pas d'une limitation directe des vitesses des rotors. Ils peuvent provenir de la dynamique de la boucle externe, des références d'attitude et de vitesse angulaire produites par le guidage, de l'estimation d'état ou du réglage relatif des différentes bandes passantes.
+
+La performance calculée uniquement sur les cinq dernières secondes est sensiblement meilleure que celle obtenue sur la totalité du scénario. Cette différence montre que la fenêtre finale caractérise principalement le régime atteint à proximité de la fin de la trajectoire. Elle ne représente pas la performance globale pendant les phases où la courbure, la vitesse ou l'accélération de la référence sont plus importantes.
+
+L'erreur maximale de \SI{4.023}{m} observée après la phase initiale indique notamment que la précision n'est pas uniforme le long de la trajectoire. Une analyse complémentaire devrait mettre en relation l'erreur de position avec la vitesse, l'accélération et la courbure de la référence afin d'identifier si la dégradation provient d'une bande passante insuffisante, d'une limitation du guidage ou d'un déphasage entre les boucles en cascade.
+
+\section{Influence des conditions initiales}
+
+Le véhicule débute près de l'origine, alors que la référence commence à une altitude de \SI{10}{m} et à une distance horizontale de \SI{2}{m}. Cette différence impose une phase initiale de rattrapage d'amplitude élevée.
+
+Une telle initialisation est pertinente pour simuler un décollage suivi d'une acquisition de trajectoire, mais elle ne doit pas être confondue avec un essai de suivi commencé à l'équilibre. Pour séparer correctement les deux problématiques, deux scénarios distincts sont recommandés :
+\begin{enumerate}
+	\item un scénario de décollage et d'acquisition de trajectoire, pour lequel les performances sont évaluées à partir de l'état initial au sol;
+	\item un scénario de suivi nominal, initialisé sur la trajectoire avec des états compatibles avec la position, la vitesse et l'attitude de référence.
+\end{enumerate}
+
+Cette séparation permettrait d'éviter que l'erreur initiale de plus de \SI{10}{m} domine les intégrales et les indicateurs calculés sur l'ensemble de la simulation.
+
+\section{Précision verticale}
+
+La principale non-conformité sur la fenêtre finale concerne la position verticale. La RMSE de \SI{0.594}{m} dépasse la limite de \SI{0.50}{m} et l'erreur moyenne est essentiellement constante.
+
+Le biais vertical de l'EKF, égal à environ \SI{-0.632}{m}, est proche de l'erreur verticale moyenne de suivi, égale à \SI{-0.593}{m}. Cette proximité indique que l'erreur d'estimation constitue une explication plausible du décalage d'altitude. Lorsque la position estimée est plus négative que la position réelle dans le repère NED, l'estimateur indique une altitude supérieure à l'altitude réelle. Une boucle d'altitude utilisant cette estimation peut alors réduire prématurément la commande de poussée et maintenir le véhicule sous l'altitude demandée.
+
+Cette hypothèse doit être vérifiée par une comparaison entre :
+\begin{enumerate}
+	\item la commande utilisant les états estimés;
+	\item la même commande utilisant les états réels simulés;
+	\item une configuration dans laquelle le biais vertical est explicitement compensé.
+\end{enumerate}
+
+\section{Qualité de l'estimation}
+
+Les erreurs de vitesse estimée demeurent faibles et équilibrées entre les trois axes. Les erreurs d'attitude restent inférieures à environ \SI{1}{\degree} en roulis et en tangage, mais l'estimation du lacet présente un biais voisin de \SI{4}{\degree}.
+
+Ces résultats montrent que l'EKF fournit des états suffisamment réguliers pour la simulation considérée, mais ils ne démontrent pas sa cohérence statistique. La validation complète nécessite l'enregistrement des innovations
+\begin{equation}
+	\vect r_k
+	=
+	\vect y_k-\mathbf C\hat{\vect x}_k^{-},
+\end{equation}
+de leur covariance $\mathbf S_k$ et, idéalement, d'indicateurs normalisés tels que la NIS et la NEES.
+
+La NIS est définie par
+\begin{equation}
+	\epsilon_{\mathrm{NIS},k}
+	=
+	\vect r_k\trans
+	\mathbf S_k^{-1}
+	\vect r_k.
+	\label{eq_discussion_nis}
+\end{equation}
+Elle permet de vérifier si les innovations sont compatibles avec les covariances annoncées par l'estimateur.
+
+Lorsque l'état réel est disponible, la NEES peut être calculée par
+\begin{equation}
+	\epsilon_{\mathrm{NEES},k}
+	=
+	\tilde{\vect x}_k\trans
+	\mathbf P_k^{-1}
+	\tilde{\vect x}_k,
+	\label{eq_discussion_nees}
+\end{equation}
+où $\tilde{\vect x}_k=\hat{\vect x}_k-\vect x_k$. Ces deux statistiques sont nécessaires pour distinguer un estimateur réellement cohérent d'un estimateur dont les erreurs sont faibles uniquement pour une réalisation particulière du bruit.
+
+\section{Observation des couples perturbateurs}
+
+Les résultats de l'observateur non linéaire ne montrent pas de reconstruction satisfaisante des couples appliqués. Les amplitudes estimées représentent moins de \SI{4}{\percent} des amplitudes efficaces réelles en roulis et en tangage, et moins de \SI{1}{\percent} en lacet. Les faibles corrélations confirment que l'écart ne correspond pas uniquement à une atténuation constante ou à un retard temporel.
+
+Les causes possibles comprennent :
+\begin{enumerate}
+	\item un gain d'observation trop faible;
+	\item une incohérence d'unités ou de mise à l'échelle entre le couple injecté et le couple estimé;
+	\item une différence entre le couple de commande utilisé par l'observateur et le couple réellement appliqué à la dynamique;
+	\item une erreur de signe dans la dynamique nominale ou dans l'équation de l'observateur;
+	\item l'absence d'un terme dynamique nécessaire à la reconstruction;
+	\item une bande passante de l'observateur très inférieure à celle des perturbations injectées.
+\end{enumerate}
+
+Avant tout réglage des gains, les équations implémentées doivent être vérifiées en imposant successivement des couples constants sur chaque axe. Pour une perturbation constante et un modèle nominal exact, l'estimation devrait converger vers la valeur injectée avec une erreur statique faible. Ce test élémentaire permettrait de distinguer un défaut structurel d'un simple problème de réglage.
+
+\section{Évaluation PNT}
+
+L'évaluation sur les cinq dernières secondes satisfait la limite de \SI{1}{m}, mais l'évaluation glissante sur les \SI{60}{s} précédentes ne la satisfait pas. Cette différence résulte de la présence, dans la fenêtre longue, des erreurs importantes observées pendant la partie centrale de la trajectoire.
+
+La fenêtre glissante doit être conservée pour toute conclusion fondée sur la désignation PNT configurée. Une fenêtre finale plus courte peut être utilisée comme indicateur de régime établi, mais elle constitue une métrique distincte et ne doit pas remplacer la mesure glissante définie pour l'évaluation PNT \cite{ASTM_F3609_25}.
+
+Les niveaux d'assurance horizontale et verticale sont largement respectés. Le dépassement du niveau NP1 est donc principalement associé à la capacité de suivi de trajectoire plutôt qu'à une perte de précision de l'estimation de position.
+
+\section{Réponse transitoire}
+
+La trajectoire continue ne permet pas d'évaluer les caractéristiques usuelles d'une réponse à échelon. L'absence de résultats pour le délai, le temps de montée, le temps d'établissement et le dépassement ne constitue donc ni une réussite ni un échec de la commande.
+
+Des scénarios spécifiques doivent être définis pour chacune des boucles :
+\begin{enumerate}
+	\item échelons de vitesse angulaire pour la boucle interne;
+	\item échelons d'attitude pour la boucle d'orientation;
+	\item échelons de vitesse de translation;
+	\item échelons de position horizontale et verticale.
+\end{enumerate}
+
+L'amplitude de chaque échelon doit rester compatible avec le domaine de fonctionnement linéarisé autour du point d'essai, tandis que les limites des actionneurs doivent être enregistrées pour distinguer la dynamique propre de la boucle d'une réponse contrainte par saturation.
+
+\section{Portée des résultats}
+
+Les résultats sont limités au scénario simulé. En particulier :
+\begin{itemize}
+	\item le vent est nul pendant toute la simulation;
+	\item les effets de sol, de plafond et de paroi ne sont pas représentés;
+	\item les interactions aérodynamiques entre rotors ne sont pas modélisées;
+	\item la trajectoire est lisse et ne contient pas d'échelons exploitables;
+	\item les innovations et les covariances de l'EKF ne sont pas enregistrées;
+	\item l'observateur de perturbations ne reconstruit pas correctement les couples injectés;
+	\item les résultats correspondent à une seule réalisation des bruits simulés.
+\end{itemize}
+
+La robustesse ne peut donc pas être déduite de ce seul essai. Elle doit être évaluée par des simulations répétées faisant varier les graines aléatoires, la masse, l'inertie, les paramètres de propulsion, les biais des capteurs et les conditions de vent.
+
+% ================================================================
+\chapter{Conclusion}
+\label{chap_conclusion}
+
+L'environnement de simulation permet d'exécuter une trajectoire tridimensionnelle complète en boucle fermée en intégrant la dynamique du corps rigide, les actionneurs, les capteurs, l'estimation d'état, la commande INDI et l'observation des couples perturbateurs. Le scénario analysé couvre une durée de \SI{100}{s} et comporte une spirale ascendante à deux révolutions, sans perturbation de vent.
+
+La boucle interne de commande des vitesses angulaires satisfait la limite de RMSE retenue. La plus grande RMSE sur la fenêtre finale est obtenue en roulis et vaut \SI{3.342}{\degree.s^{-1}}, pour une limite de \SI{5}{\degree.s^{-1}}. Les six rotors demeurent éloignés de leurs saturations, avec une marge normalisée minimale de \SI{18.07}{\percent} et une fraction nulle de fonctionnement à moins de \SI{5}{\percent} des limites.
+
+Le suivi horizontal en régime final est satisfaisant, avec une RMSE de \SI{0.276}{m}. Le critère vertical n'est toutefois pas respecté, la RMSE atteignant \SI{0.594}{m} pour une limite de \SI{0.50}{m}. L'erreur présente principalement la forme d'un biais. Le décalage vertical de l'EKF, voisin de \SI{0.63}{m}, constitue une cause plausible de cette erreur résiduelle et doit être examiné avant de modifier les gains de la commande d'altitude.
+
+L'estimation de la vitesse est précise, avec des RMSE comprises entre \SI{0.033}{m.s^{-1}} et \SI{0.038}{m.s^{-1}}. Les RMSE d'attitude restent inférieures à \SI{1}{\degree} en roulis et en tangage, mais atteignent environ \SI{3.94}{\degree} en lacet. Ces résultats doivent être complétés par une analyse des innovations, de la NIS et de la NEES avant de conclure à la cohérence statistique de l'EKF.
+
+L'évaluation PNT sur les cinq dernières secondes fournit un percentile 95 de l'erreur tridimensionnelle égal à \SI{0.728}{m}. Cependant, le percentile 95 calculé sur la fenêtre glissante de \SI{60}{s} vaut encore \SI{3.999}{m} à la fin de la simulation. Le niveau NP1 n'est donc pas satisfait selon cette fenêtre, même si les niveaux d'assurance horizontale et verticale demeurent respectés.
+
+L'observateur non linéaire des couples perturbateurs ne reproduit ni l'amplitude ni l'évolution temporelle des perturbations injectées. Ses erreurs efficaces sont comparables aux amplitudes efficaces des couples réels, et les corrélations entre couples réels et estimés sont faibles. L'observateur ne peut donc pas être considéré comme validé dans sa configuration actuelle.
+
+Enfin, la trajectoire continue ne permet pas d'évaluer les caractéristiques de réponse à échelon. Des essais distincts doivent être réalisés pour mesurer le délai, le temps de montée, le dépassement et le temps d'établissement des différentes boucles.
+
+Au terme de cette simulation, la commande des vitesses angulaires et l'utilisation des actionneurs sont satisfaisantes, mais la validation globale demeure incomplète. Les travaux prioritaires sont la correction du biais vertical de l'estimation, l'amélioration du suivi pendant les portions les plus exigeantes de la trajectoire, la vérification structurelle de l'observateur de perturbations, l'enregistrement des statistiques de cohérence de l'EKF et l'exécution de scénarios dédiés aux réponses transitoires et aux perturbations de vent.
+	
+	\printbibliography[heading=bibintoc,title={Références}]
+	
+\end{document}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style id="__om-edit-overrides"></style>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #0c0f12; font-family: 'IBM Plex Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #7fd6d0; text-decoration: none; }
+    a:hover { color: #a9e8e3; text-decoration: underline; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    ::selection { background: #7fd6d0; color: #0c0f12; }
+  </style>
+</helmet>
+
+<!-- Projet Acoustique.dc.html — étude de cas de la recherche doctorale, isolée du reste
+     du portfolio pour rester modifiable indépendamment. -->
+<div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
+
+  <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
+    <div style="max-width:1160px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; gap:26px;">
+      <a href="./CV.dc.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — Acoustique</span>
+      <span style="flex:1;"></span>
+      <a href="./CV.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← CV</a>
+      <a href="./Projet Hexacoptere.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Projet hexacoptère</a>
+    </div>
+  </nav>
+
+  <section style="max-width:1160px; margin:0 auto; padding:80px 40px 0;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start;">
+      <div>
+        <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:36px; line-height:1.12; letter-spacing:-0.02em; margin:0 0 18px;">Contrôle actif large bande d'une double paroi acoustique</h1>
+        <p style="font-size:16px; line-height:1.7; color:#a5aeb5; margin:0 0 22px;">Quatre ans de recherche sur la réduction active du bruit transmis aux basses fréquences à travers une double cloison : modélisation vibroacoustique par éléments finis, identification expérimentale des chemins primaires et secondaires, puis contrôle adaptatif multicanal en temps réel.</p>
+        <p style="font-size:16px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Contribution principale : une méthode de compensation du signal d'erreur qui minimise le champ acoustique aux points <em>non</em> monitorés — là où les stratégies classiques dégradent la performance hors des microphones d'erreur.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <sc-for list="{{ thesisStack }}" as="t" hint-placeholder-count="5">
+            <span style="display:inline-block; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#7fd6d0; border:1px solid #24383a; background:#101a1b; padding:6px 11px; border-radius:2px;">{{ t }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429;">
+        <sc-for list="{{ thesisPoints }}" as="f" hint-placeholder-count="4">
+          <div style="background:#101418; padding:20px 24px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:8px;">{{ f.label }}</div>
+            <div style="font-size:14.5px; line-height:1.6; color:#d3d9dd;">{{ f.text }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="height:300px; border:1px solid #1e2429; margin-top:36px;">
+      <image-slot id="fig-anc" shape="rect" placeholder="Banc d'essai double paroi / atténuation mesurée par bande de fréquence"></image-slot>
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 04 — Banc multicanal instrumenté et performance en boucle fermée</div>
+
+    <div style="margin-top:60px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:22px;">Publications associées</div>
+      <div style="display:flex; flex-direction:column; gap:20px;">
+        <sc-for list="{{ publications }}" as="p" hint-placeholder-count="3">
+          <div style="display:grid; grid-template-columns:28px 1fr; gap:14px; border-left:1px solid #24383a; padding:2px 0 2px 20px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7fd6d0;">{{ p.num }}</span>
+            <div>
+              <div style="font-size:15.5px; line-height:1.5; color:#d3d9dd;">{{ p.title }}</div>
+              <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7c868e; margin-top:6px; line-height:1.5;">{{ p.ref }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <footer style="max-width:1160px; margin:60px auto 0; padding:22px 40px 44px; border-top:1px solid #191f24; display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6d767d;">
+    <a href="./CV.dc.html">← Retour au CV</a>
+    <span>Jonathan Mifundu Nzengi, Ph.D. — Portfolio 2026</span>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      thesisStack: ['FxLMS / FxNLMS', 'IMC', 'COMSOL Multiphysics', 'MIMO multicanal', 'Temps réel'],
+      thesisPoints: [
+        { label: 'Modélisation', text: "Modèle vibroacoustique par éléments finis de la double paroi : analyse modale et couplage fluide-structure." },
+        { label: 'Identification', text: "Estimation expérimentale des chemins acoustiques primaires et secondaires sur banc multicanal instrumenté." },
+        { label: 'Commande', text: "Algorithmes adaptatifs temps réel avec compensation du signal d'erreur, appliqués aux basses fréquences." },
+        { label: 'Diffusion', text: "3 publications : 1 article en revue avec comité de lecture, 2 communications à INTER-NOISE." },
+      ],
+      publications: [
+        { num: '01', title: 'Active Double Glazing With In-Cavity Compensated Microphones', ref: 'Grandjean, Mifundu Nzengi, Micheau, Berry — Mechanical Systems and Signal Processing, vol. 252, mai 2026, p. 114246' },
+        { num: '02', title: 'Optimizing Loudspeakers Placement for Active Noise Control in Double-Glazing', ref: 'Grandjean, Mifundu Nzengi, Micheau, Berry — INTER-NOISE 2025, vol. 272 (1), p. 3473–3482' },
+        { num: '03', title: 'Preliminary study on active control of double-glazing with pressure compensation using an in-cavity microphone', ref: 'Mifundu Nzengi, Grandjean, Micheau, Berry — INTER-NOISE 2024, vol. 270 (2), p. 9702–9711' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
