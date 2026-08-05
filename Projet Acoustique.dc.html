@@ -33,8 +33,9 @@
       <a href="./CV.dc.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — Acoustique</span>
       <span style="flex:1;"></span>
-      <a href="./CV.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← CV</a>
+      <a href="./CV.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← Présentation</a>
       <a href="./Projet Hexacoptere.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Projet hexacoptère</a>
+      <a href="./Projet F16.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">F-16</a>
     </div>
   </nav>
 
@@ -59,10 +60,32 @@
         </sc-for>
       </div>
     </div>
-    <div style="height:300px; border:1px solid #1e2429; margin-top:36px;">
-      <image-slot id="fig-anc" shape="rect" placeholder="Banc d'essai double paroi / atténuation mesurée par bande de fréquence"></image-slot>
+    <div style="margin-top:36px;">
+      <div style="border:1px solid #1e2429;">
+        <img src="./assets/SB_FFBxLMS.jpg" alt="Schéma-bloc de la méthode : contrôleur adaptatif FF-BxLMS avec compensation du signal d'erreur" style="width:100%; display:block;">
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 04 — Contrôleur FF-BxLMS avec compensation du signal d'erreur (contribution principale)</div>
     </div>
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 04 — Banc multicanal instrumenté et performance en boucle fermée</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:36px;">
+      <div>
+        <div style="border:1px solid #1e2429;">
+          <img src="./assets/SetUpMIMO.png" alt="Setup expérimental : chambres couplées réverbérante / semi-anéchoïque pour la mesure de la perte par transmission" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 05 — Banc de mesure de la perte par transmission (chambres couplées réverbérante–semi-anéchoïque)</div>
+      </div>
+      <div>
+        <div style="border:1px solid #1e2429;">
+          <img src="./assets/TL.png" alt="Perte par transmission mesurée : passif vs. MinCav, MinAval, Comp" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 06 — Perte par transmission : passif vs. contrôle actif (MinCav, MinAval, Comp)</div>
+      </div>
+      <div style="grid-column:1 / -1;">
+        <div style="border:1px solid #1e2429;">
+          <img src="./assets/Mesures_finales_Attenuation.jpg" alt="Atténuation mesurée par tiers d'octave, moyenne sur 8 microphones, stratégie MinAval" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 07 — Atténuation par tiers d'octave (MinAval), pics jusqu'à 20 dB en moyenne sur 8 microphones</div>
+      </div>
+    </div>
 
     <div style="margin-top:60px;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:22px;">Publications associées</div>
@@ -96,7 +119,7 @@ class Component extends DCLogic {
       thesisPoints: [
         { label: 'Modélisation', text: "Modèle vibroacoustique par éléments finis de la double paroi : analyse modale et couplage fluide-structure." },
         { label: 'Identification', text: "Estimation expérimentale des chemins acoustiques primaires et secondaires sur banc multicanal instrumenté." },
-        { label: 'Commande', text: "Algorithmes adaptatifs temps réel avec compensation du signal d'erreur, appliqués aux basses fréquences." },
+        { label: 'Commande', text: "Algorithmes adaptatifs temps réel : minimisation de la pression en cavité (MinCav), en aval (MinAval), ou compensation minimisant la pression en aval à partir des microphones placés en cavité (Comp)." },
         { label: 'Diffusion', text: "3 publications : 1 article en revue avec comité de lecture, 2 communications à INTER-NOISE." },
       ],
       publications: [

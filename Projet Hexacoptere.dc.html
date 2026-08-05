@@ -33,7 +33,8 @@
       <a href="./CV.dc.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — Hexacoptère</span>
       <span style="flex:1;"></span>
-      <a href="./CV.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← CV</a>
+      <a href="./CV.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← Présentation</a>
+      <a href="./Projet F16.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">F-16</a>
       <a href="./Projet Acoustique.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Projet acoustique</a>
     </div>
   </nav>
@@ -63,8 +64,8 @@
       </div>
     </div>
 
-    <div style="height:420px; border:1px solid #1e2429; margin-bottom:16px;">
-      <image-slot id="architecture" shape="rect" placeholder="Schéma d'architecture : guidage → commande INDI → allocation → actionneurs → dynamique → environnement → capteurs → EKF / NDO"></image-slot>
+    <div style="border:1px solid #1e2429; margin-bottom:16px; background:#fff; padding:16px;">
+      <img src="./assets/Architecture-simulateur.png" alt="Schéma d'architecture : guidage → INDI → allocation des commandes → dynamique du véhicule → environnement → capteurs → observateurs (états + perturbations)" style="width:100%; display:block;">
     </div>
     <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-bottom:60px;">FIG. 01 — Architecture fonctionnelle du simulateur</div>
 
@@ -105,10 +106,25 @@
         <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 02 — Environnement atmosphérique</div>
       </div>
       <div>
-        <div style="height:280px; border:1px solid #1e2429;">
-          <image-slot id="fig-ekf" shape="rect" placeholder="Validation EKF/NDO : erreurs d'estimation et couple perturbateur estimé"></image-slot>
+        <div style="border:1px solid #1e2429;">
+          <img src="./assets/RotDistObs_tau.png" alt="Observateur de perturbation : estimation des couples τx, τy, τz" style="width:100%; display:block;">
         </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 03 — Estimation d'état et de perturbation</div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 03 — Estimation d'état et de perturbation (Observateur NDO des couples)</div>
+      </div>
+    </div>
+
+    <div style="margin-top:36px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:8px;">Résultats préliminaires — suivi de trajectoire</div>
+      <div style="font-size:13.5px; color:#8b949b; margin-bottom:20px;">Résultats intermédiaires, non finaux : la campagne de validation est en cours.</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <sc-for list="{{ preliminaryResults }}" as="r" hint-placeholder-count="2">
+          <div>
+            <div style="border:1px solid #1e2429;">
+              <img src="{{ r.file }}" alt="Résultat préliminaire de suivi de trajectoire" style="width:100%; display:block;">
+            </div>
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">{{ r.caption }}</div>
+          </div>
+        </sc-for>
       </div>
     </div>
 
@@ -127,7 +143,7 @@
 
     <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-top:40px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Statut</div>
-      <div style="font-size:14.5px; line-height:1.65; color:#c3cad0;">Campagne de validation en cours : suivi de trajectoire sous vent, cohérence statistique de l'EKF et convergence de l'observateur. Les figures de résultats seront intégrées dès leur production — aucune performance n'est annoncée avant son calcul effectif.</div>
+      <div style="font-size:14.5px; line-height:1.65; color:#c3cad0;">Campagne de validation en cours : suivi de trajectoire sous vent, cohérence statistique de l'EKF et convergence de l'observateur. Les figures ci-dessus sont des résultats intermédiaires — les performances finales seront confirmées à l'issue de la campagne.</div>
     </div>
   </section>
 
@@ -166,6 +182,10 @@ class Component extends DCLogic {
         { value: 'ISO 2533', label: 'Atmosphère standard' },
         { value: 'MIL-F-8785C', label: 'Standard de vent / turbulence' },
         { value: 'ASTM F3609-25', label: 'Validation des performances' },
+      ],
+      preliminaryResults: [
+        { file: './assets/01_trajectory.png', caption: 'FIG. 04 — Suivi de trajectoire en huit (résultat préliminaire) : trajectoire 3D, ground track et altitude' },
+        { file: './assets/02_position_tracking.png', caption: 'FIG. 05 — Suivi de position NED et erreur de suivi 3D (résultat préliminaire)' },
       ],
       standards: [
         { code: 'ISO 2533', title: 'Atmosphère type', use: "Température, densité de l'air, pression et accélération gravitationnelle en fonction de l'altitude." },

@@ -11,7 +11,7 @@
 <helmet>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
   <style id="__om-edit-overrides"></style>
   <style>
     *, *::before, *::after { box-sizing: border-box; }
@@ -33,9 +33,10 @@
   <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
     <div style="max-width:1160px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; gap:26px;">
       <a href="./CV.dc.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Ph.D. — CV</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Ph.D. — Présentation</span>
       <span style="flex:1;"></span>
       <a href="./Projet Hexacoptere.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Hexacoptère</a>
+      <a href="./Projet F16.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">F-16</a>
       <a href="./Projet Acoustique.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Acoustique</a>
       <a href="#expertise" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Expertise</a>
       <a href="#parcours" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Parcours</a>
@@ -49,7 +50,7 @@
       <div>
         <div style="display:flex; align-items:center; gap:14px; margin-bottom:26px;">
           <span style="width:7px; height:7px; background:#7fd6d0; border-radius:50%;"></span>
-          <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Disponible — R&amp;D, recherche, enseignement</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">R&amp;D, recherche, enseignement</span>
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:30px;">
           <sc-for list="{{ profileTabs }}" as="p" hint-placeholder-count="4">
@@ -65,18 +66,21 @@
         </div>
       </div>
       <div>
-        <div style="height:420px; display:flex; align-items:flex-start; justify-content:center; background:radial-gradient(ellipse at 50% 85%, #171d23 0%, rgba(12,15,18,0) 70%);">
+        <div style="height:420px; margin-top:108px; display:flex; align-items:flex-start; justify-content:center; background:radial-gradient(ellipse at 50% 85%, #171d23 0%, rgba(12,15,18,0) 70%);">
           <img src="./uploads/Photo_Jonathan_Mifundu_Nzengi_sans_fond.png" alt="Jonathan Mifundu Nzengi" style="max-width:100%; max-height:100%; object-fit:contain; display:block;">
         </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.12em; color:#6d767d; margin-top:12px; text-align:center;">Jonathan Mifundu Nzengi, Ph.D.</div>
+        <div style="font-family: 'IBM Plex Mono',monospace; font-size: 11px; letter-spacing: 0.12em; color: #6d767d; margin-top: 12px; text-align: center; width: 329px;">
+          <div style="font-weight:600; color:#e7eaec; letter-spacing:0.02em; margin-bottom:6px;">Jonathan Mifundu Nzengi, Ph.D.</div>
+          <div><span style="text-transform:uppercase; color:#7fd6d0;">Contribution principale dans le domaine :</span> Auteur de la méthode de compensation du signal d'erreur qui minimise le champ acoustique aux points non monitorés d'une double paroi.</div>
+        </div>
       </div>
     </div>
   </header>
 
   <div style="border-top:1px solid #1e2429; border-bottom:1px solid #1e2429;">
-    <div style="max-width:1160px; margin:0 auto; padding:0 40px; display:grid; grid-template-columns:repeat(4,1fr);">
+    <div style="max-width:1160px; margin:0 auto; padding:0 40px; display:grid; grid-template-columns:repeat(4,1fr); column-gap:24px;">
       <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
-        <div style="padding:30px 28px 30px 0; border-right:1px solid #1e2429;">
+        <div style="padding:30px 28px 30px 6px; border-right:1px solid #1e2429;">
           <div style="font-family:'Archivo',sans-serif; font-size:30px; font-weight:600; letter-spacing:-0.01em;">{{ s.value }}</div>
           <div style="font-size:13px; color:#8b949b; margin-top:6px; line-height:1.45;">{{ s.label }}</div>
         </div>
@@ -227,7 +231,6 @@
       </div>
       <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
         <a href="mailto:mifunduj@gmail.com" style="font-family:'Archivo',sans-serif; font-size:18px; font-weight:600; color:#0c0f12; background:#7fd6d0; padding:16px 28px; border-radius:2px;" style-hover="background:#a9e8e3;">mifunduj@gmail.com</a>
-        <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; color:#7c868e;">+1 819 434 6558 · Sherbrooke, QC</span>
       </div>
     </div>
   </section>
@@ -248,9 +251,9 @@ const PROFILES = [
   {
     key: 'controle',
     label: 'Commande & robotique',
-    headline: "Je modélise, simule et commande des systèmes dynamiques — jusqu'à la validation expérimentale.",
+    headline: "Modélisation, simulation et commande de systèmes dynamiques — jusqu'à la validation expérimentale.",
     summary: "Docteur en génie mécanique (Université de Sherbrooke, 2025). Commande adaptative et multivariable temps réel, simulation haute fidélité de véhicules aériens, estimation d'état, systèmes embarqués et automatisation industrielle.",
-    tags: ['PID', 'LQG', 'H∞', 'INDI', 'Filtre de Kalman étendu', 'MATLAB / Simulink', 'C++ · STM32 · ROS', 'HIL temps réel'],
+    tags: ['PID', 'LQG', 'H∞', 'INDI', 'Contrôleurs non linéaires à gain variable', 'Filtre de Kalman étendu', 'Observateurs de perturbations', 'MATLAB / Simulink', 'C++ · STM32 · ROS', 'HIL temps réel'],
     expertise: [
       { title: 'Commande & estimation', items: ['PID, LQG, H∞ — synthèse et réglage', 'Commande multivariable (MIMO) et robuste', 'INDI et inversion dynamique', 'Commande adaptative (FxLMS, FxNLMS, IMC)', 'Filtrage de Kalman, observateurs non linéaires'] },
       { title: 'Robotique & mécatronique', items: ['ROS, intégration capteurs et actionneurs', 'Apprentissage kinesthésique, robots collaboratifs', 'Prototypage et validation fonctionnelle', 'Automates Siemens (TIA Portal, PLCSIM), LADDER', 'Systèmes embarqués : Arduino, STM32 (CubeMX, Keil)'] },
@@ -260,7 +263,7 @@ const PROFILES = [
   {
     key: 'acoustique',
     label: 'Acoustique & contrôle actif',
-    headline: "Je réduis le bruit là où la masse ne suffit plus : contrôle actif, vibroacoustique, validation sur banc.",
+    headline: "Réduction du bruit là où la masse ne suffit plus : contrôle actif, vibroacoustique, validation sur banc.",
     summary: "Quatre ans de recherche doctorale sur la réduction active du bruit basses fréquences transmis par les doubles cloisons — algorithmes adaptatifs, identification des chemins acoustiques, contrôle multicanal et corrélation essai-calcul.",
     tags: ['ANC · FxLMS / FxNLMS', 'Contrôle IMC', 'MIMO multicanal', 'Vibroacoustique', 'COMSOL Multiphysics', 'Identification expérimentale'],
     expertise: [
@@ -272,7 +275,7 @@ const PROFILES = [
   {
     key: 'fea',
     label: 'Simulation & FEA',
-    headline: "Je modélise par éléments finis ce qui doit être prédit avant d'être construit — puis je le confronte à l'essai.",
+    headline: "Modélisation par éléments finis de ce qui doit être prédit avant d'être construit — puis confrontation à l'essai.",
     summary: "Modélisation par éléments finis appliquée à la dynamique des structures, à l'interaction fluide-structure et à la vibroacoustique : analyse modale, dimensionnement statique et en fatigue, corrélation essai-calcul.",
     tags: ['COMSOL Multiphysics', 'SolidWorks Simulation', 'Analyse modale', 'Interaction fluide-structure', 'Corrélation essai-calcul'],
     expertise: [
@@ -284,7 +287,7 @@ const PROFILES = [
   {
     key: 'enseignement',
     label: 'Enseignement',
-    headline: "J'enseigne le génie mécanique : contrôle, structures, simulation et instrumentation — du concept au laboratoire.",
+    headline: "Enseignement du génie mécanique : contrôle, structures, simulation et instrumentation — du concept au laboratoire.",
     summary: "Cinq ans d'enseignement et d'encadrement aux niveaux collégial et universitaire : conception et prestation de cours, supervision de projets intégrateurs, ateliers MATLAB/Simulink et soutien pédagogique en calcul numérique.",
     tags: ['Conception de cours', 'Projets intégrateurs', 'Capteurs & instrumentation', 'Ateliers MATLAB/Simulink', 'Encadrement d\u2019étudiants'],
     expertise: [
@@ -298,9 +301,9 @@ const PROFILES = [
 // Contenu fixe (indépendant du profil) : stats, autres travaux, parcours, formation, publications.
 const STATS = [
   { value: 'Ph.D. 2025', label: 'Génie mécanique — Université de Sherbrooke' },
-  { value: '4 ans', label: 'Recherche appliquée en commande temps réel' },
+  { value: '4', label: 'Recherche appliquée en commande temps réel' },
   { value: '3', label: 'Publications évaluées par les pairs' },
-  { value: '5 ans', label: 'Enseignement collégial et universitaire' },
+  { value: '+650h', label: 'Enseignement collégial et universitaire' },
 ];
 
 const OTHER_PROJECTS = [

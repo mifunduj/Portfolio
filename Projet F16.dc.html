@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style id="__om-edit-overrides"></style>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: #0c0f12; font-family: 'IBM Plex Sans', sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #7fd6d0; text-decoration: none; }
+    a:hover { color: #a9e8e3; text-decoration: underline; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    ::selection { background: #7fd6d0; color: #0c0f12; }
+  </style>
+</helmet>
+
+<!-- Projet F16.dc.html — étude de cas isolée. Réutilise les modèles d'environnement
+     (atmosphère, vent) développés pour le simulateur hexacoptère. Données en haut, séparées. -->
+<div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
+
+  <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
+    <div style="max-width:1160px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; gap:26px;">
+      <a href="./CV.dc.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — F-16</span>
+      <span style="flex:1;"></span>
+      <a href="./CV.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← Présentation</a>
+      <a href="./Projet Hexacoptere.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Hexacoptère</a>
+      <a href="./Projet Acoustique.dc.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Acoustique</a>
+    </div>
+  </nav>
+
+  <section style="max-width:1160px; margin:0 auto; padding:80px 40px 0;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; margin-bottom:52px;">
+      <div>
+        <div style="margin:0 0 28px; border:1px solid #1e2429;">
+          <img src="./assets/F16-1920.jpg" alt="Chasseur F-16" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin:10px 0 26px;">VÉHICULE DE RÉFÉRENCE — F-16</div>
+        <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:40px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 20px;">Simulateur de dynamique de vol d'un F-16</h1>
+        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Modèle non linéaire 6 degrés de liberté du F-16, couplé à un filtre de Kalman étendu pour l'estimation d'état — en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797. Les coefficients aérodynamiques sont issus de données de vol réelles rendues disponibles par la NASA.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+          <sc-for list="{{ projectStack }}" as="p" hint-placeholder-count="5">
+            <span style="display:inline-block; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#7fd6d0; border:1px solid #24383a; background:#101a1b; padding:6px 11px; border-radius:2px;">{{ p }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429;">
+        <sc-for list="{{ problemFraming }}" as="f" hint-placeholder-count="3">
+          <div style="background:#101418; padding:22px 24px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:9px;">{{ f.label }}</div>
+            <div style="font-size:14.5px; line-height:1.6; color:#d3d9dd;">{{ f.text }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="4">
+        <div style="background:#101418; padding:32px 34px;">
+          <div style="display:flex; align-items:baseline; gap:12px; margin-bottom:14px;">
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7fd6d0;">{{ p.num }}</span>
+            <h3 style="font-family:'Archivo',sans-serif; font-size:19px; font-weight:600; margin:0;">{{ p.title }}</h3>
+          </div>
+          <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0 0 18px; white-space:pre-line;">{{ p.text }}</p>
+          <ul style="display:flex; flex-direction:column; gap:7px;">
+            <sc-for list="{{ p.points }}" as="pt" hint-placeholder-count="3">
+              <li style="display:grid; grid-template-columns:16px 1fr; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.5; color:#c3cad0;">
+                <span style="color:#4f5b62;">/</span>
+                <span>{{ pt }}</span>
+              </li>
+            </sc-for>
+          </ul>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ vehicleParams }}" as="v" hint-placeholder-count="8">
+        <div style="background:#101418; padding:20px 22px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:16.5px;">{{ v.value }}</div>
+          <div style="font-size:12px; color:#7c868e; margin-top:5px; line-height:1.4;">{{ v.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-bottom:60px;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:20px;">Normes &amp; références de modélisation</div>
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429;">
+        <sc-for list="{{ standards }}" as="s" hint-placeholder-count="6">
+          <div style="background:#101418; padding:22px 24px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:13.5px; color:#7fd6d0; margin-bottom:8px;">{{ s.code }}</div>
+            <div style="font-size:14px; font-weight:600; margin-bottom:6px;">{{ s.title }}</div>
+            <div style="font-size:13px; line-height:1.55; color:#8b949b;">{{ s.use }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-bottom:60px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Statut</div>
+      <div style="font-size:14.5px; line-height:1.65; color:#c3cad0;">Campagne de tests en cours : validation de la dynamique 6 DDL et de la cohérence de l'estimation par filtre de Kalman étendu. Résultats intégrés au fur et à mesure de leur production.</div>
+    </div>
+  </section>
+
+  <footer style="max-width:1160px; margin:0 auto; padding:22px 40px 44px; border-top:1px solid #191f24; display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6d767d;">
+    <a href="./CV.dc.html">← Retour au CV</a>
+    <span>Jonathan Mifundu Nzengi, Ph.D. — Portfolio 2026</span>
+  </footer>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      projectStack: ['MATLAB / Simulink', 'matlab.System', 'Quaternions', '6 DDL', 'EKF'],
+      problemFraming: [
+        { label: 'Problème', text: "Valider une chaîne d'estimation d'état sur un avion de chasse à dynamique rapide et fortement non linéaire, sans risque d'essai en vol." },
+        { label: 'Approche', text: "Modèle 6 degrés de liberté du F-16 couplé à l'environnement atmosphérique et de vent déjà validé sur le simulateur hexacoptère." },
+        { label: 'Livrable', text: "Un banc de test partagé pour l'estimation d'état, réutilisant la même infrastructure de modélisation à travers deux véhicules distincts." },
+      ],
+      pillars: [
+        { num: '01', title: 'Dynamique du véhicule', text: "6 DDL, dynamique non linéaire du F-16 — translation et rotation couplées, forces et moments aérodynamiques basés sur des données réelles rendues disponibles par la NASA.", points: ['Modèle non linéaire 6 DDL', 'Coefficients aérodynamiques issus de mesures NASA', 'Atmosphère selon le standard ISO 2533'] },
+        { num: '02', title: 'Environnement', text: "Modèles de vent et d'atmosphère en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797.", points: ['Vent moyen selon l\u2019altitude (MIL-F-8785C)', 'Rafale en 1-cos, turbulence de von Kármán', 'Atmosphère standard ISO 2533'] },
+        { num: '03', title: 'Estimation d\u2019état', text: "Filtre de Kalman étendu pour la reconstruction de l'état à partir de mesures imparfaites.", points: ['Filtre de Kalman étendu', 'Fusion des mesures capteurs simulées', 'Évaluation de la nécessité d\u2019un observateur des perturbations linéaires et rotationnelles'] },
+      ],
+      vehicleParams: [
+        { value: '6 DDL', label: 'Dynamique non linéaire' },
+        { value: 'EKF', label: 'Observateur d\u2019état' },
+        { value: 'NDO', label: 'Observateurs de perturbation (linéaire/rotationnel) à l\u2019étude' },
+        { value: 'ISO 2533', label: 'Atmosphère standard' },
+        { value: 'MIL-F-8785C', label: 'Standard de vent / turbulence' },
+        { value: 'MIL-STD-1797', label: 'Modèles complémentaires de rafale / turbulence' },
+      ],
+      standards: [
+        { code: 'ISO 2533', title: 'Atmosphère type', use: "Température, densité de l'air, pression et accélération gravitationnelle en fonction de l'altitude." },
+        { code: 'MIL-F-8785C', title: 'Flying Qualities — spécification', use: "Vent moyen selon l'altitude, rafale en 1-cos et turbulence de von Kármán." },
+        { code: 'MIL-STD-1797', title: 'Flying Qualities of Piloted Aircraft', use: "Modèles complémentaires de rafale discrète et de turbulence atmosphérique." },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
