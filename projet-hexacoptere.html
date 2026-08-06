@@ -24,8 +24,9 @@
   </style>
 </helmet>
 
-<!-- Projet Hexacoptere.dc.html — étude de cas isolée. Contenu (piliers, chiffres, normes)
-     centralisé dans le logic class ci-dessous pour rester facile à mettre à jour. -->
+<!-- Projet Hexacoptere.dc.html — étude de cas isolée. Contenu (piliers, chiffres, normes,
+     scénario, métriques, lecture des figures) centralisé dans le logic class ci-dessous
+     pour rester facile à mettre à jour après chaque campagne de simulation. -->
 <div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
 
   <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
@@ -34,7 +35,7 @@
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — Hexacoptère</span>
       <span style="flex:1;"></span>
       <a href="./index.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← Présentation</a>
-      <a href="./projet-f16.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">F-16</a>
+      <a href="./projet-f16.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Avion</a>
       <a href="./projet-acoustique.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Projet acoustique</a>
     </div>
   </nav>
@@ -67,7 +68,8 @@
     <div style="border:1px solid #1e2429; margin-bottom:16px; background:#fff; padding:16px;">
       <img src="./assets/Architecture-simulateur.png" alt="Schéma d'architecture : guidage → INDI → allocation des commandes → dynamique du véhicule → environnement → capteurs → observateurs (états + perturbations)" style="width:100%; display:block;">
     </div>
-    <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-bottom:60px;">FIG. 01 — Architecture fonctionnelle du simulateur</div>
+    <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-bottom:22px;">FIG. 01 — Architecture fonctionnelle du simulateur</div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 60px;">La boucle est parcourue dans un seul sens : le générateur de trajectoire produit une consigne NED + cap, le guidage la convertit en consignes de vitesses de rotation, l'INDI calcule la force collective et les couples, l'allocation les répartit sur six rotors, la chaîne batterie–ESC–moteur–hélice produit forces et couples réels, la dynamique 6 DDL intègre le mouvement dans une atmosphère et un vent modélisés, les capteurs imparfaits l'observent, et l'estimation (EKF + observateurs de perturbation) referme la boucle. Chaque bloc est une responsabilité séparée : le contrôleur ne voit que l'état estimé, jamais l'état vrai.</p>
 
     <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
       <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="4">
@@ -89,7 +91,7 @@
       </sc-for>
     </div>
 
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:26px;">
       <sc-for list="{{ vehicleParams }}" as="v" hint-placeholder-count="8">
         <div style="background:#101418; padding:20px 22px;">
           <div style="font-family:'IBM Plex Mono',monospace; font-size:16.5px;">{{ v.value }}</div>
@@ -98,37 +100,103 @@
       </sc-for>
     </div>
 
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-bottom:60px; display:grid; grid-template-columns:190px 1fr; gap:26px; align-items:start;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Provenance des paramètres</div>
       <div>
-        <div style="height:280px; border:1px solid #1e2429;">
-          <image-slot id="fig-vent" shape="rect" placeholder="Validation des modèles de vent : profil logarithmique, rafale 1-cos, DSP von Kármán"></image-slot>
-        </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 02 — Environnement atmosphérique</div>
-      </div>
-      <div>
-        <div style="border:1px solid #1e2429;">
-          <img src="./assets/RotDistObs_tau.png" alt="Observateur de perturbation : estimation des couples τx, τy, τz" style="width:100%; display:block;">
-        </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 03 — Estimation d'état et de perturbation (Observateur NDO des couples)</div>
+        <p style="font-size:14.5px; line-height:1.7; color:#c3cad0; margin:0 0 14px;">Les paramètres du véhicule ne sont pas des valeurs plausibles choisies pour faire tourner un modèle : ils proviennent d'une identification menée sur un <strong style="color:#e7eaec; font-weight:600;">DJI Matrice 600 Pro réel, à partir de données de vol</strong>, et publiée par Bauer et Nagy. Géométrie, disposition et sens de rotation des six rotors, masse et inertie en configuration TB48S, coefficients de force de moyeu et de traînée aérodynamique — chacun est repris de cet article avec sa référence d'équation ou de tableau, et conserve dans le code son unité, sa source et son statut.</p>
+        <p style="font-size:13.5px; line-height:1.65; color:#8b949b; margin:0;">P. Bauer et M. Nagy, « Flight-Data-Based High-Fidelity System Identification of DJI M600 Pro Hexacopter », <em>Aerospace</em>, MDPI, vol. 11, n° 1, p. 79, janvier 2024. Complété par les spécifications publiques DJI et, pour les moments d'inertie, par Setati <em>et al.</em> (2022).</p>
       </div>
     </div>
 
-    <div style="margin-top:36px;">
-      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:8px;">Résultats préliminaires — suivi de trajectoire</div>
-      <div style="font-size:13.5px; color:#8b949b; margin-bottom:20px;">Résultats intermédiaires, non finaux : la campagne de validation est en cours.</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-        <sc-for list="{{ preliminaryResults }}" as="r" hint-placeholder-count="2">
-          <div>
-            <div style="border:1px solid #1e2429;">
-              <img src="{{ r.file }}" alt="Résultat préliminaire de suivi de trajectoire" style="width:100%; display:block;">
-            </div>
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">{{ r.caption }}</div>
+    <div style="display:grid; grid-template-columns:1fr; gap:16px; margin-bottom:24px; justify-items:center;">
+      <div style="width:16cm;">
+        <div style="border:1px solid #1e2429; width:100%;">
+          <img src="./assets/RotDistObs_tau.png" alt="Banc de l'observateur non linéaire de perturbation : couples imposés τx, τy, τz et couples estimés" style="width:100%; height:auto; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 03 — Banc de l'observateur non linéaire de perturbation (NDO) : couples imposés vs estimés</div>
+      </div>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 60px;">FIG. 03 est un essai de qualification isolé de l'observateur : trois couples sinusoïdaux d'amplitudes 10, 20 et 30 N·m et de période 10 s sont injectés sur les axes de roulis, tangage et lacet. L'estimé reconstruit l'amplitude sur les trois axes et suit la consigne avec un léger retard de phase, cohérent avec la bande passante retenue pour l'observateur. Cet essai borne ce que l'observateur sait faire sur une perturbation lente et déterministe — ce qu'il donne en vol, sur une perturbation large bande, est rapporté plus bas (FIG. 06).</p>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Scénario de référence</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 24px;">Toutes les figures et toutes les métriques de cette page proviennent d'une seule et même simulation, afin qu'elles restent comparables entre elles. Les conditions sont les suivantes.</p>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:26px;">
+      <sc-for list="{{ scenario }}" as="s" hint-placeholder-count="6">
+        <div style="background:#101418; padding:20px 22px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:8px;">{{ s.label }}</div>
+          <div style="font-size:14px; line-height:1.6; color:#d3d9dd;">{{ s.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size:13.5px; line-height:1.65; color:#7c868e; max-width:860px; margin:0 0 60px;">Campagne <span style="font-family:'IBM Plex Mono',monospace; color:#9aa3aa;">HiFi_INDI — 05-08-2026</span>. Résultats intermédiaires : la campagne de validation est en cours et les valeurs ci-dessous correspondent à une réalisation unique (une seule graine aléatoire), non à une statistique Monte-Carlo.</p>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Résultats — suivi de trajectoire</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:26px;">
+      <sc-for list="{{ resultFigures }}" as="r" hint-placeholder-count="3">
+        <div>
+          <div style="border:1px solid #1e2429;">
+            <img src="{{ r.file }}" alt="{{ r.alt }}" style="width:100%; display:block;">
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">{{ r.caption }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ readings }}" as="r" hint-placeholder-count="3">
+        <div style="background:#101418; padding:24px 28px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7fd6d0;">{{ r.figure }}</div>
+          <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">{{ r.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Critères de qualification</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 24px;">La décision PASS/FAIL est prononcée sur les cinq dernières secondes de vol, une fois la trajectoire de référence stabilisée. Les seuils sont des exigences de projet, traçables mais non universelles : ils s'inspirent des mesures définies par l'ASTM F3609-25 sans constituer une déclaration de conformité.</p>
+    <div style="border:1px solid #1e2429; margin-bottom:20px; overflow-x:auto;">
+      <div style="display:grid; grid-template-columns:1fr 110px 110px 140px; gap:1px; background:#1e2429; min-width:640px;">
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Exigence</div>
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Mesuré</div>
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Limite</div>
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Statut</div>
+        <sc-for list="{{ qualification }}" as="q" hint-placeholder-count="9">
+          <div style="background:#101418; padding:13px 18px; font-size:13.5px; line-height:1.5; color:#d3d9dd;">{{ q.name }}</div>
+          <div style="background:#101418; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#e7eaec;">{{ q.value }}</div>
+          <div style="background:#101418; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#7c868e;">{{ q.limit }}</div>
+          <div style="background:#101418; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.08em;">
+            <span style="{{ q.statusStyle }}">{{ q.status }}</span>
           </div>
         </sc-for>
       </div>
     </div>
+    <p style="font-size:13.5px; line-height:1.65; color:#7c868e; max-width:860px; margin:0 0 60px;">Les huit critères évalués sur cette campagne sont satisfaits. Les marges sont confortables en position horizontale (0,22 m pour une limite de 1 m), en vitesse de rotation (0,61 °/s pour 5 °/s) et sur l'usage des actionneurs, aucun rotor ne s'approchant de sa butée de régime. L'axe vertical est le plus tendu, à 0,62 m pour la même limite de 1 m : c'est là que porte l'effort d'amélioration.</p>
 
-    <div style="margin-top:60px;">
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Estimation d'état — écarts mesurés</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 24px;">Le contrôleur ne dispose jamais de l'état vrai : il travaille sur la sortie de l'EKF. Comme le simulateur, lui, connaît l'état vrai, l'écart entre les deux est directement mesurable — ce qui est l'intérêt principal d'une plateforme de ce type. Valeurs RMS calculées après extinction du transitoire initial (t ≥ 2 s).</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:20px;">
+      <sc-for list="{{ estimation }}" as="e" hint-placeholder-count="4">
+        <div style="background:#101418; padding:20px 22px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:15px; color:#e7eaec;">{{ e.value }}</div>
+          <div style="font-size:12px; color:#7c868e; margin-top:5px; line-height:1.45;">{{ e.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size:13.5px; line-height:1.65; color:#7c868e; max-width:860px; margin:0 0 60px;">L'écart d'estimation de cap est nettement supérieur à celui de roulis et de tangage — comportement attendu, l'assiette étant contrainte par le vecteur gravité alors que le cap ne l'est que par la dynamique et le GNSS. Réduire cet écart est le prochain point d'amélioration de l'EKF.</p>
+
+    <div style="margin-bottom:60px;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:20px;">Normes &amp; références de modélisation</div>
       <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429;">
         <sc-for list="{{ standards }}" as="s" hint-placeholder-count="6">
@@ -141,9 +209,23 @@
       </div>
     </div>
 
-    <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-top:40px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
-      <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Statut</div>
-      <div style="font-size:14.5px; line-height:1.65; color:#c3cad0;">Campagne de validation en cours : suivi de trajectoire sous vent, cohérence statistique de l'EKF et convergence de l'observateur. Les figures ci-dessus sont des résultats intermédiaires — les performances finales seront confirmées à l'issue de la campagne.</div>
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Domaine de validité &amp; limites</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 24px;">« Haute fidélité » qualifie l'objectif du projet et le niveau de détail des modèles. Cela ne vaut ni validation en vol, ni conformité réglementaire, ni certification. Les phénomènes suivants ne sont pas représentés et ne doivent pas être supposés couverts par les résultats ci-dessus.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:24px;">
+      <sc-for list="{{ limitations }}" as="l" hint-placeholder-count="6">
+        <div style="background:#101418; padding:18px 24px; display:grid; grid-template-columns:16px 1fr; gap:10px; font-size:14px; line-height:1.55; color:#a5aeb5;">
+          <span style="color:#4f5b62; font-family:'IBM Plex Mono',monospace;">/</span>
+          <span>{{ l }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-top:16px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Suite des travaux</div>
+      <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">Trois chantiers sont ouverts : intégrer les effets de sol et l’influence rotor-sol dans la dynamique ; élargir la campagne aux modes de défaillance, notamment la perte d’un moteur et les réponses asymétriques associées ; et développer un système de supervision capable d’atterrissage d’urgence et de retour autonome au point de départ.</div>
     </div>
   </section>
 
@@ -158,19 +240,26 @@
 <script type="text/x-dc" data-dc-script>
 // Toutes les données de cette étude de cas sont ici, séparées par thème,
 // pour être modifiées sans toucher au template.
+//
+// Provenance des chiffres : campagne HiFi_INDI du 05-08-2026, fichier
+// results/data/HiFi_INDI_data_05-08-2026_22h43min55s.mat du dépôt du
+// simulateur. Les critères PASS/FAIL sortent de reportData.compliance,
+// les métriques d'estimation sont recalculées sur les signaux logués.
+const PASS = 'color:#5fd39a; border:1px solid #24463a; background:#0f1b17; padding:4px 9px; border-radius:2px;';
+
 class Component extends DCLogic {
   renderVals() {
     return {
       projectStack: ['MATLAB / Simulink', 'matlab.System', 'Quaternions', 'INDI + NDO', 'EKF 13 états'],
       problemFraming: [
-        { label: 'Problème', text: "Éprouver des lois de commande sur un hexacoptère de 11 kg engage un risque matériel et humain réel à chaque vol d'essai." },
-        { label: 'Approche', text: "Reproduire la chaîne causale complète du vol — dynamique, propulsion, atmosphère, capteurs imparfaits, estimation, commande — plutôt qu'un modèle idéalisé." },
-        { label: 'Livrable', text: "Une plateforme modulaire, compatible génération de code, où un contrôleur validé se transpose directement vers le véhicule physique." },
+        { label: 'Problématique', text: "Une loi de commande validée sur un modèle idéal ne dit presque rien de son comportement réel. En vol, elle ne voit jamais l'état vrai : elle voit une estimation bruitée, retardée et biaisée, reconstruite à partir de capteurs imparfaits. C'est là que la plupart des lois se dégradent — et le découvrir sur un appareil de 11 kg coûte cher." },
+        { label: 'Approche', text: "Fermer la boucle sur l'état estimé, jamais sur l'état vrai. Toute la chaîne causale est reproduite — dynamique 6 DDL, batterie-ESC-moteurs-hélices, atmosphère et vent normalisés, IMU et GNSS avec neuf effets de capteur modélisés, EKF, observateur de perturbation — de sorte qu'une perte de performance soit imputable à un maillon identifiable plutôt qu'à un modèle global opaque." },
+        { label: 'Livrable', text: "Un banc de qualification plutôt qu'un simulateur : chaque campagne rend un verdict chiffré face à des critères déclarés à l'avance, et la loi qui passe est exactement le code, compatible génération, destiné à voler sur le véhicule." },
       ],
       pillars: [
-        { num: '01', title: 'Dynamique & perturbations', text: "6 DDL, dynamique non linéaire. Forces aérodynamiques fonction de la vitesse absolue, de l'orientation du drone, de la vitesse et direction du vent, et d'une traînée quadratique. \nAtmosphère selon le standard ISO 2533.", points: ['Vitesse absolue et orientation du drone', 'Vitesse de vent et direction', 'Traînée quadratique', 'Atmosphère : température, densité de l\u2019air, pression, accélération gravitationnelle'] },
-        { num: '02', title: 'Propulsion & vent', text: "Chaîne batterie-ESC-moteurs-hélices à six rotors. Vent selon les standards MIL-F-8785C / MIL-STD-1797.", points: ['Six rotors, régime transitoire, délais ESC, limites de régime', 'Variation de la poussée et du couple avec la densité de l\u2019air', 'Vent moyen en fonction de l\u2019altitude', 'Rafale en 1-cos, \nTurbulence de von Kármán'] },
-        { num: '03', title: 'Capteurs & estimation', text: "IMU & GNSS avec paramètres et effets modélisés, fusionnés par un filtre de Kalman étendu.", points: ['Fréquence d\u2019échantillonnage, bruit gaussien, instabilité du biais, random walk', 'Erreurs de facteur d\u2019échelle, sensibilité croisée entre axes, quantification', 'g-sensitivity (gyroscope) et effets de la température', 'Filtre de Kalman étendu + observateur non linéaire des perturbations rotationnelles'] },
+        { num: '01', title: 'Dynamique & perturbations', text: "6 DDL, dynamique non linéaire. Forces aérodynamiques fonction de la vitesse absolue, de l'orientation du drone, de la vitesse et direction du vent, et d'une traînée quadratique. \nAtmosphère selon le standard ISO 2533.", points: ['Vitesse absolue et orientation du drone', 'Vitesse de vent et direction', 'Traînée quadratique', 'Atmosphère : température, densité de l’air, pression, accélération gravitationnelle'] },
+        { num: '02', title: 'Propulsion & vent', text: "Chaîne batterie-ESC-moteurs-hélices à six rotors. Vent selon les standards MIL-F-8785C / MIL-STD-1797.", points: ['Six rotors, régime transitoire, délais ESC, limites de régime', 'Variation de la poussée et du couple avec la densité de l’air', 'Vent moyen en fonction de l’altitude', 'Rafale en 1-cos, \nTurbulence de von Kármán'] },
+        { num: '03', title: 'Capteurs & estimation', text: "IMU & GNSS avec paramètres et effets modélisés, fusionnés par un filtre de Kalman étendu.", points: ['Fréquence d’échantillonnage, bruit gaussien, instabilité du biais, random walk', 'Erreurs de facteur d’échelle, sensibilité croisée entre axes, quantification', 'g-sensitivity (gyroscope) et effets de la température', 'Filtre de Kalman étendu + observateur non linéaire des perturbations rotationnelles'] },
         { num: '04', title: 'Système de contrôle', text: "Contrôleurs proportionnel dérivée et INDI, validation selon la norme ASTM F3609-25.", points: ['PD : conversion consigne NED-Yaw → consignes de vitesses de rotation (X-Y-Z)', 'INDI : contrôle des vitesses de rotation (X-Y-Z)', 'Validation des performances : ASTM F3609-25'] },
       ],
       vehicleParams: [
@@ -183,15 +272,54 @@ class Component extends DCLogic {
         { value: 'MIL-F-8785C', label: 'Standard de vent / turbulence' },
         { value: 'ASTM F3609-25', label: 'Validation des performances' },
       ],
-      preliminaryResults: [
-        { file: './assets/01_trajectory.png', caption: 'FIG. 04 — Suivi de trajectoire en huit (résultat préliminaire) : trajectoire 3D, ground track et altitude' },
-        { file: './assets/02_position_tracking.png', caption: 'FIG. 05 — Suivi de position NED et erreur de suivi 3D (résultat préliminaire)' },
+      scenario: [
+        { label: 'Véhicule', text: "DJI M600 Pro, 11,665 kg avec batteries TB48S et charge utile, six rotors, régime rotor maximal 456 rad/s. Paramètres identifiés en vol par Bauer et Nagy (2024)." },
+        { label: 'Trajectoire', text: "Spirale ascendante : rayon croissant jusqu'à environ 12 m, montée de 0 à 10 m, cap commandé en rotation continue sur plus de deux tours." },
+        { label: 'Cinématique de référence', text: "Vitesse horizontale moyenne 0,77 m/s, maximale 1,81 m/s ; vitesse verticale au plus 0,19 m/s. Consigne continûment dérivable, sans échelon." },
+        { label: 'Environnement', text: "Vent moyen 0,86 m/s, crête 1,46 m/s, composante Nord dominante, avec cisaillement, rafale et turbulence selon MIL-F-8785C." },
+        { label: 'Intégration', text: "100 s simulées, pas fondamental 1 ms, 100 001 points logués. Signaux vrais, estimés et commandés enregistrés sur la même base de temps." },
+        { label: 'Fenêtre d’évaluation', text: "Décision PASS/FAIL sur les 5 dernières secondes. Les mesures ASTM F3609 sur fenêtre glissante de 60 s restent un diagnostic séparé." },
+      ],
+      resultFigures: [
+        { file: './assets/01_trajectory.png', alt: "Trajectoire 3D, trace au sol et altitude : référence et trajectoire réalisée", caption: 'FIG. 04 — Trajectoire 3D, trace au sol et altitude (référence vs réalisé)' },
+        { file: './assets/11_commanded_setpoints.png', alt: "Consignes commandées et atteintes en Nord, Est, Down et cap", caption: 'FIG. 05 — Consignes commandées vs atteintes : Nord, Est, Down et cap' },
+        { file: './assets/09_disturbance_real_vs_estimated.png', alt: "Couples perturbateurs réels et estimés sur les axes de roulis, tangage et lacet en vol", caption: 'FIG. 06 — Couples perturbateurs en vol : réels vs estimés par le NDO' },
+      ],
+      readings: [
+        { figure: 'FIG. 04', text: "La trace au sol réalisée se superpose à la référence sur toute la spirale : le véhicule reste sur le chemin. Le seul écart lisible est en altitude, où la montée réalisée accuse un léger retard et se stabilise environ 0,6 m sous la consigne de 10 m — ce qui correspond exactement au RMSE vertical de 0,62 m mesuré en fin de vol." },
+        { figure: 'FIG. 05', text: "La même simulation, vue en fonction du temps, montre ce que la trace au sol masque : les courbes Nord et Est réalisées sont décalées dans le temps par rapport aux consignes. L'écart est un retard, pas une déviation. Décomposée dans le repère de la trajectoire, l'erreur horizontale vaut 2,07 m RMS le long du chemin contre 0,55 m RMS latéralement ; et compenser un retard pur de 1,92 s ramène le résidu sur l'axe Nord de 1,41 m à 0,28 m. Le cap, lui, est suivi sans écart visible sur plus de deux tours complets." },
+        { figure: 'FIG. 06', text: "En vol, le couple perturbateur reconstruit reste contenu dans une bande de ±0,1 N·m. L'observateur en restitue correctement l'ordre de grandeur sur les trois axes, et suit véritablement la composante lente en lacet (corrélation 0,85 sous 0,5 Hz, erreur ramenée à 39 % de l'amplitude du signal). En roulis et en tangage, la perturbation est dominée par une composante large bande que l'observateur reproduit en enveloppe mais pas point à point (corrélation voisine de 0,3). C'est la limite identifiée de la chaîne d'observation actuelle, et elle est signalée comme telle plutôt que lissée." },
+      ],
+      qualification: [
+        { name: 'RMSE de position horizontale', value: '0,22 m', limit: '1,00 m', status: 'PASS', statusStyle: PASS },
+        { name: 'RMSE de position verticale', value: '0,62 m', limit: '1,00 m', status: 'PASS', statusStyle: PASS },
+        { name: 'P95 d’erreur de navigation (mesure F3609)', value: '0,72 m', limit: '1,00 m', status: 'PASS', statusStyle: PASS },
+        { name: 'P95 d’assurance de position horizontale', value: '0,24 m', limit: '8 m', status: 'PASS', statusStyle: PASS },
+        { name: 'P95 d’assurance de position verticale', value: '0,74 m', limit: '13 m', status: 'PASS', statusStyle: PASS },
+        { name: 'RMSE de vitesse de rotation', value: '0,61 °/s', limit: '5 °/s', status: 'PASS', statusStyle: PASS },
+        { name: 'Fraction de fonctionnement en limite d’actionneur', value: '0 %', limit: '1 %', status: 'PASS', statusStyle: PASS },
+        { name: 'Utilisation crête des rotors', value: '64,4 %', limit: '75 %', status: 'PASS', statusStyle: PASS },
+      ],
+      estimation: [
+        { value: '0,15 m', label: 'Écart RMS d’estimation de position, axes Nord et Est' },
+        { value: '0,37 m', label: 'Écart RMS d’estimation de position, axe vertical' },
+        { value: '0,03 m/s', label: 'Écart RMS d’estimation de vitesse, sur les trois axes' },
+        { value: '0,6 / 1,0 / 3,9°', label: 'Écart RMS d’estimation d’attitude : roulis, tangage, cap' },
       ],
       standards: [
+        { code: 'Bauer & Nagy, 2024', title: 'Identification du DJI M600 Pro en vol', use: "Source des paramètres du véhicule : géométrie et disposition des rotors, masse et inertie, coefficients de force de moyeu et de traînée, identifiés sur données de vol réelles. Aerospace, 11(1), 79 — DOI 10.3390/aerospace11010079." },
         { code: 'ISO 2533', title: 'Atmosphère type', use: "Température, densité de l'air, pression et accélération gravitationnelle en fonction de l'altitude." },
         { code: 'MIL-F-8785C', title: 'Flying Qualities — spécification', use: "Vent moyen selon l'altitude, rafale en 1-cos et turbulence de von Kármán." },
         { code: 'MIL-STD-1797', title: 'Flying Qualities of Piloted Aircraft', use: "Modèles complémentaires de rafale discrète et de turbulence atmosphérique." },
-        { code: 'ASTM F3609-25', title: 'Validation des performances', use: "Référentiel de validation des performances de vol du simulateur." },
+        { code: 'ASTM F3609-25', title: 'Validation des performances', use: "Référentiel des mesures PNT et des fenêtres d'évaluation reprises par les critères de projet." },
+      ],
+      limitations: [
+        "Interaction aérodynamique rotor-rotor détaillée",
+        "Effets de sol, de plafond et de paroi",
+        "Déformation et vibration structurales de la cellule",
+        "Gradients spatiaux complets de turbulence sur l'envergure",
+        "Thermique et vieillissement de la batterie et des moteurs",
+        "Récepteur GNSS à pseudo-distances et constellation réelle",
       ],
     };
   }

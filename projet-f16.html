@@ -23,14 +23,15 @@
   </style>
 </helmet>
 
-<!-- Projet F16.dc.html — étude de cas isolée. Réutilise les modèles d'environnement
-     (atmosphère, vent) développés pour le simulateur hexacoptère. Données en haut, séparées. -->
+<!-- Projet F16.dc.html — étude de cas isolée. L'en-tête reste générique (dynamique du
+     vol à voilure fixe) ; le véhicule de référence, le F-16, est révélé dans le corps
+     de la page. Données en bas, séparées du gabarit. -->
 <div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
 
   <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
     <div style="max-width:1160px; margin:0 auto; padding:14px 40px; display:flex; align-items:center; gap:26px;">
       <a href="./index.html" style="font-family:'Archivo',sans-serif; font-weight:600; font-size:14.5px; color:#e7eaec;">Jonathan Mifundu Nzengi</a>
-      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — F-16</span>
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Projet — Avion</span>
       <span style="flex:1;"></span>
       <a href="./index.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← Présentation</a>
       <a href="./projet-hexacoptere.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Hexacoptère</a>
@@ -42,11 +43,11 @@
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:start; margin-bottom:52px;">
       <div>
         <div style="margin:0 0 28px; border:1px solid #1e2429;">
-          <img src="./assets/F16-1920.jpg" alt="Chasseur F-16" style="width:100%; display:block;">
+          <img src="./assets/F16-1920.jpg" alt="Avion de combat à voilure fixe en vol" style="width:100%; display:block;">
         </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin:10px 0 26px;">VÉHICULE DE RÉFÉRENCE — F-16</div>
-        <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:40px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 20px;">Simulateur de dynamique de vol d'un F-16</h1>
-        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Modèle non linéaire 6 degrés de liberté du F-16, couplé à un filtre de Kalman étendu pour l'estimation d'état — en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797. Les coefficients aérodynamiques sont issus de données de vol réelles de la NASA.</p>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin:10px 0 26px;">VÉHICULE DE RÉFÉRENCE — AVION DE COMBAT MONORÉACTEUR</div>
+        <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:40px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 20px;">Simulateur de dynamique de vol à voilure fixe</h1>
+        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Modèle non linéaire à six degrés de liberté d'un avion de combat à stabilité longitudinale relâchée, couplé à un filtre de Kalman étendu pour l'estimation d'état — en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797. Les coefficients aérodynamiques proviennent d'essais en soufflerie publiés.</p>
         <div style="display:flex; flex-wrap:wrap; gap:8px;">
           <sc-for list="{{ projectStack }}" as="p" hint-placeholder-count="5">
             <span style="display:inline-block; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#7fd6d0; border:1px solid #24383a; background:#101a1b; padding:6px 11px; border-radius:2px;">{{ p }}</span>
@@ -92,6 +93,41 @@
       </sc-for>
     </div>
 
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Le module aérodynamique — de la table NASA au modèle</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 30px;">La qualité d'un simulateur de dynamique de vol tient d'abord à celle de ses données aérodynamiques. Le rapport NASA TP-1538 (Nguyen <em>et al.</em>, 1979) publie les mesures en soufflerie d'un chasseur à stabilité longitudinale relâchée, sous forme de tables de coefficients — c'est la référence sur laquelle repose la quasi-totalité des modèles F-16 ouverts.</p>
+    <p style="font-size:14.5px; line-height:1.75; color:#7c868e; max-width:880px; margin:0 0 60px;">Le domaine d'emploi retenu suit le modèle réduit décrit par Stevens, Johnson et Lewis : environ Mach 0,6 et une incidence comprise entre −10° et 45°. Disposer de données au-delà ne rend pas le modèle d'avion complet valide pour autant.</p>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Vérification n'est pas validation</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:22px;">
+      <sc-for list="{{ vAndV }}" as="v" hint-placeholder-count="2">
+        <div style="background:#101418; padding:26px 30px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0; margin-bottom:12px;">{{ v.label }}</div>
+          <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">{{ v.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:880px; margin:0 0 24px;">Les éléments suivants ne sont pas fournis par la transcription aérodynamique et ne doivent pas être supposés couverts.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ limitations }}" as="l" hint-placeholder-count="5">
+        <div style="background:#101418; padding:18px 24px; display:grid; grid-template-columns:16px 1fr; gap:10px; font-size:14px; line-height:1.55; color:#a5aeb5;">
+          <span style="color:#4f5b62; font-family:'IBM Plex Mono',monospace;">/</span>
+          <span>{{ l }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Règles de construction du banc</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14px; line-height:1.7; color:#6d767d; max-width:880px; margin:0 0 60px; font-style:italic;">Section en cours de rédaction.</p>
+
     <div style="margin-bottom:60px;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:20px;">Normes &amp; références de modélisation</div>
       <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429;">
@@ -107,7 +143,7 @@
 
     <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-bottom:60px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Statut</div>
-      <div style="font-size:14.5px; line-height:1.65; color:#c3cad0;">Campagne de tests en cours : validation de la dynamique 6 DDL et de la cohérence de l'estimation par filtre de Kalman étendu. Résultats intégrés au fur et à mesure de leur production.</div>
+      <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">Projet en cours de développement. Les travaux portent sur la modélisation, l’estimation d’état et la conception du contrôleur. Les résultats seront intégrés progressivement après validation.</div>
     </div>
   </section>
 
@@ -120,32 +156,52 @@
 
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+// Provenance : dépôt « Aircraft Simulator » — transcription NASA TP-1538 et
+// rapport de vérification Results/f16_aero_lookup_validation.csv, qui donne
+// l'erreur absolue maximale du rejeu et la tolérance appliquée.
 class Component extends DCLogic {
   renderVals() {
     return {
-      projectStack: ['MATLAB / Simulink', 'matlab.System', 'Quaternions', '6 DDL', 'EKF'],
+      projectStack: ['MATLAB / Simulink', 'NASA TP-1538', '6 DDL non linéaire', 'Quaternions', 'EKF'],
       problemFraming: [
-        { label: 'Problème', text: "Valider une chaîne d'estimation d'état sur un avion de chasse à dynamique rapide et fortement non linéaire, sans risque d'essai en vol." },
-        { label: 'Approche', text: "Modèle 6 degrés de liberté du F-16 couplé à l'environnement atmosphérique et de vent déjà validé sur le simulateur hexacoptère." },
-        { label: 'Livrable', text: "Un banc de test partagé pour l'estimation d'état, réutilisant la même infrastructure de modélisation à travers deux véhicules distincts." },
+        { label: 'Problématique', text: "Développer un contrôleur de vol efficace pour un avion fortement non linéaire, capable d’assurer la stabilité, le suivi des consignes et la robustesse face aux variations aérodynamiques et aux perturbations." },
+        { label: 'Approche', text: "Construire un modèle 6 DDL du F-16 à partir des données aérodynamiques NASA TP-1538, puis concevoir et évaluer des lois de commande adaptées à l’ensemble de son domaine de fonctionnement." },
+        { label: 'Livrable', text: "Un environnement de simulation haute fidélité intégrant le modèle aérodynamique du F-16, la dynamique de vol, l’estimation d’état et un contrôleur validé par des scénarios de suivi, de stabilisation et de rejet des perturbations." },
       ],
       pillars: [
-        { num: '01', title: 'Dynamique du véhicule', text: "6 DDL, dynamique non linéaire du F-16 — translation et rotation couplées, forces et moments aérodynamiques basés sur des données réelles rendues disponibles par la NASA.", points: ['Modèle non linéaire 6 DDL', 'Coefficients aérodynamiques issus de mesures NASA', 'Atmosphère selon le standard ISO 2533'] },
-        { num: '02', title: 'Environnement', text: "Modèles de vent et d'atmosphère en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797.", points: ['Vent moyen selon l\u2019altitude (MIL-F-8785C)', 'Rafale en 1-cos, turbulence de von Kármán', 'Atmosphère standard ISO 2533'] },
-        { num: '03', title: 'Estimation d\u2019état', text: "Filtre de Kalman étendu pour la reconstruction de l'état à partir de mesures imparfaites.", points: ['Filtre de Kalman étendu', 'Fusion des mesures capteurs simulées', 'Évaluation de la nécessité d\u2019un observateur des perturbations linéaires et rotationnelles'] },
+        { num: '01', title: 'Données aérodynamiques', text: "Transcription intégrale et traçable des tables de soufflerie NASA TP-1538, exposée derrière une interface d'interpolation unique.", points: [] },
+        { num: '02', title: 'Dynamique du véhicule', text: "6 DDL, dynamique non linéaire du F-16 — translation et rotation couplées, forces et moments aérodynamiques issus des tables ci-dessus.", points: ['Modèle non linéaire 6 DDL, attitude par quaternions', 'Forces et moments interpolés en (α, β, δ) à chaque pas', 'Atmosphère selon le standard ISO 2533'] },
+        { num: '03', title: 'Environnement', text: "Modèles de vent et d'atmosphère en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797, paramétrés pour l'enveloppe d'altitude et de vitesse de l'appareil.", points: ['Vent moyen selon l’altitude (MIL-F-8785C)', 'Rafale en 1-cos, turbulence de von Kármán', 'Atmosphère standard ISO 2533'] },
+        { num: '04', title: 'Estimation d’état', text: "Filtre de Kalman étendu pour la reconstruction de l'état à partir de mesures imparfaites.", points: ['Filtre de Kalman étendu, fusion des mesures capteurs simulées', 'Évaluation de la nécessité d’observateurs de perturbation linéaires et rotationnels'] },
       ],
       vehicleParams: [
         { value: '6 DDL', label: 'Dynamique non linéaire' },
-        { value: 'EKF', label: 'Observateur d\u2019état' },
-        { value: 'NDO', label: 'Observateurs de perturbation (linéaire/rotationnel) à l\u2019étude' },
+        { value: 'TP-1538', label: 'Source aérodynamique NASA (1979)' },
+        { value: 'EKF', label: 'Observateur d’état' },
+        { value: 'NDO', label: 'Observateurs de perturbation à l’étude' },
         { value: 'ISO 2533', label: 'Atmosphère standard' },
         { value: 'MIL-F-8785C', label: 'Standard de vent / turbulence' },
         { value: 'MIL-STD-1797', label: 'Modèles complémentaires de rafale / turbulence' },
+        { value: 'Quaternions', label: 'Propagation de l’attitude' },
+      ],
+      vAndV: [
+        { label: 'Ce que les tests établissent', text: "" },
+        { label: 'Ce qu’ils n’établissent pas', text: "" },
+      ],
+      limitations: [
+        "Dynamique des actionneurs de gouvernes",
+        "Caractéristiques détaillées des capteurs embarqués",
+        "Souplesse et déformation structurale de la cellule",
+        "Consommation de carburant et variation de masse en vol",
+        "Dynamique de mise en régime du réacteur",
+        "Domaine au-delà de Mach 0,6 et hors de la plage d’incidence −10° à 45°",
       ],
       standards: [
+        { code: 'NASA TP-1538', title: 'Stall / post-stall characteristics', use: "Nguyen et al., 1979 — tables de coefficients aérodynamiques issues d'essais en soufflerie, source unique du modèle aérodynamique." },
         { code: 'ISO 2533', title: 'Atmosphère type', use: "Température, densité de l'air, pression et accélération gravitationnelle en fonction de l'altitude." },
         { code: 'MIL-F-8785C', title: 'Flying Qualities — spécification', use: "Vent moyen selon l'altitude, rafale en 1-cos et turbulence de von Kármán." },
         { code: 'MIL-STD-1797', title: 'Flying Qualities of Piloted Aircraft', use: "Modèles complémentaires de rafale discrète et de turbulence atmosphérique." },
+        { code: 'Stevens & Lewis', title: 'Aircraft Control and Simulation', use: "Modèle réduit du F-16 et contexte d'interpolation ; fixe le domaine de validité retenu." },
       ],
     };
   }
