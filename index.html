@@ -36,7 +36,7 @@
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Ph.D. — Présentation</span>
       <span style="flex:1;"></span>
       <a href="./projet-hexacoptere.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Hexacoptère</a>
-      <a href="./projet-f16.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">F-16</a>
+      <a href="./projet-f16.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Avion</a>
       <a href="./projet-acoustique.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Acoustique</a>
       <a href="#expertise" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Expertise</a>
       <a href="#parcours" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Parcours</a>
@@ -94,17 +94,16 @@
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">01 — Études de cas</span>
       <span style="flex:1; height:1px; background:#1e2429;"></span>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#1e2429; border:1px solid #1e2429;">
-      <a href="./projet-hexacoptere.html" style="display:block; background:#101418; padding:34px 36px;" style-hover="background:#141a1f;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:14px;">Projet · Simulation &amp; commande de vol</div>
-        <h3 style="font-family:'Archivo',sans-serif; font-size:24px; font-weight:600; color:#e7eaec; margin:0 0 14px;">Simulateur haute fidélité d'un hexacoptère industriel</h3>
-        <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0;">Dynamique non linéaire, propulsion, atmosphère, capteurs, estimation et commande. Voir l'étude de cas complète →</p>
-      </a>
-      <a href="./projet-acoustique.html" style="display:block; background:#101418; padding:34px 36px;" style-hover="background:#141a1f;">
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:14px;">Projet · Recherche doctorale</div>
-        <h3 style="font-family:'Archivo',sans-serif; font-size:24px; font-weight:600; color:#e7eaec; margin:0 0 14px;">Contrôle actif large bande d'une double paroi acoustique</h3>
-        <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0;">Modélisation vibroacoustique, identification expérimentale, contrôle adaptatif multicanal. Voir l'étude de cas complète →</p>
-      </a>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429;">
+      <sc-for list="{{ caseStudies }}" as="c" hint-placeholder-count="3">
+        <a href="{{ c.href }}" style="display:block; background:#101418; padding:34px 36px;" style-hover="background:#141a1f;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:14px;">{{ c.kicker }}</div>
+          <h3 style="font-family:'Archivo',sans-serif; font-size:22px; font-weight:600; color:#e7eaec; line-height:1.2; margin:0 0 14px;">{{ c.title }}</h3>
+          <p style="font-size:14.5px; line-height:1.65; color:#9aa3aa; margin:0 0 18px;">{{ c.text }}</p>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#7fd6d0; line-height:1.55;">{{ c.result }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6d767d; margin-top:14px;">Étude de cas complète →</div>
+        </a>
+      </sc-for>
     </div>
   </section>
 
@@ -227,7 +226,7 @@
     <div style="border-top:1px solid #1e2429; padding-top:56px; display:grid; grid-template-columns:1fr auto; gap:48px; align-items:end;">
       <div>
         <h2 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:42px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 18px; max-width:640px;">Un système à modéliser, à commander ou à valider ?</h2>
-        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; max-width:520px; margin:0;">Ouvert aux mandats de R&amp;D, collaborations de recherche, postes en commande et simulation, et charges de cours.</p>
+        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; max-width:520px; margin:0;">Contact pour mandats de R&amp;D, collaborations de recherche, postes en commande et simulation, et charges de cours.</p>
       </div>
       <div style="display:flex; flex-direction:column; gap:12px; align-items:flex-start;">
         <a href="mailto:mifunduj@gmail.com" style="font-family:'Archivo',sans-serif; font-size:18px; font-weight:600; color:#0c0f12; background:#7fd6d0; padding:16px 28px; border-radius:2px;" style-hover="background:#a9e8e3;">mifunduj@gmail.com</a>
@@ -306,6 +305,32 @@ const STATS = [
   { value: '+650h', label: 'Enseignement collégial et universitaire' },
 ];
 
+// Études de cas ayant leur propre page. Le champ `result` porte le chiffre
+// vérifiable qui justifie le clic — il doit rester aligné sur la page cible.
+const CASE_STUDIES = [
+  {
+    href: './projet-hexacoptere.html',
+    kicker: 'Projet · Simulation & commande de vol',
+    title: "Simulateur haute fidélité d'un hexacoptère industriel",
+    text: "Dynamique non linéaire 6 DDL, propulsion électrique, atmosphère et vent normalisés, capteurs imparfaits, estimation et commande INDI d'un DJI M600 Pro.",
+    result: "Vol de 100 s sous vent : tous les critères de qualification évalués sont satisfaits, erreur de position horizontale 0,22 m RMS en fin de vol, rotors à 64 % de leur régime maximal.",
+  },
+  {
+    href: './projet-f16.html',
+    kicker: 'Projet · Dynamique du vol & données',
+    title: "Simulateur de dynamique de vol à voilure fixe",
+    text: "Modèle 6 DDL d'un avion de combat, alimenté par des tables de soufflerie transcrites sans retouche, avec une chaîne de données entièrement traçable.",
+    result: "Projet en cours : transcription aérodynamique et interface d'interpolation en place, travaux sur la dynamique 6 DDL et l'estimation d'état.",
+  },
+  {
+    href: './projet-acoustique.html',
+    kicker: 'Projet · Recherche doctorale',
+    title: "Contrôle actif large bande d'une double paroi acoustique",
+    text: "Trois algorithmes adaptatifs — FxLMS-COMP, sa forme à filtre compensé et sa version par modèle interne — généralisés au multicanal et implantés en temps réel sur double vitrage.",
+    result: "Jusqu'à 20 dB d'atténuation en tiers d'octave, et une zone de silence créée sans aucun capteur dans l'espace protégé.",
+  },
+];
+
 const OTHER_PROJECTS = [
   { kicker: 'Soutien technique · UdeS', title: 'Ventilateur liquidien — projet INOLIVENT', text: "Programmation et validation expérimentale d'un système de ventilation liquidienne : instrumentation, acquisition et essais.", stack: 'Instrumentation · essais · programmation' },
   { kicker: 'R&D · 3IT', title: "Apprentissage kinesthésique d'un robot collaboratif", text: "Programmation par démonstration sur un robot Baxter : le geste humain est enregistré sur plusieurs répétitions du mouvement, puis synthétisé pour en extraire la meilleure façon de l'exécuter.", stack: 'ROS · Python · robotique collaborative' },
@@ -353,6 +378,7 @@ class Component extends DCLogic {
       profile: PROFILES[active],
       showPublications: this.props.showPublications ?? true,
       stats: STATS,
+      caseStudies: CASE_STUDIES,
       otherProjects: OTHER_PROJECTS,
       timeline: TIMELINE,
       education: EDUCATION,

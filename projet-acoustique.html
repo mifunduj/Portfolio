@@ -25,7 +25,8 @@
 </helmet>
 
 <!-- Projet Acoustique.dc.html — étude de cas de la recherche doctorale, isolée du reste
-     du portfolio pour rester modifiable indépendamment. -->
+     du portfolio pour rester modifiable indépendamment. Chiffres issus de la thèse
+     « Contrôle actif large bande par compensation par modèle interne », UdeS, juin 2025. -->
 <div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
 
   <nav style="position:sticky; top:0; z-index:20; background:rgba(12,15,18,0.82); backdrop-filter:blur(12px); border-bottom:1px solid #1e2429;">
@@ -35,7 +36,7 @@
       <span style="flex:1;"></span>
       <a href="./index.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">← Présentation</a>
       <a href="./projet-hexacoptere.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Projet hexacoptère</a>
-      <a href="./projet-f16.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">F-16</a>
+      <a href="./projet-f16.html" style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:#b6bec4;">Avion</a>
     </div>
   </nav>
 
@@ -52,42 +53,176 @@
         </div>
       </div>
       <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429;">
-        <sc-for list="{{ thesisPoints }}" as="f" hint-placeholder-count="4">
-          <div style="background:#101418; padding:20px 24px;">
-            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:8px;">{{ f.label }}</div>
+        <sc-for list="{{ problemFraming }}" as="f" hint-placeholder-count="3">
+          <div style="background:#101418; padding:22px 24px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:9px;">{{ f.label }}</div>
             <div style="font-size:14.5px; line-height:1.6; color:#d3d9dd;">{{ f.text }}</div>
           </div>
         </sc-for>
       </div>
     </div>
-    <div style="width:100%; max-width:700px; margin:36px auto 0;">
+
+    <div style="margin-top:52px;">
+      <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Démarche</span>
+        <span style="flex:1; height:1px; background:#1e2429;"></span>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429;">
+        <sc-for list="{{ thesisPoints }}" as="f" hint-placeholder-count="4">
+          <div style="background:#101418; padding:22px 24px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:9px;">{{ f.label }}</div>
+            <div style="font-size:14px; line-height:1.6; color:#a5aeb5;">{{ f.text }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="margin-top:64px;">
+      <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Les trois stratégies en présence</span>
+        <span style="flex:1; height:1px; background:#1e2429;"></span>
+      </div>
+      <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 20px;">Une double cloison — un double vitrage, par exemple — isole très bien du bruit en moyennes et hautes fréquences, et très mal en dessous de quelques centaines de hertz : la cavité d'air se comporte comme un ressort entre deux masses, et l'ensemble entre en résonance là où le bruit urbain et le bruit de transport ont précisément le plus d'énergie. Épaissir le vitrage ne résout rien à ces fréquences ; c'est le domaine du contrôle actif.</p>
+      <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 20px;">Le contrôle actif classique impose alors un dilemme. Pour réduire réellement le bruit dans la pièce, il faut y placer les microphones d'erreur — c'est la stratégie de <strong style="color:#d3d9dd; font-weight:600;">minimisation en aval</strong> (MinAval), la plus performante, mais aussi la plus intrusive : câbler des microphones dans l'espace habité est rarement acceptable. La solution commode consiste à ne mesurer que dans la cavité inter-vitrages (<strong style="color:#d3d9dd; font-weight:600;">MinCav</strong>) ; mais réduire la pression dans la cavité ne réduit pas nécessairement l'onde transmise, et l'expérience montre que le gain en aval reste alors faible.</p>
+      <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 34px;">La contribution de cette thèse — la stratégie <strong style="color:#7fd6d0; font-weight:600;">Comp</strong> — lève le dilemme. Un filtre de compensation est appris pendant une phase initiale où les microphones aval sont temporairement présents. Une fois ce filtre identifié, ils sont retirés : le contrôleur ne mesure plus que dans la cavité, mais poursuit l'objectif de la minimisation en aval. Autrement dit, la zone de silence est créée là où plus aucun capteur ne se trouve.</p>
+    </div>
+
+    <div style="width:100%; max-width:700px; margin:0 auto;">
       <div style="border:1px solid #1e2429;">
         <img src="./assets/SB_FFBxLMS.jpg" alt="Schéma-bloc de la méthode : contrôleur adaptatif FF-BxLMS avec compensation du signal d'erreur" style="width:100%; display:block;">
       </div>
       <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 04 — Contrôleur FF-BxLMS avec compensation du signal d'erreur (contribution principale)</div>
     </div>
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:36px;">
-      <div>
-        <div style="border:1px solid #1e2429;">
-          <img src="./assets/SetUpMIMO.png" alt="Setup expérimental : chambres couplées réverbérante / semi-anéchoïque pour la mesure de la perte par transmission" style="width:100%; display:block;">
-        </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 05 — Banc de mesure de la perte par transmission (chambres couplées réverbérante–semi-anéchoïque)</div>
+    <p style="font-size:14.5px; line-height:1.75; color:#9aa3aa; max-width:880px; margin:26px auto 0;">Le signal d'erreur réellement minimisé n'est pas la pression mesurée en cavité, mais cette pression corrigée par le filtre de compensation. Le formalisme établit que le FxLMS avec compensation est équivalent à un FxLMS classique dont la réponse impulsionnelle est le filtre compensé <span style="font-family:'IBM Plex Mono',monospace; color:#7fd6d0;">k(z) = h(z) − m(z)</span>. Cette équivalence a une conséquence pratique importante : elle permet de reconstruire la même loi en commande par modèle interne (IMC-FxLMS-COMP), donc de se passer d'un signal de référence avancé cohérent avec la perturbation — hypothèse rarement satisfaite dans une installation réelle.</p>
+
+    <div style="margin-top:64px;">
+      <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+        <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Ce que le modèle numérique a révélé</span>
+        <span style="flex:1; height:1px; background:#1e2429;"></span>
       </div>
-      <div>
-        <div style="border:1px solid #1e2429;">
-          <img src="./assets/TL.png" alt="Perte par transmission mesurée : passif vs. MinCav, MinAval, Comp" style="width:100%; display:block;">
-        </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 06 — Perte par transmission : passif vs. contrôle actif (MinCav, MinAval, Comp)</div>
-      </div>
-      <div style="grid-column:1 / -1; width:100%; max-width:640px; margin:0 auto;">
-        <div style="border:1px solid #1e2429;">
-          <img src="./assets/Mesures_finales_Attenuation.jpg" alt="Atténuation mesurée par tiers d'octave, moyenne sur 8 microphones, stratégie MinAval" style="width:100%; display:block;">
-        </div>
-        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 07 — Atténuation par tiers d'octave (MinAval), pics jusqu'à 20 dB en moyenne sur 8 microphones</div>
+      <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 24px;">Avant toute expérience, une étude numérique en co-simulation COMSOL Multiphysics – MATLAB a servi à comprendre la physique du problème plutôt qu'à prédire un chiffre. Elle a donné trois résultats qui ont ensuite structuré tout le travail expérimental.</p>
+      <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:64px;">
+        <sc-for list="{{ numericalFindings }}" as="n" hint-placeholder-count="2">
+          <div style="background:#101418; padding:26px 28px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7fd6d0; margin-bottom:12px;">{{ n.num }}</div>
+            <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">{{ n.text }}</div>
+          </div>
+        </sc-for>
       </div>
     </div>
 
-    <div style="margin-top:60px;">
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Dispositifs expérimentaux</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 24px;">Deux bancs successifs, du plus contraint au plus réaliste. Le premier isole la physique ; le second confronte la méthode à un vitrage de taille utile et à une mesure normalisée d'isolement.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:40px;">
+      <sc-for list="{{ benches }}" as="b" hint-placeholder-count="2">
+        <div style="background:#101418; padding:26px 30px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0; margin-bottom:12px;">{{ b.label }}</div>
+          <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">{{ b.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+      <div>
+        <div style="border:1px solid #1e2429;">
+          <img src="./assets/tube2kundt.jpeg" alt="Photographie du tube de Kundt : deux caissons en bois alignés, séparés par le porte-échantillon où est monté le double vitrage, avec microphones et câblage" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">BANC MONOCANAL — TUBE DE KUNDT, MONTAGE RÉEL</div>
+      </div>
+      <div>
+        <div style="border:1px solid #1e2429; background:#fff;">
+          <img src="./assets/Schema_dimensions_Tube2kundt.png" alt="Schéma coté du tube de Kundt en section longitudinale et transversale : source acoustique, quatre microphones amont et aval, microphone de cavité, source secondaire, emplacement de l'échantillon" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">BANC MONOCANAL — SECTIONS LONGITUDINALE ET TRANSVERSALE COTÉES</div>
+      </div>
+    </div>
+    <p style="font-size:14.5px; line-height:1.75; color:#9aa3aa; max-width:880px; margin:0 0 44px;">Le tube impose une onde plane et une <strong style="color:#d3d9dd; font-weight:600;">incidence normale</strong> sur l'échantillon, retenue comme cas défavorable. Sa section carrée de 30,5 cm reçoit le double vitrage ; deux microphones en amont et deux en aval permettent de séparer l'onde incidente de l'onde transmise et d'en déduire l'isolement, tandis qu'un microphone débouche dans la cavité inter-vitrages et que la source secondaire y injecte le signal de contrôle par le côté. C'est ce montage — un seul mode de cavité, un champ parfaitement maîtrisé — qui a permis de quantifier ce que la compensation pouvait atteindre avant d'aborder le multicanal.</p>
+
+    <div style="margin-bottom:16px;">
+      <div style="border:1px solid #1e2429;">
+        <img src="./assets/SetUpMIMO.png" alt="Setup expérimental : chambres couplées réverbérante / semi-anéchoïque pour la mesure de la perte par transmission" style="width:100%; display:block;">
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 05 — Banc multicanal en chambres couplées réverbérante–semi-anéchoïque</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div>
+        <div style="border:1px solid #1e2429;">
+          <img src="./assets/TL.png" alt="Perte par transmission mesurée : passif STC 41, MinDown STC 43, MinCav STC 42, Comp STC 42" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 06 — Perte par transmission mesurée : passif vs. contrôle actif. La courbe « MinDown » de la légende est la stratégie appelée MinAval dans le texte.</div>
+      </div>
+      <div>
+        <div style="border:1px solid #1e2429;">
+          <img src="./assets/Mesures_finales_Attenuation.jpg" alt="Atténuation mesurée par tiers d'octave pour deux configurations : 8 haut-parleurs / 8 microphones / 3192 coefficients et 7 / 7 / 2500" style="width:100%; display:block;">
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">FIG. 07 — Atténuation par tiers d'octave en stratégie MinAval, pour deux dimensionnements du contrôleur (haut-parleurs / microphones / coefficients)</div>
+      </div>
+    </div>
+
+    <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-top:36px; margin-bottom:64px;">
+      <sc-for list="{{ readings }}" as="r" hint-placeholder-count="3">
+        <div style="background:#101418; padding:24px 28px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7fd6d0;">{{ r.figure }}</div>
+          <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">{{ r.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Résultats mesurés</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:880px; margin:0 0 24px;">Toutes les valeurs ci-dessous sont expérimentales, et toutes sont des atténuations : des décibels réellement retirés au bruit transmis. MinAval sert de référence de performance — c'est ce que l'on obtiendrait en acceptant de câbler des microphones dans l'espace à protéger. La question posée à Comp est de savoir combien on en conserve sans eux.</p>
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:26px;">
+      <sc-for list="{{ keyFigures }}" as="k" hint-placeholder-count="4">
+        <div style="background:#101418; padding:24px 22px;">
+          <div style="font-family:'Archivo',sans-serif; font-size:30px; font-weight:600; letter-spacing:-0.01em; color:#7fd6d0;">{{ k.value }}</div>
+          <div style="font-size:13px; color:#a5aeb5; margin-top:8px; line-height:1.5;">{{ k.label }}</div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6d767d; margin-top:8px; line-height:1.5;">{{ k.detail }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="border:1px solid #1e2429; margin-bottom:20px; overflow-x:auto;">
+      <div style="display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:1px; background:#1e2429; min-width:700px;">
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Essai</div>
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">MinAval</div>
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">Comp</div>
+        <div style="background:#12181c; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:#7c868e;">MinCav</div>
+        <sc-for list="{{ resultsTable }}" as="t" hint-placeholder-count="5">
+          <div style="background:#101418; padding:13px 18px; font-size:13.5px; line-height:1.5; color:#d3d9dd;">{{ t.case }}</div>
+          <div style="background:#101418; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#e7eaec;">{{ t.minaval }}</div>
+          <div style="background:#101418; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#7fd6d0;">{{ t.comp }}</div>
+          <div style="background:#101418; padding:13px 18px; font-family:'IBM Plex Mono',monospace; font-size:13px; color:#8b949b;">{{ t.mincav }}</div>
+        </sc-for>
+      </div>
+    </div>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:880px; margin:0 0 16px;">Lecture d'ensemble. Sur le banc monocanal, la compensation retire 10 dB au bruit transmis là où la minimisation directe en retire 11 : à 1 dB près, se priver de tout capteur dans la zone protégée ne coûte rien. Le principe est validé.</p>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:880px; margin:0 0 16px;">Sur le prototype multicanal, le résultat se lit à deux niveaux. En isolement de la paroi, Comp tient tête à MinAval — 12 dB contre 13 dB de gain au maximum, à 1 dB près sur toute la bande utile : le bruit qui traverse est réduit dans les mêmes proportions. En atténuation mesurée aux microphones aval, en revanche, l'écart est net : 5 à 11 dB contre 9 à 14 dB. La compensation isole donc aussi bien, mais creuse une zone de silence moins profonde — pour une raison identifiée et quantifiée, la charge de calcul, traitée ci-dessous.</p>
+    <p style="font-size:13px; line-height:1.65; color:#6d767d; max-width:880px; margin:0 0 64px;">Pour mémoire, l'indice normalisé global suit la même hiérarchie mais l'aplatit : STC 41 en passif, 43 avec MinAval, 42 avec Comp et MinCav. Le STC intègre tout le spectre jusqu'à 4 kHz, où le contrôle actif n'agit pas ; il masque donc l'essentiel du gain, concentré entre 125 et 500 Hz.</p>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Limites identifiées</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:24px;">
+      <sc-for list="{{ limitations }}" as="l" hint-placeholder-count="4">
+        <div style="background:#101418; padding:22px 28px; display:grid; grid-template-columns:210px 1fr; gap:26px; align-items:start;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#c9a227;">{{ l.label }}</div>
+          <div style="font-size:14.5px; line-height:1.7; color:#a5aeb5;">{{ l.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-bottom:64px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
+      <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Perspective</div>
+      <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">Étendre la matrice de compensation à des configurations à plusieurs sources primaires, avec apprentissage incrémental, pour viser une isolation omnidirectionnelle — c'est-à-dire indépendante de la position de la source de bruit, alors que le filtre actuel est appris pour une configuration d'excitation donnée.</div>
+    </div>
+
+    <div>
       <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.18em; text-transform:uppercase; color:#7c868e; margin-bottom:22px;">Publications associées</div>
       <div style="display:flex; flex-direction:column; gap:20px;">
         <sc-for list="{{ publications }}" as="p" hint-placeholder-count="3">
@@ -99,6 +234,11 @@
             </div>
           </div>
         </sc-for>
+      </div>
+      <div style="border:1px solid #24383a; background:#101a1b; padding:22px 26px; margin-top:26px;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0; margin-bottom:10px;">Thèse complète</div>
+        <div style="font-size:14.5px; line-height:1.65; color:#c3cad0; margin-bottom:10px;">« Contrôle actif large bande par compensation par modèle interne : application à l'isolation acoustique des doubles cloisons » — Université de Sherbrooke, juin 2025. Dir. P. Micheau, codir. A. Berry.</div>
+        <a href="https://usherbrooke.scholaris.ca/items/4f62a80f-7087-4e74-bad5-6fbde3a04d23" target="_blank" rel="noopener" style="font-family:'IBM Plex Mono',monospace; font-size:12.5px;">Consulter la thèse sur Scholaris — Université de Sherbrooke →</a>
       </div>
     </div>
   </section>
@@ -112,15 +252,56 @@
 
 </x-dc>
 <script type="text/x-dc" data-dc-script>
+// Contenu issu de la thèse (UdeS, juin 2025) : résumé, chapitres 3 à 5 et conclusion.
+// Les valeurs de STC reportées ici sont celles portées sur la FIG. 06 affichée.
 class Component extends DCLogic {
   renderVals() {
     return {
-      thesisStack: ['FxLMS / FxNLMS', 'IMC', 'COMSOL Multiphysics', 'MIMO multicanal', 'Temps réel'],
+      thesisStack: ['FxLMS / FxNLMS', 'FxLMS-COMP', 'IMC', 'COMSOL Multiphysics', 'MIMO multicanal', 'Temps réel'],
+      problemFraming: [
+        { label: 'Problématique', text: "En basses fréquences, une double paroi cesse d'isoler, et le contrôle actif n'y répond qu'au prix de microphones d'erreur placés dans l'espace à protéger. Sur une paroi de taille réelle, la difficulté redouble : plusieurs modes de cavité sont excités à la fois, une voie unique ne suffit plus, et il faut piloter simultanément plusieurs sources et plusieurs capteurs en temps réel." },
+        { label: 'Approche', text: "Développer une famille d'algorithmes adaptatifs autour d'une même idée — compenser le signal d'erreur au lieu de déplacer les capteurs. FxLMS-COMP en anticipation, sa forme équivalente à filtre compensé k(z) = h(z) − m(z), puis IMC-FxLMS-COMP pour se passer de référence avancée ; le tout généralisé au cas MIMO par une matrice de compensation reliant les microphones de cavité aux haut-parleurs secondaires." },
+        { label: 'Livrable', text: "Trois algorithmes formalisés, analysés en convergence et implantés en temps réel, puis éprouvés sur un prototype multicanal à 8 voies en chambres couplées : jusqu'à 20 dB d'atténuation en tiers d'octave, et une compensation qui rejoint la minimisation directe sans aucun capteur dans la zone protégée." },
+      ],
       thesisPoints: [
-        { label: 'Modélisation', text: "Modèle vibroacoustique par éléments finis de la double paroi : analyse modale et couplage fluide-structure." },
+        { label: 'Modélisation', text: "Modèle vibroacoustique par éléments finis de la double paroi, en co-simulation COMSOL – MATLAB : analyse modale et couplage fluide-structure." },
         { label: 'Identification', text: "Estimation expérimentale des chemins acoustiques primaires et secondaires sur banc multicanal instrumenté." },
-        { label: 'Commande', text: "Algorithmes adaptatifs temps réel : minimisation de la pression en cavité (MinCav), en aval (MinAval), ou compensation minimisant la pression en aval à partir des microphones placés en cavité (Comp)." },
+        { label: 'Commande', text: "Algorithmes adaptatifs temps réel : minimisation de la pression en cavité (MinCav), en aval (MinAval), ou compensation minimisant la pression en aval à partir des seuls microphones placés en cavité (Comp)." },
         { label: 'Diffusion', text: "3 publications : 1 article en revue avec comité de lecture, 2 communications à INTER-NOISE." },
+      ],
+      numericalFindings: [
+        { num: '01', text: "En configuration monocanale, où seul le mode (0,0,0) de la cavité est en jeu, la stratégie optimale consiste à produire à la source secondaire un débit acoustique égal à celui de la cloison amont. Le contrôleur maintient alors un volume d'air constant entre les vitrages, ce qui découple les deux parois : la cavité cesse de transmettre le mouvement de l'une à l'autre. Ce résultat ne se transpose pas tel quel au cas multicanal, où plusieurs modes coexistent." },
+        { num: '02', text: "Pour que la compensation approche la performance de la minimisation en aval, elle doit reproduire la pression acoustique optimale en cavité avec une précision meilleure que 10 %. Ce seuil fixe directement l'exigence de qualité sur l'identification des chemins secondaires." },
+      ],
+      benches: [
+        { label: 'Banc monocanal — guide d’ondes', text: "Un double vitrage réduit, deux vitres identiques en verre trempé de 30,48 cm de côté, placé dans un guide d'ondes instrumenté. Le guide impose un champ maîtrisé et limite le contrôle au seul mode (0,0,0) de la cavité : configuration idéale pour isoler la physique et quantifier ce qui est réalisable, avant d'ajouter la complexité modale." },
+        { label: 'Banc multicanal — chambres couplées', text: "Un prototype 1 : 2 avec un double vitrage de 2,1 × 0,8 m, monté entre une chambre réverbérante et une chambre semi-anéchoïque afin de mesurer la perte par transmission dans des conditions normalisées. Plusieurs modes de cavité sont excités simultanément, jusqu'à 8 haut-parleurs secondaires et 8 microphones d'erreur." },
+      ],
+      readings: [
+        { figure: 'FIG. 05', text: "Changer de banc, c'est changer de question. Dans le tube, on mesure une atténuation locale : combien de décibels a-t-on retirés à cet endroit précis. En chambres couplées, on mesure l'isolement de la paroi elle-même — la source excite la chambre réverbérante, le double vitrage sépare les deux volumes, et la perte par transmission se déduit des niveaux de part et d'autre. C'est la grandeur qui a un sens pour un bâtiment, et la seule qui permette de dire que la paroi isole mieux, et pas seulement qu'un microphone entend moins." },
+        { figure: 'FIG. 06', text: "Le maximum est atteint à 200 Hz : la paroi passe de 26 dB d'isolement à 39 dB avec MinAval et à 38 dB avec Comp — treize et douze décibels gagnés, soit un bruit transmis divisé par vingt et par seize en puissance. À cette fréquence, la compensation fait pratiquement jeu égal avec la référence tout en se passant de microphone en aval ; MinCav reste nettement en retrait, avec 9 dB de gain au mieux. Le gain reste supérieur à 6 dB de 125 à 315 Hz pour MinAval, et le bénéfice est entièrement concentré entre 125 et 500 Hz — précisément le creux d'isolement de la double paroi passive. Au-delà de 630 Hz les quatre courbes se rejoignent : le contrôle n'agit plus, mais ne dégrade rien non plus. Le creux de coïncidence visible vers 2000 Hz lui échappe : c'est un problème de conception passive." },
+        { figure: 'FIG. 07', text: "Cette figure quantifie le coût de la contrainte temps réel. Avec 8 haut-parleurs, 8 microphones et 3192 coefficients de filtre, l'atténuation culmine à près de 20 dB vers 200 Hz. Ramené à 7 voies et 2500 coefficients — dimensionnement nécessaire pour exécuter la version multicanale de la compensation dans le temps imparti — le pic tombe à environ 14 dB, et l'écart atteint 6 à 7 dB en dessous de 160 Hz. La limite de la méthode multicanale n'est donc pas théorique mais calculatoire, et elle est ici mesurée plutôt que supposée." },
+      ],
+      keyFigures: [
+        { value: '50 dB', label: "Atténuation sur perturbation harmonique : la raie est ramenée au niveau du bruit de fond", detail: "Banc monocanal — borne haute du réalisable" },
+        { value: '20 dB', label: "Atténuation en tiers d'octave vers 200 Hz, contrôleur à 8 voies", detail: "Prototype multicanal, MinAval" },
+        { value: '15 dB', label: "Atténuation par compensation sur 120–460 Hz, sans microphone en aval", detail: "Prototype multicanal, perturbation harmonique" },
+        { value: '13 dB', label: "Isolement gagné à 200 Hz : la paroi passe de 26 à 39 dB", detail: "Perte par transmission, chambres couplées" },
+      ],
+      resultsTable: [
+        { case: "Monocanal, harmonique — atténuation, jusqu’au bruit de fond du banc", minaval: "jusqu’à 50 dB", comp: "équivalente", mincav: "—" },
+        { case: "Monocanal, bruit aléatoire 50–550 Hz — gain de perte par transmission", minaval: "11 dB", comp: "10 dB", mincav: "—" },
+        { case: "Multicanal, harmonique — atténuation sur 120–460 Hz", minaval: "—", comp: "≈ 15 dB", mincav: "non significative en aval" },
+        { case: "Multicanal, large bande — atténuation en tiers d’octave 125–250 Hz, à 7 voies", minaval: "9 à 14 dB", comp: "5 à 11 dB", mincav: "—" },
+        { case: "Multicanal, large bande — même bande, à 8 voies (FIG. 07)", minaval: "17 à 20 dB", comp: "hors budget de calcul", mincav: "—" },
+        { case: "Multicanal — gain de perte par transmission, 125–500 Hz", minaval: "2 à 13 dB", comp: "1,5 à 12 dB", mincav: "0 à 9 dB" },
+        { case: "Multicanal — gain de perte par transmission au maximum", minaval: "13 dB à 200 Hz", comp: "12 dB à 200 Hz", mincav: "9 dB à 160 Hz" },
+      ],
+      limitations: [
+        { label: 'Charge de calcul', text: "Le FxLMS-COMP multicanal est nettement plus coûteux que le FxLMS classique : la contrainte temps réel a imposé de réduire le nombre d'unités secondaires et de microphones d'erreur à 7, au prix direct d'environ 6 dB d'atténuation crête (FIG. 07). C'est la cause principale de l'écart résiduel entre Comp et MinAval en multicanal." },
+        { label: 'Phase d’apprentissage', text: "Le filtre de compensation doit être identifié une fois, avec des microphones temporairement placés en aval. La méthode supprime les capteurs dans la zone protégée en exploitation, pas à l'installation." },
+        { label: 'Effet « lit d’eau »', text: "En version par modèle interne (IMC-FxLMS-COMP) et sur perturbation large bande, la réduction obtenue dans une bande s'accompagne d'une amplification ailleurs. Une matrice de fuite l'atténue, mais réduit aussi l'atténuation utile : le compromis reste à arbitrer selon le spectre visé." },
+        { label: 'Bande utile', text: "Au-delà d'environ 500 à 630 Hz, le contrôle actif n'apporte plus rien sur ce dispositif. L'isolement y relève de la conception passive, y compris le creux de coïncidence autour de 2000 Hz." },
       ],
       publications: [
         { num: '01', title: 'Active Double Glazing With In-Cavity Compensated Microphones', ref: 'Grandjean, Mifundu Nzengi, Micheau, Berry — Mechanical Systems and Signal Processing, vol. 252, mai 2026, p. 114246' },
