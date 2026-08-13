@@ -24,7 +24,7 @@
   </style>
 </helmet>
 
-<!-- Projet Hexacoptere.dc.html — étude de cas isolée. Contenu (piliers, chiffres, normes,
+<!-- projet-hexacoptere.html — étude de cas isolée. Contenu (piliers, chiffres, normes,
      scénario, métriques, lecture des figures) centralisé dans le logic class ci-dessous
      pour rester facile à mettre à jour après chaque campagne de simulation. -->
 <div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
@@ -48,7 +48,7 @@
         </div>
         <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin:10px 0 26px;">VÉHICULE DE RÉFÉRENCE — DJI MATRICE 600 PRO</div>
         <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:40px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 20px;">Simulateur haute fidélité d'un hexacoptère industriel</h1>
-        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Un environnement de simulation non linéaire complet — corps rigide, propulsion électrique, atmosphère, vent, capteurs, estimation et commande — conçu pour développer et éprouver des lois de commande de vol avant tout essai sur le véhicule physique.</p>
+        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Un environnement de simulation non linéaire à haute fidélité permettant d'évaluer la stabilité, la précision et la robustesse de la chaîne GNC face aux perturbations atmosphériques, aux incertitudes du modèle et aux imperfections de mesure.</p>
         <div style="display:flex; flex-wrap:wrap; gap:8px;">
           <sc-for list="{{ projectStack }}" as="p" hint-placeholder-count="5">
             <span style="display:inline-block; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#7fd6d0; border:1px solid #24383a; background:#101a1b; padding:6px 11px; border-radius:2px;">{{ p }}</span>
@@ -122,7 +122,7 @@
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Scénario de référence</span>
       <span style="flex:1; height:1px; background:#1e2429;"></span>
     </div>
-    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 24px;">Toutes les figures et toutes les métriques de cette page proviennent d'une seule et même simulation, afin qu'elles restent comparables entre elles. Les conditions sont les suivantes.</p>
+    <p style="font-size:14.5px; line-height:1.7; color:#9aa3aa; max-width:860px; margin:0 0 24px;">La validation est réalisée sur une trajectoire 3D agressive, conçue pour solliciter simultanément le suivi de position, le contrôle d'attitude, l'allocation de commande, la propulsion et l'estimation d'état. La manœuvre combine déplacement horizontal courbe, montée continue et rotation soutenue du cap, sous l'action d'un vent non stationnaire comprenant cisaillement et rafale. Toutes les figures et métriques présentées ci-dessous correspondent à ce même scénario.</p>
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:26px;">
       <sc-for list="{{ scenario }}" as="s" hint-placeholder-count="6">
         <div style="background:#101418; padding:20px 22px;">
@@ -252,9 +252,9 @@ class Component extends DCLogic {
     return {
       projectStack: ['MATLAB / Simulink', 'matlab.System', 'Quaternions', 'INDI + NDO', 'EKF 13 états'],
       problemFraming: [
-        { label: 'Problématique', text: "Une loi de commande validée sur un modèle idéal ne dit presque rien de son comportement réel. En vol, elle ne voit jamais l'état vrai : elle voit une estimation bruitée, retardée et biaisée, reconstruite à partir de capteurs imparfaits. C'est là que la plupart des lois se dégradent — et le découvrir sur un appareil de 11 kg coûte cher." },
-        { label: 'Approche', text: "Fermer la boucle sur l'état estimé, jamais sur l'état vrai. Toute la chaîne causale est reproduite — dynamique 6 DDL, batterie-ESC-moteurs-hélices, atmosphère et vent normalisés, IMU et GNSS avec neuf effets de capteur modélisés, EKF, observateur de perturbation — de sorte qu'une perte de performance soit imputable à un maillon identifiable plutôt qu'à un modèle global opaque." },
-        { label: 'Livrable', text: "Un banc de qualification plutôt qu'un simulateur : chaque campagne rend un verdict chiffré face à des critères déclarés à l'avance, et la loi qui passe est exactement le code, compatible génération, destiné à voler sur le véhicule." },
+        { label: 'Problématique', text: "Comment développer et valider une architecture de guidage, navigation et commande robuste pour un hexacoptère soumis aux non-linéarités de la dynamique de vol, aux incertitudes paramétriques, aux limitations de la propulsion, aux perturbations aérodynamiques et atmosphériques ainsi qu'aux imperfections des capteurs et de la navigation, tout en assurant des performances de vol quantifiables et une démarche de développement compatible avec les exigences de sûreté et de vérification applicables aux UAS ?" },
+        { label: 'Approche', text: "Développer une plateforme de simulation modulaire de l'hexacoptère selon une démarche model-based design, puis l'utiliser comme banc d'essai numérique pour concevoir et évaluer la chaîne complète GNC." },
+        { label: 'Livrable', text: "Une plateforme numérique modulaire de conception et de validation GNC pour hexacoptère, accompagnée d'une bibliothèque de modèles physiques, capteurs, estimateurs, observateurs et contrôleurs, ainsi que d'un environnement automatisé de vérification des performances et de la robustesse." },
       ],
       pillars: [
         { num: '01', title: 'Dynamique & perturbations', text: "6 DDL, dynamique non linéaire. Forces aérodynamiques fonction de la vitesse absolue, de l'orientation du drone, de la vitesse et direction du vent, et d'une traînée quadratique. \nAtmosphère selon le standard ISO 2533.", points: ['Vitesse absolue et orientation du drone', 'Vitesse de vent et direction', 'Traînée quadratique', 'Atmosphère : température, densité de l’air, pression, accélération gravitationnelle'] },
@@ -274,11 +274,11 @@ class Component extends DCLogic {
       ],
       scenario: [
         { label: 'Véhicule', text: "DJI M600 Pro, 11,665 kg avec batteries TB48S et charge utile, six rotors, régime rotor maximal 456 rad/s. Paramètres identifiés en vol par Bauer et Nagy (2024)." },
-        { label: 'Trajectoire', text: "Spirale ascendante : rayon croissant jusqu'à environ 12 m, montée de 0 à 10 m, cap commandé en rotation continue sur plus de deux tours." },
+        { label: 'Trajectoire', text: "Spirale ascendante 3D avec rayon croissant jusqu'à ≈ 12 m, montée de 0 à 10 m et rotation continue du cap sur plus de deux tours. La manœuvre sollicite simultanément translation, altitude et lacet." },
         { label: 'Cinématique de référence', text: "Vitesse horizontale moyenne 0,77 m/s, maximale 1,81 m/s ; vitesse verticale au plus 0,19 m/s. Consigne continûment dérivable, sans échelon." },
-        { label: 'Environnement', text: "Vent moyen 0,86 m/s, crête 1,46 m/s, composante Nord dominante, avec cisaillement, rafale et turbulence selon MIL-F-8785C." },
-        { label: 'Intégration', text: "100 s simulées, pas fondamental 1 ms, 100 001 points logués. Signaux vrais, estimés et commandés enregistrés sur la même base de temps." },
-        { label: 'Fenêtre d’évaluation', text: "Décision PASS/FAIL sur les 5 dernières secondes. Les mesures ASTM F3609 sur fenêtre glissante de 60 s restent un diagnostic séparé." },
+        { label: 'Environnement', text: "Vent moyen 0,86 m/s, avec rafale selon MIL-F-8785C." },
+        { label: 'Navigation & estimation', text: "Mesures IMU et GNSS imparfaites, fusionnées par EKF. Les couples perturbateurs rotationnels sont reconstruits par un observateur non linéaire de perturbation (NDO). Le contrôleur exploite les états estimés, et non les états vrais." },
+        { label: 'Commande & évaluation', text: "Architecture guidage → PD → INDI → allocation → 6 rotors. Simulation de 100 s à pas fondamental de 1 ms. Performances évaluées par erreurs de suivi, estimation des perturbations, utilisation des actionneurs et critères de qualification définis pour le scénario." },
       ],
       resultFigures: [
         { file: './assets/01_trajectory.png', alt: "Trajectoire 3D, trace au sol et altitude : référence et trajectoire réalisée", caption: 'FIG. 04 — Trajectoire 3D, trace au sol et altitude (référence vs réalisé)' },
@@ -312,6 +312,7 @@ class Component extends DCLogic {
         { code: 'MIL-F-8785C', title: 'Flying Qualities — spécification', use: "Vent moyen selon l'altitude, rafale en 1-cos et turbulence de von Kármán." },
         { code: 'MIL-STD-1797', title: 'Flying Qualities of Piloted Aircraft', use: "Modèles complémentaires de rafale discrète et de turbulence atmosphérique." },
         { code: 'ASTM F3609-25', title: 'Validation des performances', use: "Référentiel des mesures PNT et des fenêtres d'évaluation reprises par les critères de projet." },
+        { code: 'DO-178C', title: 'Software Considerations in Airborne Systems', use: "Référentiel de développement logiciel visé pour les systèmes embarqués critiques." },
       ],
       limitations: [
         "Interaction aérodynamique rotor-rotor détaillée",

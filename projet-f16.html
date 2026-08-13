@@ -23,7 +23,7 @@
   </style>
 </helmet>
 
-<!-- Projet F16.dc.html — étude de cas isolée. L'en-tête reste générique (dynamique du
+<!-- projet-f16.html — étude de cas isolée. L'en-tête reste générique (dynamique du
      vol à voilure fixe) ; le véhicule de référence, le F-16, est révélé dans le corps
      de la page. Données en bas, séparées du gabarit. -->
 <div style="background:#0c0f12; color:#e7eaec; width:100%; overflow-x:hidden;">
@@ -162,7 +162,7 @@
 class Component extends DCLogic {
   renderVals() {
     return {
-      projectStack: ['MATLAB / Simulink', 'NASA TP-1538', '6 DDL non linéaire', 'Quaternions', 'EKF'],
+      projectStack: ['MATLAB / Simulink', 'NASA TP-1538', '6 DDL non linéaire', 'Quaternions', 'EKF', 'V&V', 'DO-178C', 'SAE ARP 4754'],
       problemFraming: [
         { label: 'Problématique', text: "Développer un contrôleur de vol efficace pour un avion fortement non linéaire, capable d’assurer la stabilité, le suivi des consignes et la robustesse face aux variations aérodynamiques et aux perturbations." },
         { label: 'Approche', text: "Construire un modèle 6 DDL du F-16 à partir des données aérodynamiques NASA TP-1538, puis concevoir et évaluer des lois de commande adaptées à l’ensemble de son domaine de fonctionnement." },
@@ -202,6 +202,8 @@ class Component extends DCLogic {
         { code: 'MIL-F-8785C', title: 'Flying Qualities — spécification', use: "Vent moyen selon l'altitude, rafale en 1-cos et turbulence de von Kármán." },
         { code: 'MIL-STD-1797', title: 'Flying Qualities of Piloted Aircraft', use: "Modèles complémentaires de rafale discrète et de turbulence atmosphérique." },
         { code: 'Stevens & Lewis', title: 'Aircraft Control and Simulation', use: "Modèle réduit du F-16 et contexte d'interpolation ; fixe le domaine de validité retenu." },
+        { code: 'DO-178C', title: 'Software Considerations in Airborne Systems', use: "Référentiel de développement logiciel visé pour les systèmes avioniques critiques." },
+        { code: 'SAE ARP 4754', title: 'Development of Civil Aircraft and Systems', use: "Processus de développement au niveau système, en amont du logiciel et du matériel." },
       ],
     };
   }
