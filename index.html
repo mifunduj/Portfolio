@@ -22,6 +22,22 @@
     ul { margin: 0; padding: 0; list-style: none; }
     button { font: inherit; cursor: pointer; }
     ::selection { background: #7fd6d0; color: #0c0f12; }
+    @media (max-width: 720px) {
+      nav > div { padding: 12px 20px !important; gap: 12px !important; flex-wrap: wrap; }
+      nav > div > span { display: none; }
+      nav a { font-size: 10.5px !important; letter-spacing: .07em !important; }
+      nav a:first-child { width: 100%; font-size: 14px !important; }
+      header, section, footer { padding-left: 20px !important; padding-right: 20px !important; }
+      header { padding-top: 48px !important; padding-bottom: 40px !important; }
+      section { padding-top: 60px !important; }
+      h1 { font-size: clamp(34px, 10vw, 46px) !important; line-height: 1.08 !important; }
+      h2 { font-size: 26px !important; }
+      div[style*="grid-template-columns"]:not([style*="16px 1fr"]):not([style*="28px 1fr"]) { grid-template-columns: 1fr !important; gap: 16px !important; }
+      div[style*="background:#1e2429"] { gap: 1px !important; }
+      div[style*="min-width"] { min-width: 0 !important; }
+      img { max-width: 100% !important; height: auto !important; }
+      footer { margin-top: 40px !important; padding-bottom: 30px !important; }
+    }
   </style>
 </helmet>
 
