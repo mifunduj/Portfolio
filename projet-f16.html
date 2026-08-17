@@ -62,7 +62,7 @@
         </div>
         <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin:10px 0 26px;">VÉHICULE DE RÉFÉRENCE — AVION DE COMBAT MONORÉACTEUR</div>
         <h1 style="font-family:'Archivo',sans-serif; font-weight:700; font-size:40px; line-height:1.1; letter-spacing:-0.02em; margin:0 0 20px;">Simulateur de dynamique de vol à voilure fixe</h1>
-        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Modèle non linéaire à six degrés de liberté d'un avion de combat à stabilité longitudinale relâchée, couplé à un filtre de Kalman étendu pour l'estimation d'état — en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797. Les coefficients aérodynamiques proviennent d'essais en soufflerie publiés.</p>
+        <p style="font-size:16.5px; line-height:1.7; color:#a5aeb5; margin:0 0 26px;">Modèle non linéaire à six degrés de liberté d'un avion de combat à stabilité longitudinale relâchée — actionneurs et propulsion inclus — couplé à un filtre de Kalman étendu pour l'estimation d'état et piloté par une loi de commande INDI de suivi de trajectoire, en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797. Les coefficients aérodynamiques proviennent d'essais en soufflerie publiés.</p>
         <div style="display:flex; flex-wrap:wrap; gap:8px;">
           <sc-for list="{{ projectStack }}" as="p" hint-placeholder-count="5">
             <span style="display:inline-block; white-space:nowrap; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#7fd6d0; border:1px solid #24383a; background:#101a1b; padding:6px 11px; border-radius:2px;">{{ p }}</span>
@@ -113,7 +113,67 @@
       <span style="flex:1; height:1px; background:#1e2429;"></span>
     </div>
     <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 30px;">La qualité d'un simulateur de dynamique de vol tient d'abord à celle de ses données aérodynamiques. Le rapport NASA TP-1538 (Nguyen <em>et al.</em>, 1979) publie les mesures en soufflerie d'un chasseur à stabilité longitudinale relâchée, sous forme de tables de coefficients — c'est la référence sur laquelle repose la quasi-totalité des modèles F-16 ouverts.</p>
+    <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 22px;">Le modèle aérodynamique du simulateur est dérivé directement de ces paramètres identifiés en soufflerie : les forces et les moments sont reconstruits à chaque pas par interpolation des tables en incidence, en dérapage et en déflexion de gouvernes, derrière une interface unique. Aucun coefficient n'est réajusté a posteriori. Les pentes dont la loi de commande a besoin sont elles-mêmes obtenues par différences finies centrées sur ces tables autour du point d'équilibre, puis converties en axes vent — le contrôleur est donc réglé sur la même source que l'avion qu'il pilote, et non sur un modèle analytique parallèle.</p>
     <p style="font-size:14.5px; line-height:1.75; color:#7c868e; max-width:880px; margin:0 0 60px;">Le domaine d'emploi retenu suit le modèle réduit décrit par Stevens, Johnson et Lewis : environ Mach 0,6 et une incidence comprise entre −10° et 45°. Disposer de données au-delà ne rend pas le modèle d'avion complet valide pour autant.</p>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Actionneurs et propulsion</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 26px;">Entre la commande calculée et la force réellement produite, il y a des gouvernes à bande passante finie, des butées de position et de vitesse, et un réacteur dont la puissance ne suit pas instantanément la manette. Ces deux modèles proviennent du même rapport NASA TP-1538 que l'aérodynamique et sont implémentés en temps continu, en amont de la boucle de commande — c'est ce qui rend l'utilisation des gouvernes lisible et la saturation physique plutôt que numérique.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ actuationModel }}" as="a" hint-placeholder-count="6">
+        <div style="background:#101418; padding:24px 28px;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7c868e; margin-bottom:9px;">{{ a.label }}</div>
+          <div style="font-size:14.5px; line-height:1.65; color:#d3d9dd;">{{ a.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Structure du contrôleur</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:15px; line-height:1.75; color:#a5aeb5; max-width:880px; margin:0 0 24px;">La loi de commande est une inversion dynamique non linéaire incrémentale (INDI), réalisée sur le F-16 d'après la structure de suivi de trajectoire publiée par Zhou <em>et al.</em> (2023). L'INDI n'inverse pas le modèle complet de l'avion : il inverse l'<em>incrément</em> de commande à partir de l'accélération mesurée. La connaissance de modèle exigée se réduit ainsi à l'efficacité des gouvernes — précisément la grandeur que les tables de soufflerie donnent le mieux — ce qui laisse le reste des non-linéarités et des perturbations être rejeté par la boucle.</p>
+    <div style="border:1px solid #1e2429; background:#0f1417; padding:20px 24px; margin-bottom:22px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:2; color:#9aa3aa;">
+      mission → <span style="color:#7fd6d0;">Path Manager</span> → <span style="color:#7fd6d0;">Path Follower</span> → <span style="color:#7fd6d0;">INDI extérieur</span> → modèle de référence d'assiette → correcteur linéaire d'assiette → <span style="color:#7fd6d0;">INDI rotationnel</span> → allocation → gouvernes &amp; manette
+    </div>
+    <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:60px;">
+      <sc-for list="{{ controllerStack }}" as="c" hint-placeholder-count="6">
+        <div style="background:#101418; padding:24px 28px; display:grid; grid-template-columns:28px 1fr; gap:20px; align-items:start;">
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:11px; color:#7fd6d0; padding-top:2px;">{{ c.num }}</span>
+          <div>
+            <div style="font-family:'Archivo',sans-serif; font-size:16px; font-weight:600; margin-bottom:8px;">{{ c.title }}</div>
+            <div style="font-size:14.5px; line-height:1.7; color:#a5aeb5;">{{ c.text }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
+      <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Résultats intermédiaires — capture et suivi d'une branche montante</span>
+      <span style="flex:1; height:1px; background:#1e2429;"></span>
+    </div>
+    <p style="font-size:14.5px; line-height:1.75; color:#9aa3aa; max-width:880px; margin:0 0 24px;">Scénario de régression du contrôleur : une branche rectiligne à 3° de pente, cap au Nord, engagée depuis un décalage latéral initial de 200 m au point de conception — 3000 m d'altitude, 136 m/s de vitesse vraie. 90 s de vol, pas fondamental de 1 ms, environnement de vent avec cisaillement et rafale en 1-cos, boucle fermée sur l'estimation de l'observateur. Les deux figures proviennent de la même exécution.</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:26px;">
+      <sc-for list="{{ resultFigures }}" as="r" hint-placeholder-count="2">
+        <div>
+          <div style="border:1px solid #1e2429; background:#fff;">
+            <img src="{{ r.file }}" alt="{{ r.alt }}" style="width:100%; display:block;">
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.1em; color:#6d767d; margin-top:10px;">{{ r.caption }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:grid; gap:1px; background:#1e2429; border:1px solid #1e2429; margin-bottom:22px;">
+      <sc-for list="{{ readings }}" as="r" hint-placeholder-count="2">
+        <div style="background:#101418; padding:24px 28px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
+          <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; color:#7fd6d0;">{{ r.figure }}</div>
+          <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">{{ r.text }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="font-size:13.5px; line-height:1.65; color:#7c868e; max-width:880px; margin:0 0 60px;">Campagne <span style="font-family:'IBM Plex Mono',monospace; color:#9aa3aa;">PathFollowing / climbingLine — 17-08-2026</span>. Résultats intermédiaires : une seule exécution, une seule graine aléatoire. Aucune analyse de robustesse — marges, Monte-Carlo sur la masse, le centrage ou les dérivées aérodynamiques — n'a encore été conduite, et rien ici ne permet d'en préjuger.</p>
 
     <div style="display:flex; align-items:baseline; gap:16px; margin-bottom:26px;">
       <span style="font-family:'IBM Plex Mono',monospace; font-size:11.5px; letter-spacing:0.2em; text-transform:uppercase; color:#7fd6d0;">Vérification n'est pas validation</span>
@@ -158,12 +218,12 @@
 
     <div style="border:1px solid #24383a; background:#101a1b; padding:26px 30px; margin-bottom:60px; display:grid; grid-template-columns:150px 1fr; gap:26px; align-items:start;">
       <div style="font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:0.18em; text-transform:uppercase; color:#7fd6d0;">Statut</div>
-      <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">Projet en cours de développement. Les travaux portent sur la modélisation, l’estimation d’état et la conception du contrôleur. Les résultats seront intégrés progressivement après validation.</div>
+      <div style="font-size:14.5px; line-height:1.7; color:#c3cad0;">Projet en cours de développement. Le modèle 6 DDL, les actionneurs, la propulsion, l’estimation d’état et la loi de commande INDI de suivi de trajectoire sont en place et volent une mission complète en segments enchaînés. Les travaux en cours portent sur l’intégration de trajectoires extrêmes — fortes pentes, virages à la limite de gîte, enchaînements serrés — destinées à sonder les bords du domaine des tables et les limites d’autorité des gouvernes. Les résultats seront intégrés progressivement, après validation.</div>
     </div>
   </section>
 
   <footer style="max-width:1160px; margin:0 auto; padding:22px 40px 44px; border-top:1px solid #191f24; display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#6d767d;">
-    <a href="./index.html">← Retour au CV</a>
+    <a href="./index.html">← Retour à la présentation</a>
     <span>Jonathan Mifundu Nzengi, Ph.D. — Portfolio 2026</span>
   </footer>
 
@@ -177,7 +237,7 @@
 class Component extends DCLogic {
   renderVals() {
     return {
-      projectStack: ['MATLAB / Simulink', 'NASA TP-1538', '6 DDL non linéaire', 'Quaternions', 'EKF', 'V&V', 'DO-178C', 'SAE ARP 4754'],
+      projectStack: ['MATLAB / Simulink', 'NASA TP-1538', '6 DDL non linéaire', 'Quaternions', 'EKF', 'INDI', 'Allocation de commande', 'V&V', 'DO-178C', 'SAE ARP 4754'],
       problemFraming: [
         { label: 'Problématique', text: "Développer un contrôleur de vol efficace pour un avion fortement non linéaire, capable d’assurer la stabilité, le suivi des consignes et la robustesse face aux variations aérodynamiques et aux perturbations." },
         { label: 'Approche', text: "Construire un modèle 6 DDL du F-16 à partir des données aérodynamiques NASA TP-1538, puis concevoir et évaluer des lois de commande adaptées à l’ensemble de son domaine de fonctionnement." },
@@ -185,7 +245,7 @@ class Component extends DCLogic {
       ],
       pillars: [
         { num: '01', title: 'Données aérodynamiques', text: "Transcription intégrale et traçable des tables de soufflerie NASA TP-1538, exposée derrière une interface d'interpolation unique.", points: [] },
-        { num: '02', title: 'Dynamique du véhicule', text: "6 DDL, dynamique non linéaire du F-16 — translation et rotation couplées, forces et moments aérodynamiques issus des tables ci-dessus.", points: ['Modèle non linéaire 6 DDL, attitude par quaternions', 'Forces et moments interpolés en (α, β, δ) à chaque pas', 'Atmosphère selon le standard ISO 2533'] },
+        { num: '02', title: 'Dynamique du véhicule', text: "6 DDL, dynamique non linéaire du F-16 — translation et rotation couplées, forces et moments aérodynamiques issus des tables ci-dessus.", points: ['Modèle non linéaire 6 DDL, attitude par quaternions', 'Forces et moments interpolés en (α, β, δ) à chaque pas', 'Actionneurs et propulsion modélisés d’après le TP-1538', 'Atmosphère selon le standard ISO 2533'] },
         { num: '03', title: 'Environnement', text: "Modèles de vent et d'atmosphère en accord avec les normes ISO 2533, MIL-F-8785C et MIL-STD-1797, paramétrés pour l'enveloppe d'altitude et de vitesse de l'appareil.", points: ['Vent moyen selon l’altitude (MIL-F-8785C)', 'Rafale en 1-cos, turbulence de von Kármán', 'Atmosphère standard ISO 2533'] },
         { num: '04', title: 'Estimation d’état', text: "Filtre de Kalman étendu pour la reconstruction de l'état à partir de mesures imparfaites.", points: ['Filtre de Kalman étendu, fusion des mesures capteurs simulées', 'Évaluation de la nécessité d’observateurs de perturbation linéaires et rotationnels'] },
       ],
@@ -198,17 +258,44 @@ class Component extends DCLogic {
         { value: 'MIL-F-8785C', label: 'Standard de vent / turbulence' },
         { value: 'MIL-STD-1797', label: 'Modèles complémentaires de rafale / turbulence' },
         { value: 'Quaternions', label: 'Propagation de l’attitude' },
+        { value: 'INDI', label: 'Loi de commande de suivi de trajectoire' },
+        { value: '20,2 rad/s', label: 'Bande passante des actionneurs de gouvernes' },
+        { value: '76,0 kN', label: 'Poussée maximale au point de conception' },
+        { value: '1 kHz', label: 'Pas fondamental de simulation' },
+      ],
+      actuationModel: [
+        { label: 'Gouvernes', text: "Stabilateur symétrique, ailerons, gouverne de direction et empennage différentiel sont modélisés chacun par un premier ordre de constante 0,0495 s — soit 20,2 rad/s — assorti de ses butées publiées : ±25° et 60°/s au stabilateur, ±21,5° et 80°/s aux ailerons, ±30° et 120°/s à la direction. L'intégrateur de position est empêché de sortir de ses limites, de sorte qu'une saturation dans le simulateur correspond à une butée réelle." },
+        { label: 'Becs de bord d’attaque', text: "Les becs ne sont pas un degré de liberté de commande : ils suivent leur auto-programmation publiée, fonction de l'incidence et du rapport pression dynamique sur pression statique, avec sa propre dynamique plus lente (0,136 s, 25°/s). Cette contrainte maintient les tables aérodynamiques à l'intérieur de leur domaine de validité." },
+        { label: 'Manette → puissance', text: "La manette normalisée est convertie en niveau de puissance commandé par la loi affine par morceaux du rapport. Une logique de transition sépare ensuite le régime sec du régime avec postcombustion et impose une cible intermédiaire, ce qui interdit au moteur de traverser instantanément la plage de puissance." },
+        { label: 'Dynamique moteur', text: "La puissance réelle est un état dynamique à part entière : elle rejoint sa cible avec une constante de temps qui dépend de l'écart demandé, ce qui reproduit la mise en régime plus lente d'un grand coup de manette. C'est cette dynamique qui fixe la bande passante admissible de la boucle de vitesse." },
+        { label: 'Poussée', text: "La poussée est interpolée sur les trois cartes publiées — ralenti, plein sec, plein postcombustion — en Mach et en altitude, puis entre ces cartes selon le niveau de puissance courant. Elle est appliquée sur l'axe longitudinal du repère corps, sans moment propulsif : hypothèse explicite, faute de géométrie moteur documentée dans la source." },
+        { label: 'Point de conception', text: "3000 m, 136,1 m/s vrais, Mach 0,414. L'équilibre demande 8,9 kN sur les 76,0 kN disponibles, un stabilateur à −0,47°, une incidence de 4,7° et 0,166 de manette, pour une finesse de 10,1. Le trim est résolu numériquement, résidu inférieur à 1e−6." },
+      ],
+      controllerStack: [
+        { num: '01', title: 'Guidage — gestionnaire et suiveur de trajectoire', text: "Le Path Manager séquence la mission en segments élémentaires — droites et orbites — et bascule sur le suivant lorsque la cible de progression est atteinte. Le Path Follower en déduit, par champ de vecteurs, les consignes de vitesse vraie, d'altitude et de route, ainsi que les termes d'anticipation en pente et en gîte." },
+        { num: '02', title: 'Boucle extérieure INDI', text: "Les erreurs de vitesse, d'altitude et de route sont converties en incréments : un incrément de poussée sur l'axe longitudinal, et un jeu de consignes d'attitude — gîte, assiette, taux de lacet. Les limites d'accélération longitudinale, de taux de pente, de taux de lacet, de gîte et d'assiette sont imposées ici, dimensionnées sur l'autorité réellement disponible au point de vol." },
+        { num: '03', title: 'Modèle de référence d’assiette', text: "Les consignes d'attitude passent par un second ordre — amortissement 0,9, pulsation 2 rad/s en roulis et en tangage, 0,8 rad/s en lacet. Il fournit en même temps les dérivées dont l'étage suivant a besoin et borne la sollicitation transmise aux gouvernes, un facteur dix sous leur bande passante." },
+        { num: '04', title: 'Correcteur linéaire et INDI rotationnel', text: "Un correcteur linéaire par axe produit l'accélération angulaire souhaitée ; l'INDI rotationnel la traduit en incrément de couple à partir de l'accélération angulaire reconstruite par filtre washout, sans faire appel à un modèle complet des moments aérodynamiques. C'est l'étage qui absorbe les non-linéarités et les perturbations non modélisées." },
+        { num: '05', title: 'Allocation de commande', text: "Le torseur demandé — poussée longitudinale et couples de roulis, tangage, lacet — est réparti sur les gouvernes par un allocateur qui évalue leur efficacité sur les tables TP-1538 au point de vol courant, et non sur une matrice constante, puis applique les butées de position et de vitesse. Le bec suit sa programmation, l'empennage différentiel reste asservi à la commande de roulis." },
+        { num: '06', title: 'Séparation des bandes passantes', text: "Le dimensionnement repose sur une hiérarchie explicite : actionneurs à 20,2 rad/s, boucle d'incrément de couple à 12 rad/s, pôles d'assiette au plus rapide à 5,7 rad/s, boucles de trajectoire au dixième de rad/s. Les boucles que l'INDI n'inverse pas — route, dérapage, altitude, vitesse — ont été redimensionnées pour le F-16 ; l'action intégrale de route a notamment été supprimée, le champ de vecteurs du guidage jouant déjà ce rôle." },
+        { num: '07', title: 'Bouclage sur l’état estimé', text: "La boucle est fermée sur la sortie de l'observateur, pas sur la vérité simulée : c'est la configuration de vol. Les signaux vrais sont enregistrés en parallèle et ne servent qu'à la notation des performances." },
+      ],
+      resultFigures: [
+        { file: './assets/f16_01_horizontal_track.png', alt: "Trace horizontale en repère NED : trajectoire réalisée, trajectoire commandée et point de départ décalé de 200 m", caption: 'FIG. 01 — Trace horizontale : capture de l’axe depuis un décalage latéral de 200 m' },
+        { file: './assets/f16_02_airspeed_altitude.png', alt: "Canaux vitesse vraie et altitude de la boucle INDI extérieure : valeurs réalisées et consignes sur 90 s", caption: 'FIG. 02 — Boucle INDI extérieure : canaux vitesse vraie et altitude' },
+      ],
+      readings: [
+        { figure: 'FIG. 01', text: "L'avion est lâché à 200 m de l'axe commandé et rejoint la droite dans les premiers kilomètres de la branche, puis s'y maintient jusqu'à la fin de l'enregistrement. L'interception se fait sans dépassement, conséquence directe de la suppression de l'action intégrale dans la boucle de route : l'écart latéral est déjà intégré par le champ de vecteurs du guidage, et l'ajouter une seconde fois produisait un dépassement à chaque capture. La rapidité de l'interception est bornée par la limite de gîte de 35°, qui plafonne le taux de virage à 2,6 °/s au point de conception." },
+        { figure: 'FIG. 02', text: "Le canal vertical suit la rampe de montée à 3° — environ 7 m/s de vitesse verticale — de 3000 à 3650 m. Le seul écart lisible est le retard d'engagement, le temps que l'assiette s'établisse ; ensuite la consigne et la trajectoire réalisée restent confondues. Le canal vitesse tient les 136 m/s en moyenne avec une oscillation résiduelle de quelques m/s : la boucle est fermée sur des mesures bruitées, l'avion traverse un vent non stationnaire, et la poussée n'est commandée qu'en incrément, à bande passante volontairement basse pour rester à l'intérieur de la dynamique de mise en régime du réacteur. La notation porte sur l'erreur moyenne dans la fenêtre d'établissement, la crête étant reportée à côté." },
       ],
       vAndV: [
         { label: 'Ce que les tests établissent', text: "" },
         { label: 'Ce qu’ils n’établissent pas', text: "" },
       ],
       limitations: [
-        "Dynamique des actionneurs de gouvernes",
         "Caractéristiques détaillées des capteurs embarqués",
         "Souplesse et déformation structurale de la cellule",
         "Consommation de carburant et variation de masse en vol",
-        "Dynamique de mise en régime du réacteur",
         "Domaine au-delà de Mach 0,6 et hors de la plage d’incidence −10° à 45°",
       ],
       standards: [
@@ -217,6 +304,7 @@ class Component extends DCLogic {
         { code: 'MIL-F-8785C', title: 'Flying Qualities — spécification', use: "Vent moyen selon l'altitude, rafale en 1-cos et turbulence de von Kármán." },
         { code: 'MIL-STD-1797', title: 'Flying Qualities of Piloted Aircraft', use: "Modèles complémentaires de rafale discrète et de turbulence atmosphérique." },
         { code: 'Stevens & Lewis', title: 'Aircraft Control and Simulation', use: "Modèle réduit du F-16 et contexte d'interpolation ; fixe le domaine de validité retenu." },
+        { code: 'Zhou et al. (2023)', title: 'INDI-based path-following control', use: "Int. J. Robust Nonlinear Control, vol. 33 — structure de commande INDI de suivi de trajectoire dont la réalisation F-16 est dérivée." },
         { code: 'DO-178C', title: 'Software Considerations in Airborne Systems', use: "Référentiel de développement logiciel visé pour les systèmes avioniques critiques." },
         { code: 'SAE ARP 4754', title: 'Development of Civil Aircraft and Systems', use: "Processus de développement au niveau système, en amont du logiciel et du matériel." },
       ],
